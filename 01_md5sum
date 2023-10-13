@@ -1,0 +1,28 @@
+#!/bin/bash
+
+#SBATCH --job-name=md5
+#SBATCH --partition=short
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=1G
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+############
+# NOTES    #
+############
+
+# According to https://www.brandonfoltz.com/2014/09/how-fast-is-md5/ the integrity validation of my data could take ca. 8 min.
+# This code does not generate an output file. So, just copy the promt output into a file using the command below.
+
+############
+# COMMANDS #
+############
+
+## Define a path to rawdata
+dpath=~/projects/rbgk/users_area/sreinales/addseqs_schnkit
+filename=md5_Schn.txt
+
+## Run integrity validation
+cd $dpath
+
+md5sum -c $filename > $dpath/md5sum.outerr 2>&1

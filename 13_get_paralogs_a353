@@ -1,0 +1,54 @@
+#!/bin/bash
+
+#SBATCH --job-name=paralogs
+#SBATCH --partition=medium
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=2G
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+## This command fetches all paralogs for every gene and generates an unaligned multi-FASTA file for each gene.
+## This fasta file is saved in paralogs folder
+
+###########
+# COMMANDS
+###########
+
+## Activate conda environment
+source /home/sreinale/.bashrc
+source activate hybpiper
+
+## Temporary folder
+cd $TMPDIR
+
+## As all sample runs have to be in the same directory, copy runs of the same probe set in a temporary folder
+pname=a353
+dpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper
+
+cp -r $dpath/addseqs_$pname/ERR* ./
+cp -r $dpath/sauv_sprl/$pname/SPRL* ./
+cp -r $dpath/transcripts/$pname/ERR* ./
+
+echo Copy Done!
+
+## Define namelist file
+namelist=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/namelist_all_a353.txt
+
+## Define target file
+tfile=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/new_targets/mega353_filtered_crop.fas
+
+## Recover coding sequences from alternative long paralogs
+hybpiper paralog_retriever $namelist -t_dna $tfile
+
+echo END hybpiper
+
+## Create a folder to save fasta files for each gen
+mkdir -p $dpath/paralogs
+mkdir -p $dpath/paralogs/$pname
+
+## Move results from temporary folder to scratch
+mv -v paralog* $dpath/paralogs/$pname
+echo The End!

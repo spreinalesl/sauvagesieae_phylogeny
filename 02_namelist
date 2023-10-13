@@ -1,0 +1,26 @@
+#!/bin/bash
+
+###########
+# NOTES
+###########
+# Run at $HOME
+
+###########
+# COMMANDS
+###########
+rawdPath=~/projects/rbgk/users_area/sreinales/sauv_sprl
+resultsPath=~/scratch/private/sauvagesieae
+
+cd $rawdPath
+ls *fastq.gz > $resultsPath/namelist_p.txt
+
+# Modify names
+cd $resultsPath
+sed -i 's/_1.fastq.gz//' namelist_p.txt
+sed -i 's/_2.fastq.gz//' namelist_p.txt
+
+# Remove duplicates
+awk '!a[$0]++' namelist_p.txt > namelist.txt
+rm namelist_p.txt
+
+echo DONE!

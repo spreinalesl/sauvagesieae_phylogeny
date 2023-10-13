@@ -1,0 +1,51 @@
+#!/bin/bash
+
+#SBATCH --job-name=nw_ed
+#SBATCH --partition=medium
+#SBATCH --array=0-609%20
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=1G
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+## This command aims to collapse branches with BS below 10% from ML bootstraped gene trees, to improve ASTRAL accuracy.
+## These trees were estimated by RaxMl-ng using the TBE bootstrap method.
+## Option o means splice out the node (i.e. collapse branch). Applied on unsupported nodes (lesser than or equal to 10% BS)
+## Tutorial: https://gensoft.pasteur.fr/docs/newick-utils/1.6/nwutils_tutorial.pdf
+
+###########
+# COMMANDS
+###########
+
+## Input trees
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/raxml
+
+## Output folder
+mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/BS10_MLtrees
+rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/BS10_MLtrees
+
+## Define variable to list all gene trees and iterate over each element using the SLURM_ARRAY_TASK_ID variable
+## Path to a list of selected genes (all schn plus a353 genes with more than 25% of taxa represented)
+glistpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/get_seqs_summ/selected_genes.txt
+gene_list=($(cat $glistpath))
+gene=(${gene_list[$SLURM_ARRAY_TASK_ID]})
+
+## Go to the alignments folder
+cd $fpath
+
+## Collapsing trees
+~/scratch/apps/conda/bin/nw_ed $gene.raxml.supportTBE 'i & b<=0.1' o > $rpath/"$gene"_BS10.tre
+
+echo Gene tree $gene edited using nw_ed
+
+## Root trees
+if grep "ERR2040370\|SRR10951426" $gene.raxml.supportTBE
+then
+ ~/scratch/apps/conda/bin/nw_reroot $gene.raxml.supportTBE ERR2040370 SRR10951426 > $rpath/"$gene"_BS10_root.tre
+ echo $gene re-rooted
+else
+ echo $gene >> $rpath/no_outgroup.log
+fi

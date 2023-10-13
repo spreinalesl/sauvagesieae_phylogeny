@@ -1,0 +1,52 @@
+#!/bin/bash
+
+#SBATCH --job-name=mrbayes
+#SBATCH --partition=short
+#SBATCH --array=0-609%30
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=2G
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+# Hacer un script base de Mr Bayes y en bash editarle partes como nombre del arbol, modelo, etc etc
+
+###########
+# COMMANDS
+###########
+
+## Input fasta files
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/taper
+
+## Output path
+mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/raxml
+rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/raxml
+
+## Go to the alignments folder
+cd $fpath
+
+## Define variable to list all alignment and iterate over each element using the SLURM_ARRAY_TASK_ID variable
+## Path to a list of selected genes (all schn plus a353 genes with more than 25% of taxa represented)
+glistpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/get_seqs_summ/selected_genes.txt
+gene_list=($(cat $glistpath/fasta_list.txt))
+gene=(${gene_list[$SLURM_ARRAY_TASK_ID]})
+
+## Get info about best-fit substitution model previously obtained using Iqtree
+bmpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/subs_model/best_fit_models_summ.txt
+model=$(cat $bmpath | grep $gene | cut -d ':' -f 3)
+
+## Writing the mb script
+file_name ## change file name
+
+
+
+## Tree inference
+--msa $gene*.fasta \
+--threads ${SLURM_CPUS_PER_TASK} \
+--model $model \
+
+$rpath/"$gene"_alg_clean.fasta
+
+echo TAPER finished for gene $gene

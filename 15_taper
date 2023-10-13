@@ -1,0 +1,45 @@
+#!/bin/bash
+
+#SBATCH --job-name=taper
+#SBATCH --partition=medium
+#SBATCH --array=0-609%20
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=1G
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+## TAPER looks for errors in small species-specific stretches of the multiple sequence alignments. This command will detect erronous sequences and will replace them with N
+## in the output, and all N characters are treated as a dash. A cutoff (make sense to > 1) to control aggressiveness of error detection. The lower the cutoff is,
+## the more aggressive the TAPER becomes. Values below 1 are allowed but discouraged. The default cutoff is -c 3. For example, if you want TAPER be more precautious, you can try -c 10.
+
+###########
+# COMMANDS
+###########
+
+## Activate conda environment
+source /home/sreinale/.bashrc
+source activate julia
+
+## Input fasta files
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments
+
+## Output path
+mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/taper/test
+rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/taper/test
+
+## Go to the alignments folder
+cd $fpath
+
+## Define variable to list all alignment and iterate over each element using the SLURM_ARRAY_TASK_ID variable
+## Path to a list of selected genes (all schn plus a353 genes with more than 25% of taxa represented)
+glistpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/get_seqs_summ/selected_genes.txt
+gene_list=($(cat $glistpath))
+gene=(${gene_list[$SLURM_ARRAY_TASK_ID]})
+
+## Run TAPER
+julia ~/scratch/apps/addprograms/taper/correction_multi.jl -m N -a N -c 10 $gene*.fasta > $rpath/"$gene"_alg_clean.fasta
+
+echo TAPER finished for gene $gene

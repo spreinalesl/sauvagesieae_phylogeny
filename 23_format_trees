@@ -1,0 +1,25 @@
+#!/bin/bash
+
+#SBATCH --job-name=format_t
+#SBATCH --partition=short
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=1G
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+## These commands run the pxrr rooting function of the package phyx
+
+###########
+# COMMANDS
+###########
+
+## Input trees
+cd ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/astral-pro
+
+## Run pxrr to root trees using two outgroups (Bonnetia_stricta_Benko-Iseppon1726 = SRR10951426 and Hypericum_perforatum_OneKP132735 = ERR2040370)
+~/scratch/apps/conda/bin/pxrr -t sauv_prlgs_all_BS10_sptree_annot.tre -g ERR2040370,SRR10951426 > sauv_prlgs_all_BS10_sptree_annot_rooted.tre
+
+~/scratch/apps/conda/bin/pxrr -t sauv_prlgs_all_BS10_sptree.tre -g ERR2040370,SRR10951426 > sauv_prlgs_all_BS10_sptree_rooted.tre

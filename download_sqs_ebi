@@ -1,0 +1,33 @@
+#!/bin/bash
+
+#SBATCH --job-name=download_seqs
+#SBATCH --partition=short
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=1G
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+## Links were obtained from https://www.ebi.ac.uk/ searching by project name using the following codes:
+## PRJEB42299: Shah - PAFTOL
+## PRJNA602196: Schn
+## PRJNA735954: Shah - Ochna
+## For more details see the R script 'get_sample_codes.R'
+
+###########
+# COMMAND #
+###########
+
+### Define paths
+
+### Save .fastq.gz files in the BeeGFS drive
+cd /home/sreinale/projects/rbgk/users_area/sreinales/addseqs_schnkit
+
+## Download files using a list of links
+links=$(cat ./links_Schn_kit.txt)
+
+for i in $links; do
+ wget $i
+done

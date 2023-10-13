@@ -1,0 +1,64 @@
+#!/bin/bash
+
+#SBATCH --job-name=seqs
+#SBATCH --partition=short
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=1G
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+## This command fetches all sequences/samples recovered for every gene and generates an unaligned multi-FASTA file for each gene.
+## The fasta file is saved in fasta_files folder
+
+###########
+# COMMANDS
+###########
+
+## Activate conda environment
+source /home/sreinale/.bashrc
+source activate hybpiper
+
+## Temporary folder
+cd $TMPDIR
+
+## As all sample runs have to be in the same directory, copy runs of the same probe set in a temporary folder
+pname=a353
+dpath=~/scratch/private/sauvagesieae/hybpiper
+
+cp -r $dpath/addseqs_$pname/ERR* ./
+cp -r $dpath/sauv_sprl/$pname/SPRL* ./
+cp -r $dpath/transcripts/$pname/ERR* ./
+
+echo Copy Done!
+
+## Create a folder to save fasta files for each gen
+mkdir -p fasta_files
+mkdir -p fasta_files/$pname
+mkdir -p fasta_files/$pname/exons
+mkdir -p fasta_files/$pname/introns
+mkdir -p fasta_files/$pname/supercontig
+
+## Output path
+rpath=./fasta_files/$pname
+
+## Define namelist file
+namelist=~/scratch/private/sauvagesieae/namelist_all_a353.txt
+
+## Define target file
+tfile=~/scratch/private/sauvagesieae/hybpiper/new_targets/mega353_filtered_crop.fas
+
+## Generate an unaligned multi-FASTA file for each gene (only exons)
+hybpiper retrieve_sequences dna -t_dna $tfile --sample_names $namelist --fasta_dir $rpath/exons
+
+## Generate an unaligned multi-FASTA file for each gene (only introns)
+hybpiper retrieve_sequences intron -t_dna $tfile --sample_names $namelist --fasta_dir $rpath/introns
+
+## Generate an unaligned multi-FASTA file for each gene (only introns)
+hybpiper retrieve_sequences supercontig -t_dna $tfile --sample_names $namelist --fasta_dir $rpath/supercontig
+
+## Move results from temporary folder to scratch
+cp -r fasta_files/* ~/scratch/private/sauvagesieae/hybpiper
+echo The End!

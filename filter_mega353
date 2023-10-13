@@ -1,0 +1,36 @@
+#!/bin/bash
+
+#SBATCH --job-name=ochn_filter_mega353
+#SBATCH --partition=short
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=1G
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+# To maximise computational efficiency and to enable the best possible locus recovery from Angiosperms353 capture data the script filter_mega353.py
+# is used to subsample the mega353.fasta file based on user-selected taxa or taxon groups. In this case were included 9 samples from 1KP within Malpighiales
+# including 2 Ochnaceae, 1 Clusiaceae, 1 Hypericaceae, 1 Calophyllaceae, 1 Linaceae, 1 Malpighiaceae, 1 Euphorbiaceae, 1 Celastraceae, 1 Pandaceae as outgroup. 
+# this scripts ran for 1min with 1 thread and using 0.04G of memory
+
+###########
+# COMMANDS
+###########
+
+## Activate conda environment
+source /home/sreinale/.bashrc
+source activate hybpiper
+
+## Go to the folder containing the mega353 fasta file
+cd ~/scratch/apps/conda/envs/hybpiper/NewTargets
+
+## Path to filtered target file
+rtarget=~/scratch/private/sauvagesieae/hybpiper/new_targets
+
+## run filter script
+python filter_mega353.py mega353.fasta \
+       $rtarget/malpighiales_selected.txt \
+       -filtered_target_file $rtarget/mega353_filter.fasta \
+       -report_filename $rtarget/mega353_filter_report.csv

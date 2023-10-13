@@ -1,0 +1,23 @@
+#!/bin/bash
+
+#SBATCH --job-name=models
+#SBATCH --partition=short
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=1G
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+## These commands extract the name of the best substitution model for each gene from the IQtree output
+
+###########
+# COMMANDS
+###########
+
+cd ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/subs_model
+
+grep Best-fit *.iqtree > best_fit_models_summ.txt
+
+sed -i 's/_alg_clean.fasta.iqtree//g' best_fit_models_summ.txt

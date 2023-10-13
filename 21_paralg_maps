@@ -1,0 +1,31 @@
+#!/bin/bash
+
+#SBATCH --job-name=p-maps
+#SBATCH --partition=short
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=1G
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+## Run R script to extract sequence IDs from each gene-tree and write a map file for ASTRAL
+
+###########
+# COMMANDS
+###########
+
+## Create an output folder
+mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/paralog_maps
+
+## Activate conda environment
+source /home/sreinale/.bashrc
+source activate renv
+
+## Run r script
+Rscript --vanilla multiseq_map.R
+
+## Merge all maps in a single file
+cd ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/paralog_maps
+cat *.map | sort | uniq > multiseqID_all.map

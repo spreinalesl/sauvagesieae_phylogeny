@@ -1,0 +1,67 @@
+#!/bin/bash
+
+#SBATCH --job-name=ochn_fastp
+#SBATCH --partition=long
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=8G
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+# for paired-end (PE) data, you should specify read1 input by -i or --in1, and read1 output by -o or --out1, read2 input by -I or --in2, and read2 output by -O or --out2
+# The function --correction is based on overlapping detection, which has adjustable parameters overlap_len_require (default 30),
+# overlap_diff_limit (default 5) and overlap_diff_percent_limit (default 20%). Nevertheless, fastp-filtered data contains no suspercted adapters when 4 or fewer mismatches are allowed.
+# Use -s or --split to specify how many files you want to have.
+# By default, fastp uses 1/20 reads for counting overrepresented sequences
+# output options:
+# --out1 and --out2 will be the reads that cannot be merged successfully, but both pass all the filters.
+# --unpaired1 will be the reads that cannot be merged, read1 passes filters but read2 doesn't. --unpaired2 viceversa.
+# --failed_out can still be given to store the reads (either merged or unmerged) failed to passing filters.
+# --merged_out shouuld be given to specify the file to store merged reads
+# fastp considers one read as duplicated only if its all base pairs are identical as another one.
+# quality filtering is enabled by default. phred quality >=Q15 is qualified (chenged by 20); 40% of bases are allowed to be unqualified; if one read's number of N base is >5,
+# then this read/pair is discarded.
+# length filtering is enabled by default. Reads shorter than 15 (changed by 30) will be discarded.
+# If --cut_right (SLIDINGWINDOW) is enabled, then there is no need to enable --cut_tail (TRAILIND), since the former is more aggressive.
+# If --cut_right is enabled together with --cut_front (LEADING), --cut_front will be performed first before --cut_right to avoid dropping whole reads due to the low quality starting bases.
+# For both, default window_size 4 and default mean_quality 20.
+# According to the documentation duplicate accuracy level 4 requires 8GB of memory. This analysis ran for 1h49min using 16 threads and 5.54G memory
+
+###########
+# COMMANDS
+###########
+mkdir -p ../sauvagesieae/fastp
+mkdir -p ../sauvagesieae/fastp/unpaired1
+mkdir -p ../sauvagesieae/fastp/unpaired2
+mkdir -p ../sauvagesieae/fastp/pass_merged
+mkdir -p ../sauvagesieae/fastp/pass_unmerg
+
+cd ~/projects/rbgk/users_area/sreinales/
+
+for i in *_1.fastq.gz; do
+
+ base=$(basename ${i} _1.fastq.gz)
+
+ fastp --thread 16 \
+       --in1 ${i} \
+       --in2 ${base}_2.fastq.gz \
+       --out1 ~/scratch/private/sauvagesieae/fastp/pass_unmerg/${base}_1.fastp.fastq.gz \
+       --out2 ~/scratch/private/sauvagesieae/fastp/pass_unmerg/${base}_2.fastp.fastq.gz \
+       --unpaired1 ~/scratch/private/sauvagesieae/fastp/unpaired1/${base}_1.unpaired.fastq.gz \
+       --unpaired2 ~/scratch/private/sauvagesieae/fastp/unpaired2/${base}_2.unpaired.fastq.gz \
+       --merge \
+       --merged_out ~/scratch/private/sauvagesieae/fastp/pass_merged/${base}.merged.fastq.gz \
+       --html ~/scratch/private/sauvagesieae/fastp/fastp.html \
+       --overrepresentation_analysis \
+       --dedup \
+       --detect_adapter_for_pe \
+       --adapter_fasta ~/scratch/private/sauvagesieae/fastp/adaptor_seqs.fas \
+       --correction \
+       --overlap_diff_limit 4 \
+       --cut_right \
+       --cut_front \
+       --qualified_quality_phred 20 \
+       --length_required 30 > ~/scratch/private/sauvagesieae/fastp/fastp.outerr 2>&1
+done

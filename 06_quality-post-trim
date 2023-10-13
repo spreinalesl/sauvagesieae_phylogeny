@@ -1,0 +1,37 @@
+#!/bin/bash
+
+#SBATCH --job-name=trimm-post
+#SBATCH --partition=short
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=4G
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+# The previous analysis took 2.56G and ran for 34min to process 192 PE files with ca. 3M reads each.
+
+###########
+# COMMANDS
+###########
+
+## Create folders
+#pname=addseqs_schnkit
+pname=addseqs_schnkit
+
+mkdir -p ~/scratch/private/sauvagesieae/quality-post-trim/
+mkdir -p ~/scratch/private/sauvagesieae/quality-post-trim/$pname
+mkdir -p ~/scratch/private/sauvagesieae/quality-post-trim/$pname/fastqc_$pname
+
+## Define paths
+dpath=~/scratch/private/sauvagesieae/trimmomatic/$pname/trim_paired
+rpath=~/scratch/private/sauvagesieae/quality-post-trim/$pname/fastqc_$pname
+
+## Run fastqc
+
+fastqc $dpath/*.fastq.gz -t ${SLURM_CPUS_PER_TASK} -o $rpath > $rpath/fastqc-trim.outerr 2>&1
+
+## multiQC
+
+multiqc $rpath/*fastqc.zip -o $rpath > $rpath/multiqc-trim.outerr 2>&1

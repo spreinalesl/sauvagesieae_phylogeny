@@ -1,0 +1,42 @@
+#!/bin/bash
+
+#SBATCH --job-name=ochn_check_target
+#SBATCH --partition=short
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=1G
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+# --sliding_window_size 50 AA or 100 nucleotides (default)
+# --complexity_minimum_threshold 3.0 for proteins of 1.5 for nucleotides (default)
+# Custom target files were produced combining the angiosperm353 target file and the exon seqs produced by Shah et al. 2021 using a353 and Ochnaceae kit
+# see R script for further details
+
+###########
+# COMMANDS
+###########
+
+## Activate conda environment
+source /home/sreinale/.bashrc
+source activate hybpiper
+
+## Run check script for ochnaceae custom target file
+cd ~/scratch/private/sauvagesieae/hybpiper/new_targets/
+
+## Check target files .faa
+#for i in `ls *.faa`; do
+# name=sed 's/.faa//g' $i
+# hybpiper check_targetfile --targetfile_aa $i \
+#                           --run_profiler > check_$i.outerr 2>&1
+#done
+
+## For only one
+#hybpiper check_targetfile --targetfile_aa a353_plus_crop.faa \
+#                          --run_profiler > check_a353_plus_crop.outerr 2>&1
+
+## Check target files .fasta
+hybpiper check_targetfile --targetfile_dna OCHNA-input-seq_Targets_DNA_BaitKit_edit_crop.fas \
+                          --run_profiler > check_OCHNA_filter.outerr 2>&1

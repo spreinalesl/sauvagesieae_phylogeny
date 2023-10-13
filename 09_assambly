@@ -1,0 +1,79 @@
+#!/bin/bash
+
+#SBATCH --job-name=assembly
+#SBATCH --partition=short
+#SBATCH --array=0-1
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=8G
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+## Hybpiper should be ran on a local scratch directory because HybPiper produces A LOT of temporal files and folders.
+## See https://help.cropdiversity.ac.uk/data-storage.html#local-scratch
+## It's possible to leave call input files from the shared scratch directory and only produce new output on local scratch.
+## But it's easier to run gunzip in the local disk, so, fisrt copy all target files in the local disk. gunzip will remove the original file keeping just the unziped
+## Just remember to copy any results back to shared storage at the end of the run, because the contents are automatically erased when the job ends.
+## HybPiper maps reads using BLASTx for default (if --bwa or --diamond are not defined)
+## --run_intronerate to recover fasta files for supercontigs with introns (if present), and introns-only
+## Example of running HybPiper on a cluster in https://github.com/mossmatters/HybPiper/wiki/HPC. But I didnt find cleanup.py
+## The mean cpu time to assamble XX M reads was XX using 12 threads and XX memory. 15 tasks were cancelled due to insufficient memory. So,all samples  were ran again with 24G.
+## After inceasing the memory, one sample failed again, so those samples were ran with 30G and fail again. The fainal memory requirement for XX reads was XX.
+
+## This test aims to compare the enrichment efficiency using different target files. It is run on a subsample.
+
+###########
+# COMMANDS
+###########
+
+## Activate conda environment
+source /home/sreinale/.bashrc
+source activate hybpiper
+
+## Define paths
+
+# Name of probe set
+pname=transcripts
+
+# Data
+filePath=~/scratch/private/sauvagesieae/trimmomatic/$pname/trim_paired
+
+# Results
+mkdir -p ~/scratch/private/sauvagesieae/hybpiper
+mkdir -p ~/scratch/private/sauvagesieae/hybpiper/$pname
+mkdir -p ~/scratch/private/sauvagesieae/hybpiper/$pname/schn
+
+resultsPath=~/scratch/private/sauvagesieae/hybpiper/$pname/schn
+
+## Go to the local disk
+cd $TMPDIR
+
+## Define namelist file
+namelist=~/scratch/private/sauvagesieae/namelist_trans.txt
+
+## Define variable to read the sample list and iterate over each element using the SLURM_ARRAY_TASK_ID variable
+sample_list=($(cat $namelist))
+sample=(${sample_list[$SLURM_ARRAY_TASK_ID]})
+
+## Copy trimmed and filtered paired-sequences from scratch to local disk
+cp -r $filePath/$sample*.fastq.gz ./
+
+## First unzip the two files per sample
+gunzip $sample*.fastq.gz
+
+## Define target file
+tfile=~/scratch/private/sauvagesieae/hybpiper/new_targets/OCHNA-input-seq_Targets_DNA_BaitKit_edit_crop.fas
+
+## Run hybpiper assamble
+hybpiper assemble --readfiles $sample*.trim.fastq \
+                  --targetfile_dna $tfile \
+                  --prefix $sample \
+                  --bwa \
+                  --run_intronerate \
+                  --cpu ${SLURM_CPUS_PER_TASK}
+
+## Copy results back to the scratch
+cp -r -v $sample $resultsPath/$sample
+rm -r $sample
