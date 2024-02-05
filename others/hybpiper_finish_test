@@ -1,0 +1,1 @@
+grep Finished slurm-* > finish_test.log

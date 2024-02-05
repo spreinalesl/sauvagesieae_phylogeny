@@ -1,0 +1,47 @@
+#!/bin/bash
+
+#SBATCH --job-name=paralog_trees
+#SBATCH --partition=medium
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=6G
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+## These commands create individual trees directly from a *.paralogs_all.fasta using mafft auto to align and FastTree to reconstruct the phylogeny.
+
+###########
+# COMMANDS
+###########
+
+## Activate conda environment
+source /home/sreinale/.bashrc
+source activate hybpiper
+
+## Fasta files
+pname=schn
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/paralogs/$pname
+
+## Create a folder to save trees for each gen
+mkdir -p $fpath/trees
+rpath=$fpath/trees
+
+## Path to file with a list of genes flaged by hybpiper as containing paralogs
+logpath=$fpath/paralogs_above_threshold_report.txt
+
+## For all genes with paralogous sequences, construct a fast tree to assess paralogs behavior
+cd $fpath/paralogs_all
+
+for i in `ls *.fasta`; do
+ STR=$(cat $logpath)
+ SUB=${i:0:8}
+ if [[ "$STR" == *"$SUB"* ]]; then
+  echo gene $SUB has paralogous sequences
+  cat $i | mafft --auto - | fasttree -nt -gtr > $rpath/$i.tre
+  echo tree for $SUB has been saved
+ fi
+done
+
+echo The End!

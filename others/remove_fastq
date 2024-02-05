@@ -1,0 +1,27 @@
+#!/bin/bash
+
+
+#############
+## NOTES
+#############
+
+# RUN this script using `bash remove_fastq > ~/scratch/private/sauvagesieae/hybpiper/remove_fastq.log 2>&1`
+
+
+#############
+## COMMANDS
+#############
+
+path=~/scratch/private/sauvagesieae/hybpiper/target_test/mega353_filtered_bwa
+
+cd $path
+
+for dir in sreinale_*/; do
+ cd $dir
+# echo $dir
+# echo `ls`
+# echo `tail hybpiper.outerr`
+ rm -v *.fastq
+ mv SPRL* ../
+ cd ../
+done

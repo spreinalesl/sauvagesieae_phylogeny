@@ -1,0 +1,59 @@
+#!/bin/bash
+
+#SBATCH --job-name=ochn_assembly
+#SBATCH --partition=long
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=42G
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+## Hybpiper should be ran on a local scratch directory because HybPiper produces A LOT of temporal files and folders.
+## See https://help.cropdiversity.ac.uk/data-storage.html#local-scratch
+## It's possible to leave call input files from the shared scratch directory and only produce new output on local scratch.
+## But it's easier to run gunzip in the local disk, so, fisrt copy all target files in the local disk. gunzip will remove the original file keeping just the unziped
+## Just remember to copy any results back to shared storage at the end of a jobârun, because the contents are automatically erased when the job ends.
+## HybPiper maps reads using BLASTx for default (if --bwa or --diamond are not defined)
+## --run_intronerate to recover fasta files for supercontigs with introns (if present), and introns-only
+## Example of running HybPiper on a cluster in https://github.com/mossmatters/HybPiper/wiki/HPC. But I didnt find cleanup.py
+## The mean cpu time for 96 samples was containing XX M reads in mean. 15 tasks were cancelled and they were cancelled due to insufficient memory. So,all samples  were ran again with 24G.
+## After inceasing the memory, one sample failed again, so those samples were ran with 30G.
+
+###########
+# COMMANDS
+###########
+
+## Activate conda environment
+source /home/sreinale/.bashrc
+source activate hybpiper
+
+## Define paths
+filePath=~/scratch/private/sauvagesieae/trimmomatic/trim_paired
+resultsPath=~/scratch/private/sauvagesieae/hybpiper
+
+## Go to the local disk
+cd $TMPDIR
+
+## Define variable to read the sample list and iterate over each element using the SLURM_ARRAY_TASK_ID variable
+sample=SPRL_260
+
+## Copy trimmed and filtered paired-sequences from scratch to local disk
+cp -r $filePath/$sample*.fastq.gz ./
+
+## First unzip the two files per sample
+gunzip $sample*.fastq.gz
+
+## Test array index
+echo $sample > $resultsPath/array_test.outerr
+
+## Run hybpiper assamble
+hybpiper assemble --readfiles $sample*.trim.fastq \
+                  --targetfile_aa $resultsPath/new_targets/newTarget_ochn_fixed.faa \
+                  --prefix $sample \
+                  --run_intronerate \
+                  --cpu ${SLURM_CPUS_PER_TASK} > hybpiper_$sample.outerr 2>&1
+
+## Copy just changed files back to the scratch (with symlinks as symlinks)
+rsync -rltv $TMPDIR $resultsPath

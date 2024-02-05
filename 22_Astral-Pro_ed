@@ -1,0 +1,75 @@
+#!/bin/bash
+
+#SBATCH --job-name=astral-pro
+#SBATCH --partition=medium
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=8G
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+## Options -r ans -s run with more rounds of placement for ensured optimality (default is 4 and 4)
+## To place taxa on an existing fully resolved species tree, use -c SPECIES_TREE_IN_NEWICK_FORMAT
+## Option -u 0 to compute species tree topology only. Option -u 2 to add support and local-PP for all three resolutions of each branch
+
+###########
+# COMMANDS
+###########
+
+## Input trees
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/BS10_MLtrees
+
+## iterate probes
+#probe=("a353" "schn")
+probe=("all")
+
+for i in ${probe[@]}; do
+
+ ## Output path
+ mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/astral-pro
+ mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/astral-pro/ortholgs
+ mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/astral-pro/ortholgs/$i
+ rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/astral-pro/ortholgs/$i
+
+ ## Merge all gene trees in a single file
+ cd $fpath
+
+ ## iterate BS10 gtrees
+
+ for j in *_BS10.tre; do
+  gene=$(echo $j | sed 's/_BS10.tre//g')
+
+  ## selected genes
+  glistpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/get_seqs_summ/orthologs_$i.txt
+  if grep -Fxq $gene $glistpath; then
+    cat $j >> $rpath/sauv_ortlgs_"$i"_BS10_gtrees.tre
+  fi
+ done
+
+ ## Path to multi-sequence IDs map
+ msID_map=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/paralog_maps/multiseqID_all.map
+
+ ## Go to output path
+ cd $rpath
+
+ ## Run Astral-pro withouth annotations
+ ~/scratch/apps/addprograms/ASTER/bin/astral-pro -t ${SLURM_CPUS_PER_TASK} \
+                                                 -r 16 -s 16 \
+                                                 -u 0 \
+                                                 -a $msID_map \
+                                                 -o sauv_ortlgs_"$i"_BS10_sptree.tre \
+                                                 -i sauv_ortlgs_"$i"_BS10_gtrees.tre 2>sauv_ortlgs_"$i"_BS10_sptree.log
+
+ ## Run Astral-pro with annotations
+ ~/scratch/apps/addprograms/ASTER/bin/astral-pro -t ${SLURM_CPUS_PER_TASK} \
+                                                 -r 16 -s 16 \
+                                                 -u 2 \
+                                                 -a $msID_map \
+                                                 -o sauv_ortlgs_"$i"_BS10_sptree_annot.tre \
+                                                 -i sauv_ortlgs_"$i"_BS10_gtrees.tre 2>sauv_ortlgs_"$i"_BS10_sptree_annot.log
+
+ echo Astral-pro finished! for probeset $i
+
+done

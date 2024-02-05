@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --job-name=astral-pro
-#SBATCH --partition=short
+#SBATCH --partition=medium
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=8G
 #SBATCH --mail-user=s.reinales@kew.org
@@ -23,11 +23,11 @@ fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/BS10_MLtre
 
 ## Output path
 mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/astral-pro
-rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/astral-pro
+rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/astral-pro/re-run
 
 ## Merge all gene trees in a single file
 cd $fpath
-cat *.tre > $rpath/sauv_prlgs_all_BS10_gtrees.tre
+cat *BS10.tre > $rpath/sauv_prlgs_all_BS10_gtrees.tre
 
 ## Path to multi-sequence IDs map
 msID_map=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/paralog_maps/multiseqID_all.map

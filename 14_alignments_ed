@@ -1,0 +1,53 @@
+#!/bin/bash
+
+#SBATCH --job-name=mafft
+#SBATCH --partition=medium
+#SBATCH --array=0-609%100
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=12G
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+## Align DNA sequences for each gene contained in *.paralogs_all.fasta file, using the algorith E-INS-i inplemented in mafft. This algorithm is suitable for  to align multiple cDNAs
+## and multiple genomic sequences of a gene from closely related species, which has several conserved motifs embedded in long unalignable regions. As E-INS-i has the minimum assumption
+## of the three methods, this is recommended if the nature of sequences to be aligned is not clear.
+## Most genes run well with 8 to 12 G of memory. Nevetheless, genes with few samples and large amount of missing data are difficult to  align. Consequentlyl, they need more memory.
+## For g2009517 and g2026803 60G were necessary. For gene 4527 after testing with up to 60 G of memory and using the --oldgenafpair it was imposible to align using the E-INS-i algorithm,
+## then, I opted to use local pair algorithm.(THOSE PROBLEMATIC GENES WERE REMOVED FROM THE ANALYSIS)
+
+###########
+# COMMANDS
+###########
+
+## Activate conda environment (because mafft was installed as part of hybpiper)
+source /home/sreinale/.bashrc
+source activate hybpiper
+
+## Output path
+mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments
+
+## Define variable to list fasta files and iterate over each element using the SLURM_ARRAY_TASK_ID variable
+## Path to a list of selected genes (all schn plus a353 genes with more than 25% of taxa represented)
+glistpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/get_seqs_summ/selected_genes.txt
+gene_list=($(cat $glistpath))
+gene=(${gene_list[$SLURM_ARRAY_TASK_ID]})
+
+## Run mafft just for selected genes
+
+probes=("a353" "schn")
+
+for i in ${probes[@]}; do
+ test=$(ls ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/paralogs/$i/paralogs_all | grep ^"$gene"_)
+ if [ -n "$test" ]; then
+  fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/paralogs/$i/paralogs_all
+  rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$i
+ fi
+done
+
+## Run mafft
+mafft --thread ${SLURM_CPUS_PER_TASK} --genafpair --adjustdirectionaccurately --maxiterate 1000 $fpath/$gene*.fasta > $rpath/"$gene"_align.fasta
+
+echo MAFFT finished for gene $gene

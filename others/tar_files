@@ -1,0 +1,43 @@
+#!/bin/bash
+
+#SBATCH --job-name=tar
+#SBATCH --partition=short
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=1G
+#SBATCH --mail-user=spreinalesl@gmail.com
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+## These commands create a single .tar.gz file containing all of the contents of the specified directory and 
+## z option compress the TAR file with GZIP
+
+###########
+# COMMANDS
+###########
+
+## Folder to compress
+#fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/addseqs_a353/blastx
+#fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees
+#fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments
+#fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/addseqs_a353
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/addseqs_schn
+
+## output name
+#outname=blastx_results.tar.gz
+#outname=subs_models_compress.tar.gz
+#outname=BS10_MLtrees_compress.tar.gz
+#outname=raxml_trees_compress.tar.gz
+#outname=paralog_maps.tar.gz
+#outname=all_paralogs.tar.gz
+outname=assembly_results.tar.gz
+#outname=paralog_seqs.tar.gz
+
+## Compress
+cd $fpath
+
+#tar cvfz $fpath/$outname $fpath/paralogs_all $fpath/paralogs_no_chimeras
+tar cvfz $outname SRR*
+
+echo File compression completed!
