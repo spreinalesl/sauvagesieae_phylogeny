@@ -11,6 +11,7 @@
 # NOTES
 ###########
 ## Run R script to extract sequence IDs from each gene-tree and write a map file for ASTRAL
+# The --vanilla tells Rscript to run without saving or restoring anything in the process
 
 ###########
 # COMMANDS
