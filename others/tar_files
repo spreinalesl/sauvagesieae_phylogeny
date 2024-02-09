@@ -22,7 +22,8 @@
 #fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees
 #fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments
 #fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/addseqs_a353
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/addseqs_schn
+#fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/addseqs_schn
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/sauv_sprl/a353
 
 ## output name
 #outname=blastx_results.tar.gz
@@ -37,7 +38,11 @@ outname=assembly_results.tar.gz
 ## Compress
 cd $fpath
 
-#tar cvfz $fpath/$outname $fpath/paralogs_all $fpath/paralogs_no_chimeras
-tar cvfz $outname SRR*
+#tar cvfz $outname paralogs_all paralogs_no_chimeras
+tar cvfz $outname SPRL_*
 
 echo File compression completed!
+
+## Check compressed file integrity
+echo Check Integrity
+tar -tf $outname &> /dev/null; echo $?

@@ -1,0 +1,24 @@
+#!/bin/bash
+
+#SBATCH --job-name=outliers
+#SBATCH --partition=short
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=1G
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+## Run R script to remove outliers from fasta files
+
+###########
+# COMMANDS
+###########
+
+## Activate conda environment
+source /home/sreinale/.bashrc
+source activate renv
+
+## Run r script
+Rscript --vanilla remove_outliers.R

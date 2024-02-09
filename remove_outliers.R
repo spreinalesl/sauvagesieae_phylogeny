@@ -76,7 +76,7 @@ for(i in list.files(fpath, pattern = "\\.FNA")){
     write(fastaf, file = paste0(fpath, gsub(i, pattern = "\\.FNA", replacement = "_ed.FNA"), collapse = ""))
   }
   
-  cat("Editing", i, "\n")
+  cat("Editing", probename, i, "\n")
   
   ## lstats contains final number of samples per loci, samples removed (i.e. extreme values),
   # and max and min length allowed for this alignment. 
@@ -88,4 +88,8 @@ for(i in list.files(fpath, pattern = "\\.FNA")){
   write(paste(gsub(i, pattern = "\\.FNA", replacement = ""), lstats,
                paste0(samplesToRemove, collapse = ","), sep = "\t"),
         file = paste0(outpath, out2, collapse = ""), sep = "\n", append = T)
+
+ cat("Writing summary table for ", i, "\n")
 }
+
+cat("END of the run")
