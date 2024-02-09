@@ -3,9 +3,6 @@
 ## outliers from the alignments
 ###########################################
 
-fpath <- "~/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/hybpiper/fasta_files/a353/exons/"
-outpath <- "~/Documents/"
-
 ## Packages
 library(ape)
 
@@ -26,14 +23,15 @@ ffiles  <- list.files(fpath, pattern = "\\.FNA")
 
 # To save summary
 lstats <- data.frame(loci = vector(),
-                     sample_num = vector(),
+                     smp_num_org = vector(),
+                     smp_num = vector(),
                      rm_samples = vector(),
                      out_num = vector(),
                      ambp_num = vector(),
                      max_length = vector(),
                      min_allw_length = vector(),
                      mean_length = vector(),
-                     rm_samples_names = vector())
+                     rm_smp_names = vector())
 
 # Iterate files
 for(i in ffiles){
@@ -44,12 +42,36 @@ for(i in ffiles){
   ## Read fasta file
   fasta <- read.FASTA(paste0(fpath, i, collapse = ""))
   
+  ## Extract number of samples included in the fasta file
+  smp_num_org <- length(fasta)
+  
   ## Skip the current iteration because the alignment is empty
   if(length(fasta) == 0){
     write(locus_name, file = paste0(outpath, out1, collapse = ""), sep = "\n", append = T)
     next
   }
   
+  ## Count N in each sequence and save which have more than 80% of its length 
+  # of ambiguous positions (N)
+  ambp <- vector()
+  
+  for(j in 1:length(fasta)){
+    
+    if(length(which(fasta[[j]] == "f0"))/length(fasta[[j]]) > 0.8){
+      ambp <- c(ambp, j)
+    }
+  }
+  
+  ## If there are any sequence with more than 80% of N
+  # remove it from the fasta before the estimation of
+  # median length of the sequences
+  if(length(ambp) > 0){
+    smp_ambp <- names(fasta[ambp])
+    fasta <- fasta[-ambp]
+  }else{
+    smp_ambp <- vector()
+  }
+
   ## Calculate extreme outliers using the quantile approach
   # Values above Q3+1.5xIQR or below Q1-1.5xIQR are considered as outliers.
   # Values above Q3+3xIQR or below Q1-3xIQR are considered as extreme outliers.
@@ -72,60 +94,43 @@ for(i in ffiles){
   }
   
   ## List of samples with sequences shorter than the min allowed length (extreme outliers)
-  samples_extremv <- which(seq_length < minv)
+  smp_extremv <- names(which(seq_length < minv))
+  extremvp <- which(names(fasta) %in% smp_extremv) 
   
-  ## Count N in each sequence and save which have more than 80% of its length 
-  # of ambiguous positions (N)
-  samples_ambp <- vector()
-  for(j in 1:length(fasta)){
-    ambp <- length(which(fasta[[j]] == "f0"))
-    if(ambp/length(fasta[[j]]) > 0.8){
-      samples_ambp <- c(samples_ambp, names(fasta[j]))
-    }
-  }
-  
-  ## If there are samples with extreme values or samples
-  ## with many ambiguous positions, remove them and write
+  ## If there are samples with extreme values remove them and write
   ## edited fasta files
   
-  if(length(samples_extremv) > 0 | length(samples_ambp) > 0){
-    
-    ## List of samples to remove
-    samplesToRemove <- unique(c(names(samples_extremv), names(samples_ambp)))
-    to_remove <- which(names(fasta) %in% samplesToRemove)
-    
-    ## Write edited fasta file,
-    # loci without outliers are written as well, just to an easy handling forward
-    write.FASTA(fasta[-to_remove],
-                file = paste0(fpath, gsub(i, pattern = "\\.FNA", replacement = "_ed.FNA"), collapse = ""))
-    
-    ## lstats contains final number of samples per loci, samples removed (i.e. extreme values),
-    ## samples removed for N, and max and min length allowed for this alignment.
-    snames <- unlist(lapply(X = samplesToRemove,
-                            FUN = function(x) strsplit(x, split = " ")[[1]][1]))
-    snames <- gsub(snames, pattern = ">", replacement = "")
-    
-    lstats <- rbind(lstats, data.frame(loci = locus_name,
-                              sample_num = length(fasta) - length(samplesToRemove),
-                              rm_samples = length(samples_extremv) + length(samples_ambp),
-                              out_num = length(samples_extremv),
-                              ambp_num = length(samples_ambp),
-                              max_length = max(seq_length),
-                              min_allw_length = minv[[1]],
-                              mean_length = ceiling(mean(seq_length)),
-                              rm_samples_names = paste0(snames, collapse = ",")))
-  } else{
-    lstats <- rbind(lstats, data.frame(loci = locus_name,
-                                       sample_num = length(fasta),
-                                       rm_samples = 0, out_num = 0, ambp_num = 0,
-                                       max_length = max(seq_length),
-                                       min_allw_length = minv[[1]],
-                                       mean_length = ceiling(mean(seq_length)),
-                                       rm_samples_names = NA))
-    
-     write.FASTA(fasta, file = paste0(fpath, gsub(i, pattern = "\\.FNA", replacement = "_ed.FNA"), collapse = ""))
+  if(length(smp_extremv) > 0){
+    fasta <- fasta[-extremvp]
+  }
+   
+  ## Extract a list of samples to remove
+  samplesToRemove <- unique(c(smp_extremv, smp_ambp))
+  
+  if(length(samplesToRemove) > 0){
+    samplesToRemove <- unlist(lapply(X = samplesToRemove,
+                                     FUN = function(x) strsplit(x, split = " ")[[1]][1]))
+    samplesToRemove <- gsub(samplesToRemove, pattern = ">", replacement = "")  
   }
   
+  ## lstats contains final number of samples per loci, samples removed (i.e. extreme values),
+  # samples removed for N, and max and min length allowed for this alignment.  
+  lstats <- rbind(lstats, data.frame(loci = locus_name,
+                                     smp_num_org = smp_num_org,
+                                     smp_num = length(fasta),
+                                     rm_samples = length(smp_extremv) + length(smp_ambp),
+                                     out_num = length(smp_extremv),
+                                     ambp_num = length(smp_ambp),
+                                     max_length = max(seq_length),
+                                     min_allw_length = minv[[1]],
+                                     mean_length = ceiling(mean(seq_length)),
+                                     rm_smp_names = paste0(samplesToRemove, collapse = ",")))
+    
+  ## Write edited fasta. Loci which no samples were removed, are written as well just to 
+  # ease handling of the fasta files in the forward analyses
+  write.dna(fasta, format = "fasta", nbcol = 1, colsep = "", colw = 60, indent = 0, blocksep = 0,
+            file = paste0(fpath, gsub(i, pattern = "\\.FNA", replacement = "_ed.FNA"), collapse = ""))
+
   cat("Editing", i, "\n")
 }
 
