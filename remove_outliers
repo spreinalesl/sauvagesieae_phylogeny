@@ -21,4 +21,6 @@ source /home/sreinale/.bashrc
 source activate renv
 
 ## Run r script
-Rscript --vanilla remove_outliers.R
+Rscript --vanilla remove_outliers_ape.R
+
+echo END run!

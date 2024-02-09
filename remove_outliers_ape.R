@@ -7,7 +7,7 @@
 library(ape)
 
 ## Input paths
-probename <- "a353"
+probename <- "schn"
 type <- "exons"
 fpath <- paste0("~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/fasta_files",
                 "/", probename, "/", type, "/", collapse = "")
