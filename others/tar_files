@@ -23,8 +23,8 @@
 #fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments
 #fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/addseqs_a353
 #fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/addseqs_schn
-#fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/sauv_sprl/a353
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/sauv_sprl/schn
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/sauv_sprl/a353
+#fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/sauv_sprl/schn
 
 ## output name
 #outname=blastx_results.tar.gz
@@ -32,15 +32,15 @@ fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/sauv_sp
 #outname=BS10_MLtrees_compress.tar.gz
 #outname=raxml_trees_compress.tar.gz
 #outname=paralog_maps.tar.gz
-#outname=all_paralogs.tar.gz
-outname=assembly_results.tar.gz
+outname=all_paralogs.tar.gz
+#outname=assembly_results.tar.gz
 #outname=paralog_seqs.tar.gz
 
 ## Compress
 cd $fpath
 
-#tar cvfz $outname paralogs_all paralogs_no_chimeras
-tar cvfz $outname SPRL_*
+tar cvfz $outname paralogs_all paralogs_no_chimeras
+#tar cvfz $outname SPRL_*
 
 echo File compression completed!
 
