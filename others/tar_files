@@ -23,8 +23,8 @@
 #fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments
 #fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/addseqs_a353
 #fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/addseqs_schn
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/sauv_sprl/a353
-#fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/sauv_sprl/schn
+#fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/sauv_sprl/a353
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/sauv_sprl/schn
 
 ## output name
 #outname=blastx_results.tar.gz

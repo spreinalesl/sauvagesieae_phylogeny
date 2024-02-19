@@ -18,6 +18,6 @@
 
 cd ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/sauv_sprl/schn
 
-rm -r SPRL_*
+rm -r paralogs_*
 
 echo END!
