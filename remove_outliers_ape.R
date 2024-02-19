@@ -3,10 +3,6 @@
 ## outliers from the alignments
 ###########################################
 
-fpath <- "/home/spreinalesl/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/hybpiper/fasta_files/a353/exons/"
-outpath <- "/home/spreinalesl/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/hybpiper/filtering_test/" 
-namespath <- "/home/spreinalesl/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/sampling/"
-  
 ## Packages
 library(ape)
 
@@ -14,6 +10,7 @@ library(ape)
 namesfile <- "sppidTOsppname.csv"
 probename <- "a353"
 type <- "exons"
+namespath <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/name_list"
 fpath <- paste0("~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/fasta_files",
                 "/", probename, "/", type, "/", collapse = "")
 
@@ -68,21 +65,37 @@ for(i in ffiles){
     next
   }
   
-  ## Count N in each sequence and save which have more than 80% of its length 
-  # of ambiguous positions (N)
+  ## Check if more than 50% of the sequence length is unknown positions (N), if TRUE, count the number of
+  ## known positions (A,C,T,G) between Ns. Tag sequences having less than 150 known positions
+  ## between Ns. 
   ambp <- vector()
   length_ambp <- vector()
   
   for(j in 1:length(fasta)){
-    if(length(which(fasta[[j]] == "f0"))/length(fasta[[j]]) > 0.8){
-      ambp <- c(ambp, j)
-      length_ambp <- length(fasta[[j]])
+    sq <- fasta[[j]]
+    psum <- 0
+    
+    if(length(which(fasta[[j]] == "f0"))/length(fasta[[j]]) > 0.5){
+      for(k in sq){
+        if(!(k == "f0")){
+          psum <- psum + 1
+          
+          if(psum > 150){
+            break
+          }
+          
+        }else{psum <- 0}
+      }
+      
+      if(psum < 150){
+        ambp <- c(ambp, j)
+        length_ambp <- length(fasta[[j]])
+      }
     }
   }
-  
-  ## If there are any sequence with more than 80% of N
-  # remove it from the fasta before the estimation of
-  # median length of the sequences
+    
+  ## Remove sequences having less than 150 known positions between Ns from the fasta
+  # before the estimation of median length of the sequences
   if(length(ambp) > 0){
     smp_ambp <- names(fasta[ambp])
     fasta <- fasta[-ambp]
@@ -90,28 +103,28 @@ for(i in ffiles){
     smp_ambp <- vector()
   }
 
+  ## Calculate sequences length
+  seq_length <- sapply(fasta, FUN = length)
+  
   ## Calculate extreme outliers using the quantile approach
   # Values above Q3+1.5xIQR or below Q1-1.5xIQR are considered as outliers.
   # Values above Q3+3xIQR or below Q1-3xIQR are considered as extreme outliers.
   # Q1 and Q3 are the first and third quartile, IQR is the interquartile range (IQR = Q3 - Q1).
   # Outliers in a boxplot are not considered as troublesome as those considered extreme points
   # and might even be ignored.
-  seq_length <- sapply(fasta, FUN = length)
   #q1 <- quantile(seq_length, probs = 0.25)
   #q3 <- quantile(seq_length, probs = 0.75)
   #diqr <- q3 - q1
   #minv <- floor(q1 - 3*diqr)
   
+  ## Establish 1/4 of the median sequence length for that loci as the minimum allowed seq length,
+  # just if that minimum is shortest than 150 bp. The idea is not to remove sequences that can be
+  # aligned
   minv <- ceiling(median(seq_length)*0.25)
   
-  ## Sequences shorter than minv or shorter than 150 bp, whichever was longer, were removed
-  ## For shorter loci, sequences with at least 80bp will be maintained
-  #if(minv < 150){
-  #  if(median(seq_length) < 650){
-  #    minv <- 80
-  #  }else
-  #    minv <- 150
-  #}
+  if(minv > 150){
+      minv <- 150
+  }
   
   ## List of samples with sequences shorter than the min allowed length (extreme outliers)
   smp_extremv <- names(which(seq_length < minv))
@@ -145,8 +158,8 @@ for(i in ffiles){
     
   ## Write edited fasta. Loci which no samples were removed, are written as well just to 
   # ease handling of the fasta files in the forward analyses
-  #write.dna(fasta, format = "fasta", nbcol = 1, colsep = "", colw = 60, indent = 0, blocksep = 0,
-  #          file = paste0(fpath, gsub(i, pattern = "\\.FNA", replacement = "_ed.FNA"), collapse = ""))
+  write.dna(fasta, format = "fasta", nbcol = 1, colsep = "", colw = 60, indent = 0, blocksep = 0,
+            file = paste0(fpath, gsub(i, pattern = "\\.FNA", replacement = "_ed.FNA"), collapse = ""))
 
   cat("Editing", i, "\n")
 }

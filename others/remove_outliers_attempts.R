@@ -123,3 +123,12 @@ for(i in list.files(fpath, pattern = "\\.FNA")){
                paste0(samplesToRemove, collapse = ","), sep = "\t"),
         file = paste0(outpath, out2, collapse = ""), sep = "\n", append = T)
 }
+
+############################### count N positions ################
+for(j in 1:length(fasta)){
+    
+    if(length(which(fasta[[j]] == "f0"))/length(fasta[[j]]) > 0.8){
+      ambp <- c(ambp, j)
+      length_ambp <- length(fasta[[j]])
+    }
+  }
