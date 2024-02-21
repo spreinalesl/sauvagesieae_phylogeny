@@ -18,6 +18,8 @@ fpath <- paste0("~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpi
 outpath <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/get_seqs_summ/"
 out1 <- paste0("lociNOseqs_", probename, ".txt", collapse = "")
 out2 <- paste0("samplesTOremove_", probename, ".csv", collapse = "")
+out3 <- paste0("rm_samples_", probename, ".csv", collapse = "")
+
 
 ## Read data and iterate fasta files containing all sequences per loci, to
 # remove samples with shortest sequences
@@ -163,6 +165,11 @@ for(i in ffiles){
 
   cat("Editing", i, "\n")
 }
+
+## Extract list of removed samples
+rm_samples_names <- write.table(as.data.frame(table(c(unlist(strsplit(lstats$rm_out_smp_names, split = ",")),
+                                                      unlist(strsplit(lstats$rm_ambp_smp_names, split = ","))))),
+                                file = paste0(outpath, out3, collapse = ""), row.names = F)
 
 ## Write summary table
 write.table(lstats, file = paste0(outpath, out2, collapse = ""), row.names = F)
