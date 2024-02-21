@@ -8,7 +8,7 @@ library(ape)
 
 ## Input paths
 namesfile <- "sppidTOsppname.csv"
-probename <- "schn"
+probename <- "a353"
 type <- "exons"
 namespath <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/name_list/"
 fpath <- paste0("~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/fasta_files",
