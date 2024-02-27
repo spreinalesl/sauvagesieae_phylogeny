@@ -1,0 +1,49 @@
+#!/bin/bash
+
+#SBATCH --job-name=mafft
+#SBATCH --partition=short
+#SBATCH --array=0-340%50
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=12G
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+## Align DNA sequences for each locus using the algorith E-INS-i inplemented in mafft. This algorithm is suitable to align multiple cDNAs
+## and multiple genomic sequences of a gene from closely related species, which has several conserved motifs embedded in long unalignable regions.
+## As E-INS-i has the minimum assumption of the three methods, this is recommended if the nature of sequences to be aligned is not clear.
+## Most genes run well with 8 to 12 G of memory. Nevetheless, genes with few samples and large amount of missing data are difficult to  align
+## Consequentlyl, they need more memory. For g200951 and g2026803 60G were necessary. For gene 4527 after testing with up to 60 G of memory and
+## using the --oldgenafpair it was imposible to align using the E-INS-i algorithm, then, I opted to use local pair algorithm.
+
+###########
+# COMMANDS
+###########
+
+## Activate conda environment (because mafft was installed as part of hybpiper)
+source /home/sreinale/.bashrc
+source activate hybpiper
+
+## Define names
+probe=a353
+mtype=exons
+
+## Output path
+mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/all_$mtype
+rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/all_$mtype
+
+## Define variable to list fasta files and iterate over each element using the SLURM_ARRAY_TASK_ID variable
+## Path to a list of selected genes
+glistpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/get_seqs_summ/selected_genes_all_$probe.txt
+gene_list=($(cat $glistpath))
+gene=(${gene_list[$SLURM_ARRAY_TASK_ID]})
+
+## Define fasta file path
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/fasta_files/$probe/$mtype
+
+## Run mafft
+mafft --thread ${SLURM_CPUS_PER_TASK} --genafpair --adjustdirectionaccurately --maxiterate 1000 $fpath/$gene*.FNA > $rpath/"$gene"_align.fas
+
+echo MAFFT finished for gene $gene
