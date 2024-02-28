@@ -1,0 +1,50 @@
+#!/bin/bash
+
+#SBATCH --job-name=trimal
+#SBATCH --partition=short
+#SBATCH --array=0-610%50
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=1G
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+# Poorly aligned positions were removed with trimAl v1.4.rev22 build[2015-05-21], using the gappyout method.
+# trimAl incorporates three modes for the automated selection of parameters, gappyout, strict and strictplus, which are based on the different
+# use of gap and similarity scores. Moderate amounts of filtering did not seem to have much impact—positive or negative—but can save some computation time
+# The method gappyout seems to generate an alignment accurancy similar to unfiltered methods, and a quite better tree accurancy (Tan et al., 2015),
+# but can save some computation time.
+# - gets trimming summary in an HTML file (-htmlout)
+
+###########
+# COMMANDS
+###########
+
+## Activate conda environment
+source /home/sreinale/.bashrc
+source activate julia
+
+## Define names
+mtype=exons
+
+## Input fasta files
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/all_$mtype
+
+## Output path
+mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/all_$mtype/trimmed_alignm 
+rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/all_$mtype/trimmed_alignm
+
+## Go to the alignments folder
+cd $fpath
+
+## Define variable to list all alignment and iterate over each element using the SLURM_ARRAY_TASK_ID variable
+## Path to a list of selected genes (all schn plus a353 genes with more than 25% of taxa represented)
+gene_list=($(ls * | grep fas$))
+gene=(${gene_list[$SLURM_ARRAY_TASK_ID]})
+
+## Run trimAl
+~/scratch/apps/conda/bin/trimal -in $gene -out $rpath/trimal_$gene -gappyout
+
+echo TrimAl finished for gene $gene

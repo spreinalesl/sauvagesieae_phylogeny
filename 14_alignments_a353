@@ -15,8 +15,9 @@
 ## and multiple genomic sequences of a gene from closely related species, which has several conserved motifs embedded in long unalignable regions.
 ## As E-INS-i has the minimum assumption of the three methods, this is recommended if the nature of sequences to be aligned is not clear.
 ## Most genes run well with 8 to 12 G of memory. Nevetheless, genes with few samples and large amount of missing data are difficult to  align
-## Consequentlyl, they need more memory. For g200951 and g2026803 60G were necessary. For gene 4527 after testing with up to 60 G of memory and
-## using the --oldgenafpair it was imposible to align using the E-INS-i algorithm, then, I opted to use local pair algorithm.
+## Consequentlyl, they need more memory. For gene 4527 after testing with up to 60 G of memory and
+## using the --oldgenafpair it was imposible to align using the E-INS-i algorithm, then, 
+## I removed the following files: 5599, 5634, 4527 and 5421
 
 ###########
 # COMMANDS
