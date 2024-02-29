@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #SBATCH --job-name=iqtree
-#SBATCH --partition=medium
-#SBATCH --array=0-609%20
+#SBATCH --partition=short
+#SBATCH --array=0-610%100
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=1G
 #SBATCH --mail-user=s.reinales@kew.org
@@ -11,55 +11,65 @@
 ###########
 # NOTES
 ###########
-## These commands use IQtree to select the best substitution model for eac gene, to be used as a parameter in RAxML.
-## The ModelFinder (-m MF or -m TESTNEWONLY) option automatically determines best-fit model for your data.
+## These commands use IQtree to select the best substitution model for each gene, to be used as parameter in RAxML.
 ## The ModelFinder option tests the FreeRate model (+I+R) as well.
 ## Option -nt AUTO will tell IQ-TREE to automatically determine the best number of cores given the current data and computer.
 ## Option -ntmax specifies the maximal number of CPU cores -nt AUTO is allowed to allocate.
+## Option -b standard nonparametric bootstrap
+## Option -m MFP key word stands for ModelFinder Plus, which tells IQ-TREE to perform ModelFinder and the remaining analysis using the selected model
 
 ###########
 # COMMANDS
 ###########
 
+## Define names
+mtype=exons
+
 ## Input files: alignments
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/taper
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/all_$mtype/trimmed_alignm
 
 ## Output path
 mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees
-mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/subs_model
-rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/subs_model
+mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/all_$mtype
+mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/all_$mtype/iqtree_plus_models
+rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/all_$mtype/iqtree_plus_models
 
 ## Define variable to list all alignment and iterate over each element using the SLURM_ARRAY_TASK_ID variable
 ## Path to a list of selected genes (all schn plus a353 genes with more than 25% of taxa represented)
-glistpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/get_seqs_summ/selected_genes.txt
-gene_list=($(cat $glistpath))
+gene_list=($(ls $fpath | grep align.fas$))
 gene=(${gene_list[$SLURM_ARRAY_TASK_ID]})
 
-## Go to output folder
+## Go to input-file folder
 cd $fpath
 
 ## Run IQtree
-iqtree -s $gene*.fasta -m MF -mset raxml -merit AICc -nt AUTO -ntmax ${SLURM_CPUS_PER_TASK}
+#iqtree -s $gene -m MF -mset raxml -merit AICc -nt AUTO -ntmax ${SLURM_CPUS_PER_TASK} ## just to find the best model
+iqtree -s $gene -m MFP -merit AICc -mset raxml -b 100 -nt AUTO -ntmax ${SLURM_CPUS_PER_TASK} ## estimate best subs model and tree with BS support
 
-echo Run substitution model for gene $gene
+echo Run tree and substitution model for $gene
 
 ## Move result to output folder
-mv -v "$gene"_alg_clean.fasta.iqtree $rpath
-mv -v "$gene"_alg_clean.fasta.log $rpath
-mv -v "$gene"_alg_clean.fasta.treefile $rpath
+mv -v $gene.iqtree $rpath
+mv -v $gene.log $rpath
+mv -v $gene.treefile $rpath
+mv -v $gene.mldist $rpath
+mv -v $gene.boottrees $rpath
+mv -v $gene.contree $rpath
 
 # For optional output
-test=$(ls | grep "$gene"_alg_clean.fasta.uniqueseq.phy)
+#test=$(ls | grep $gene.uniqueseq.phy)
 
-if [ -n "$test" ]; then
- mv -v "$gene"_alg_clean.fasta.uniqueseq.phy $rpath
-fi
+#if [ -n "$test" ]; then
+# mv -v $gene.uniqueseq.phy $rpath
+#fi
 
 ## Remove check points created by Iqtree because there are unuseful at least for this analysis
 
 test=$(ls | grep $gene | grep gz)
 
 if [ -n "$test" ]; then
- rm -r -v "$gene"_alg_clean.fasta.ckp.gz
- rm -r -v "$gene"_alg_clean.fasta.model.gz
+ rm -r -v $gene.ckp.gz
+ rm -r -v $gene.model.gz
 fi
+
+echo END copy results
