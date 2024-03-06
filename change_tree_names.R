@@ -1,6 +1,6 @@
 ###########################################
-## This script detects and remove extreme 
-## outliers from the alignments
+## This script read trees and change 
+## sample names
 ###########################################
 
 ## Packages
@@ -8,19 +8,17 @@ library(ape)
 
 ## Input paths
 namesfile <- "sppidTOsppname.csv"
-mtype <- "exons"
-fpath <- paste0("~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/fasta_files",
-                "/", probename, "/", type, "/", collapse = "")
+fpath <- paste("~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/fasta_files",
+                "/", probename, "/", type, "/", sep = "")
 
-## Read data and iterate fasta files containing all sequences per loci, to
-# remove samples with shortest sequences
+## Read data and iterate files
 ffiles  <- list.files(fpath, pattern = "\\.FNA")
 
 # Iterate files
 for(i in ffiles){
 
   ## Read tree
-
+ 
 
   ## Change sample names from a ID to spp names file
   smp_names <- read.csv(paste0(namespath, namesfile, collapse = ""), as.is = T)

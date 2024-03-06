@@ -20,7 +20,7 @@ library(ggtree)
 library(gridExtra)
 
 ##  Paths and names
-probe <- "schn"
+probe <- "a353"
 fpath <- paste("/home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/paralogs/", probe, "/trees", sep = "")
 
 ## Read all tree files
