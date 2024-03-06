@@ -16,8 +16,11 @@
 # COMMANDS
 ###########
 
-cd ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/subs_model
+## Define names
+mtype=exons
+
+cd ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/all_$mtype/iqtree_plus_models
 
 grep Best-fit *.iqtree > best_fit_models_summ.txt
 
-sed -i 's/_alg_clean.fasta.iqtree//g' best_fit_models_summ.txt
+sed -i 's/.iqtree//g' best_fit_models_summ.txt

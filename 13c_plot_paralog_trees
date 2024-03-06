@@ -1,0 +1,26 @@
+#!/bin/bash
+
+#SBATCH --job-name=paralog-tree_plots
+#SBATCH --partition=short
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=1G
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+## Run R script to plot trees for all paralogs
+
+###########
+# COMMANDS
+###########
+
+## Activate conda environment
+source /home/sreinale/.bashrc
+source activate renv
+
+## Run r script
+Rscript --vanilla plot_hybpiper_paralog_trees.R
+
+echo END run!

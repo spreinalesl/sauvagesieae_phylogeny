@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #SBATCH --job-name=iqtree
-#SBATCH --partition=short
-#SBATCH --array=0-610%100
+#SBATCH --partition=medium
+#SBATCH --array=0-1223%20
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=1G
 #SBATCH --mail-user=s.reinales@kew.org
@@ -17,6 +17,7 @@
 ## Option -ntmax specifies the maximal number of CPU cores -nt AUTO is allowed to allocate.
 ## Option -b standard nonparametric bootstrap
 ## Option -m MFP key word stands for ModelFinder Plus, which tells IQ-TREE to perform ModelFinder and the remaining analysis using the selected model
+## This analysis uses about 2h per locus, but some locus requires more than 8h to complete bootstrapping, so, run it in the medium queue.
 
 ###########
 # COMMANDS
