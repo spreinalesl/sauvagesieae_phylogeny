@@ -9,7 +9,8 @@
 ######### - the trees files are in the Newick format and have a "paralogs.tre" suffix
 ######### - the trees were reconstructed with FastTree (see https://github.com/mossmatters/HybPiper/wiki/Paralogs for more details);
 ###  other program would work too, but you would need to change the 'pattern' arguments in list.files() and str_remove()
-#### @Leo-Paul Dagallier - 1st Nov. 2022
+#### Modified from: @Leo-Paul Dagallier - 1st Nov. 2022 available on
+### https://github.com/LPDagallier/Phylogenomics_Workshop/blob/master/PHYLOGENY_RECONSTRUCTION/R/plot_hybpiper_paralog_trees.R
 #####################################################################################################################
 
 library(ape)
@@ -28,7 +29,8 @@ filenames <- list.files(path = fpath, pattern = "\\.tre$", full.names = F, recur
 
 ## Open pdf screen
 pdf(paste(fpath, "/paralog_trees.pdf", sep = ""), onefile = TRUE, height = 7, width = 14)
-warning_list <- c()
+warning_list1 <- c()
+warning_list2 <- c()
 pb <- txtProgressBar(min = 0, max = length(files), style = 3, width = 100, char = "=") 
 
 ## Iterate tree files
@@ -38,13 +40,9 @@ for(i in 1:length(files)){
   t_trimmed <- drop.tip(t, tip = t$tip.label[str_which(t$tip.label, pattern = "\\.", negate = T)])
   nsamp <- length(t$tip.label)
   nsamp_trimmed <- length(t_trimmed$tip.label)
-
-  if (nsamp_trimmed < 3) {
-    warning_list <- rbind(warning_list, filenames[i])
-  } else {
-
-    palette <- c("#DD8D29", "#46ACC8", "")
-
+  palette <- c("#DD8D29", "#46ACC8", "")
+  
+  if (nsamp_trimmed > 2) {
     # whole trees:
     lab_size = max(min(c(5,70/nsamp)), 0.2)
     line_size = min(c(0.5, 30/nsamp))
@@ -55,7 +53,7 @@ for(i in 1:length(files)){
     color[which(color != "#46ACC8" & color != "#DD8D29")] <- NA
     p1 <- ggtree(t, layout="equal_angle", size = line_size) + geom_tippoint(color = color) + labs(title = title, size = 0.5)
     p2 <- ggtree(t, size = line_size) + geom_tippoint(color = color, alpha = c(0.7), size = min(5, 100/nsamp)) + geom_tiplab(size = lab_size, color = "black") + geom_treescale(color = "black") + ggexpand(5/nsamp, side = "h")
-
+    
     # trimmed trees:
     lab_size = max(min(c(5,70/nsamp_trimmed)), 0.2)
     line_size = min(c(0.5, 30/nsamp_trimmed))
@@ -66,14 +64,38 @@ for(i in 1:length(files)){
     color[which(color != "#46ACC8" & color != "#DD8D29")] <- NA
     p3 <- ggtree(t_trimmed, layout="equal_angle", size = line_size) + geom_tippoint(color = color) + labs(title = title, size = 0.5)
     p4 <- ggtree(t_trimmed, size = line_size) + geom_tippoint(color = color, alpha = c(0.7), size = min(5, 100/nsamp_trimmed)) + geom_tiplab(size = lab_size, color = "black") + geom_treescale(color = "black") + ggexpand(5/nsamp_trimmed, side = "h")
-
-    # arrange all the plots:
-    grid.arrange(p1, p3, p2, p4)
+    
+  } else {
+    if(nsamp_trimmed > 0){
+      
+      warning_list1 <- rbind(warning_list1, filenames[i])
+      
+      # whole trees:
+      lab_size = max(min(c(5,70/nsamp)), 0.2)
+      line_size = min(c(0.5, 30/nsamp))
+      title = str_remove(string = filenames[i], pattern = "_paralogs.*")
+      color = t$tip.label
+      color[str_which(string = t$tip.label,pattern = ".main")] <- palette[1]
+      color[str_which(string = t$tip.label,pattern = "\\.[:digit:]")] <- palette[2]
+      color[which(color != "#46ACC8" & color != "#DD8D29")] <- NA
+      p1 <- ggtree(t, layout="equal_angle", size = line_size) + geom_tippoint(color = color) + labs(title = title, size = 0.5)
+      p2 <- ggtree(t, size = line_size) + geom_tippoint(color = color, alpha = c(0.7), size = min(5, 100/nsamp)) + geom_tiplab(size = lab_size, color = "black") + geom_treescale(color = "black") + ggexpand(5/nsamp, side = "h")
+      p3 <- ggplot() + theme_void() 
+      p4 <- ggplot() + theme_void() 
+    } else{
+      warning_list2 <- rbind(warning_list2, filenames[i])
+    }
   }
+  
+  # arrange all the plots:
+  grid.arrange(p1, p3, p2, p4)
+  
+  # set progress
   setTxtProgressBar(pb, i)
 }
 dev.off()
 close(pb)
-cat("Less than 3 samples were found in the following files (no tree was reconstructed):" , warning_list, sep = "\n")
+cat("Less than 3 paralogous sequences were found in the following trees (just complete trees were plotted):" , warning_list1,
+    "There are no paralogous sequences in the following trees:", warning_list2, sep = "\n")
 
 ### end of script ###
