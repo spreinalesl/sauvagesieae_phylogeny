@@ -2,7 +2,7 @@
 
 #SBATCH --job-name=raxml-ng
 #SBATCH --partition=short
-#SBATCH --array=0-1221%100
+#SBATCH --array=0-1221%20
 #SBATCH --cpus-per-task=20
 #SBATCH --mem=4G
 #SBATCH --mail-user=s.reinales@kew.org
@@ -30,7 +30,7 @@
 mtype=exons
 
 ## Input fasta files
-rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/all_$mtype/trimmed_alignm
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/all_$mtype/trimmed_alignm
 
 ## Output path
 mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/all_$mtype/raxml
@@ -45,14 +45,14 @@ gene_list=($(ls $fpath | grep align.fas$))
 gene=(${gene_list[$SLURM_ARRAY_TASK_ID]})
 
 ## Get info about best-fit substitution model previously obtained using Iqtree
-bmpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/subs_model/best_fit_models_summ.txt
+bmpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/all_$mtype/iqtree_plus_models/best_fit_models_summ.txt
 model=$(cat $bmpath | grep $gene | cut -d ':' -f 3)
 
 ## Tree inference
 ~/scratch/apps/addprograms/raxml-ng/build/bin/raxml-ng-mpi --threads ${SLURM_CPUS_PER_TASK} \
                                                            --extra thread-nopin \
                                                            --all \
-                                                           --msa $gene.fas \
+                                                           --msa $gene \
                                                            --model $model \
                                                            --seed 2442 \
                                                            --tree pars{10},rand{10} \

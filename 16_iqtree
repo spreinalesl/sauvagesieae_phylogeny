@@ -17,7 +17,12 @@
 ## Option -ntmax specifies the maximal number of CPU cores -nt AUTO is allowed to allocate.
 ## Option -b standard nonparametric bootstrap
 ## Option -m MFP key word stands for ModelFinder Plus, which tells IQ-TREE to perform ModelFinder and the remaining analysis using the selected model
-## This analysis uses about 2h per locus, but some locus requires more than 8h to complete bootstrapping, so, run it in the medium queue.
+## Option -mset Specify the name of a program (raxml, phyml or mrbayes) to restrict to only those models supported by the specified program
+## By default IQtree uses 100 parsimony trees + BIONJ tree
+## -pers Specify perturbation strength (between 0 and 1) for randomized NNI. DEFAULT: 0.5
+## -nstop Specify number of unsuccessful iterations to stop. DEFAULT: 100
+## Data sets with many short sequences should be analyzed with smaller perturbation strength (e.g. -pers 0.2) and larger number of stop iterations (e.g. -nstop 500)
+## This analysis uses about 3h per locus, but some locus requires more than 8h to complete bootstrapping, so, run it in the medium queue.
 
 ###########
 # COMMANDS
@@ -50,12 +55,13 @@ iqtree -s $gene -m MFP -merit AICc -mset raxml -b 100 -nt AUTO -ntmax ${SLURM_CP
 echo Run tree and substitution model for $gene
 
 ## Move result to output folder
-mv -v $gene.iqtree $rpath
-mv -v $gene.log $rpath
-mv -v $gene.treefile $rpath
-mv -v $gene.mldist $rpath
-mv -v $gene.boottrees $rpath
-mv -v $gene.contree $rpath
+mv -v $gene.iqtree $rpath ## Full result of the run, including a text version of the tree. This is the main report file
+mv -v $gene.log $rpath # Run log
+mv -v $gene.treefile $rpath # Maximum likelihood tree in NEWICK format
+mv -v $gene.mldist $rpath # Maybe distances among bootstrap trees? I didnt find info in the documentation
+mv -v $gene.boottrees $rpath # Bootstrap trees
+mv -v $gene.contree $rpath # Consensus tree with assigned branch supports where branch lengths are optimized on the original alignment
+mv -v $gene.bionj $rpath # NJ starting tree
 
 # For optional output
 #test=$(ls | grep $gene.uniqueseq.phy)
@@ -64,7 +70,7 @@ mv -v $gene.contree $rpath
 # mv -v $gene.uniqueseq.phy $rpath
 #fi
 
-## Remove check points created by Iqtree because there are unuseful at least for this analysis
+## Remove check points created by Iqtree because there are unuseful at least for this moment
 
 test=$(ls | grep $gene | grep gz)
 
