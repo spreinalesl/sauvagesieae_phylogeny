@@ -15,7 +15,8 @@ fpath <- paste0("~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpi
                 "/", probename, "/", type, "/", collapse = "")
 
 # output files
-outpath <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/get_seqs_summ/"
+outpath1 <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/get_seqs_summ/"
+outpath2 <- paste(fpath, "rm_out/", sep = "")
 out1 <- paste0("lociNOseqs_", probename, ".txt", collapse = "")
 out2 <- paste0("samplesTOremove_", probename, ".csv", collapse = "")
 out3 <- paste0("rm_samples_", probename, ".csv", collapse = "")
@@ -63,7 +64,7 @@ for(i in ffiles){
   
   ## Skip the current iteration because the alignment is empty
   if(length(fasta) == 0){
-    write(locus_name, file = paste0(outpath, out1, collapse = ""), sep = "\n", append = T)
+    write(locus_name, file = paste0(outpath1, out1, collapse = ""), sep = "\n", append = T)
     next
   }
   
@@ -161,7 +162,7 @@ for(i in ffiles){
   ## Write edited fasta. Loci which no samples were removed, are written as well just to 
   # ease handling of the fasta files in the forward analyses
   write.dna(fasta, format = "fasta", nbcol = 1, colsep = "", colw = 60, indent = 0, blocksep = 0,
-            file = paste0(fpath, gsub(i, pattern = "\\.FNA", replacement = "_ed.FNA"), collapse = ""))
+            file = paste0(outpath2, gsub(i, pattern = "\\.FNA", replacement = "_ed.FNA"), collapse = ""))
 
   cat("Editing", i, "\n")
 }
@@ -169,7 +170,7 @@ for(i in ffiles){
 ## Extract list of removed samples
 rm_samples_names <- write.table(as.data.frame(table(c(unlist(strsplit(lstats$rm_out_smp_names, split = ",")),
                                                       unlist(strsplit(lstats$rm_ambp_smp_names, split = ","))))),
-                                file = paste0(outpath, out3, collapse = ""), row.names = F)
+                                file = paste0(outpath1, out3, collapse = ""), row.names = F)
 
 ## Write summary table
-write.table(lstats, file = paste0(outpath, out2, collapse = ""), row.names = F)
+write.table(lstats, file = paste0(outpath1, out2, collapse = ""), row.names = F)
