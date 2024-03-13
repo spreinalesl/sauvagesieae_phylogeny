@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #SBATCH --job-name=raxml-ng
-#SBATCH --partition=short
+#SBATCH --partition=medium
 #SBATCH --array=0-1221%20
 #SBATCH --cpus-per-task=20
-#SBATCH --mem=4G
+#SBATCH --mem=800MB
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
@@ -20,7 +20,7 @@
 # The option --bs-metric maps bootstrap values onto the best-scoring/best-known ML tree.
 # In RAxML-NG, thread pinning is enabled by default only in the hybrid MPI/pthreads mode when 1 MPI rank per node is used. But, the option --extra thread-nopin disables thread pinning,
 # avoiding the error: error calling pthread_setaffinity_np 22
-# These analyses used in mean 2.5G and 20 threads each, and ran for about 2h each.
+# These analyses used between 600 MB and 2.5G and 20 threads each, and ran for about 2h each.
 
 ###########
 # COMMANDS
@@ -40,7 +40,6 @@ rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/all_$mtype
 cd $fpath
 
 ## Define variable to list all alignment and iterate over each element using the SLURM_ARRAY_TASK_ID variable
-## Path to a list of selected genes (all schn plus a353 genes with more than 25% of taxa represented)
 gene_list=($(ls $fpath | grep align.fas$))
 gene=(${gene_list[$SLURM_ARRAY_TASK_ID]})
 
@@ -49,7 +48,7 @@ bmpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/all_$mtyp
 model=$(cat $bmpath | grep $gene | cut -d ':' -f 3)
 
 ## Tree inference
-~/scratch/apps/addprograms/raxml-ng/build/bin/raxml-ng-mpi --threads ${SLURM_CPUS_PER_TASK} \
+~/scratch/apps/addprograms/raxml-ng/build/bin/raxml-ng-mpi --threads auto{20} \
                                                            --extra thread-nopin \
                                                            --all \
                                                            --msa $gene \
