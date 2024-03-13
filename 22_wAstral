@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=astral-pro
+#SBATCH --job-name=wastral
 #SBATCH --partition=medium
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=8G

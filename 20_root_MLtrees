@@ -1,0 +1,44 @@
+#!/bin/bash
+
+#SBATCH --job-name=root
+#SBATCH --partition=short
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=10MB
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+## This command runs the script Root_trees_general_pxrr_v4.R script which extracts the outgroup for each gene tree and write the command line
+## to run newick utilities rooting
+## Tutorial: https://gensoft.pasteur.fr/docs/newick-utils/1.6/nwutils_tutorial.pdf
+
+###########
+# COMMANDS
+###########
+
+## Define names
+mtype=exons
+
+## Input trees
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/all_$mtype/iqtree_plus_models
+
+## Activate conda environment
+source /home/sreinale/.bashrc
+source activate renv
+
+## Run r script
+Rscript --vanilla Root_trees_general_pxrr_v4.R
+
+echo END run R script!
+
+## Go to the alignments folder
+cd $fpath
+
+## Iterate the output file containing the commands to reroot trees
+cat a_root_commands | while read line
+do
+  $line
+  echo Rooting tree $line
+done

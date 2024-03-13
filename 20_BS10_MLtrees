@@ -1,10 +1,10 @@
 #!/bin/bash
 
-#SBATCH --job-name=nw_ed
+#SBATCH --job-name=BSt
 #SBATCH --partition=medium
-#SBATCH --array=0-610%100
+#SBATCH --array=0-1221%20
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=1G
+#SBATCH --mem=10MB
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
@@ -34,20 +34,10 @@ rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/all_$mtype
 cd $fpath
 
 ## Define variable to list all gene trees and iterate over each element using the SLURM_ARRAY_TASK_ID variable
-## Path to a list of selected genes (all schn plus a353 genes with more than 25% of taxa represented)
 gene_list=($(ls * | grep XXXX)) ##########################################################################################
 gene=(${gene_list[$SLURM_ARRAY_TASK_ID]})
 
 ## Collapsing trees
 ~/scratch/apps/conda/bin/nw_ed $gene.raxml.supportTBE 'i & b<=0.1' o > $rpath/"$gene"_BS10.tre
 
-echo Gene tree $gene edited using nw_ed
-
-## Root trees
-if grep "ERR2040370\|SRR10951426" $gene.raxml.supportTBE
-then
- ~/scratch/apps/conda/bin/nw_reroot $gene.raxml.supportTBE ERR2040370 SRR10951426 > $rpath/"$gene"_BS10_root.tre
- echo $gene re-rooted
-else
- echo $gene >> $rpath/no_outgroup.log
-fi
+echo Gene tree $gene was edited using nw_ed
