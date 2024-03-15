@@ -3,7 +3,7 @@
 #SBATCH --job-name=rooting
 #SBATCH --partition=short
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=10MB
+#SBATCH --mem=1G
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
@@ -22,34 +22,18 @@
 mtype=exons
 
 ## Input trees
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/all_$mtype/iqtree_plus_models
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/all_$mtype/raxml
 
 ## Activate conda environment
-#source /home/sreinale/.bashrc
-#source activate renv
+source /home/sreinale/.bashrc
+source activate renv
 
 ## Run r script
-#Rscript --vanilla Root_trees_general_pxrr_v4.R
+Rscript --vanilla Root_trees_general_pxrr_v4.R
+
+echo Root_trees_general_pxrr_v4.R script finished!
 
 ## Iterate the output file containing the commands to reroot trees
-cat $fpath/a_root_commands | while IFS= read line
-do
- args=($(cat $line))
- echo $args
-# ~/scratch/apps/conda/bin/nw_reroot $args
-done
+/usr/bin/bash $fpath/pxrr_commands
 
-#args=$(cat $fpath/a_root_commands)
-#echo $args
-#~/scratch/apps/conda/bin/nw_reroot $args
-
-#sample_list=($(cat $namelist))
-#sample_list=($(cat $namelist))
-#sample=(${sample_list[$SLURM_ARRAY_TASK_ID]})
-
-
-#cat $fpath/a_root_commands_2 | while IFS= read line
-#do
-# echo $line
-# ~/scratch/apps/conda/bin/nw_reroot $(cat $line | cut -d ' ' -f 1) $(cat $line | cut -d ' ' -f 2) > $(cat $line | cut -d ' ' -f 3)
-#done
+echo "Rooting done!"

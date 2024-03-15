@@ -19,11 +19,13 @@ library(ape)
 ###############################################
 # A few things to set before you run the script
 ###############################################
-inputDir <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/all_exons/iqtree_plus_models"	# directory with the trees and the outgroup (OG) list only
+#inputDir <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/all_exons/iqtree_plus_models"	# directory with the trees and the outgroup (OG) list only
+inputDir <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/all_exons/raxml"
 inputOG <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/outgroups.txt"			# outgroups list (see below about how to make it)
-output <- "/a_root_commands"											# name of the output (list of pxrr commands)
-pattern_trees <- "_align.fas.treefile"										# whatever pattern is common to all your tree files AND ONLY TO THEM
-path_to_prog <- "/home/sreinale/scratch/apps/conda/bin/pxrr"						# absolute path to the program you will use to root trees, e.g. pxrr or newick utilities
+output <- "/pxrr_commands"											# name of the output (list of pxrr commands)
+#pattern_trees <- "_align.fas.treefile"										# whatever pattern is common to all your tree files AND ONLY TO THEM
+pattern_trees <- "_align.fas.raxml.support"
+path_to_prog <- "/home/sreinale/scratch/apps/conda/bin/pxrr"							# absolute path to the program you will use to root trees, e.g. pxrr or newick utilities
 
 # How to make the outgroups list:
 # List of the outgroups in order of priority, and with OG in clades on the same line and separated by " ; "
