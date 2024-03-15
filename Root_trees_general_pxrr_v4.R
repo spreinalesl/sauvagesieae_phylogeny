@@ -23,7 +23,7 @@ inputDir <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/all
 inputOG <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/outgroups.txt"			# outgroups list (see below about how to make it)
 output <- "/a_root_commands"											# name of the output (list of pxrr commands)
 pattern_trees <- "_align.fas.treefile"										# whatever pattern is common to all your tree files AND ONLY TO THEM
-path_to_prog <- "/home/sreinale/scratch/apps/conda/bin/nw_reroot"						# absolute path to the program you will use to root trees, e.g. pxrr or newick utilities
+path_to_prog <- "/home/sreinale/scratch/apps/conda/bin/pxrr"						# absolute path to the program you will use to root trees, e.g. pxrr or newick utilities
 
 # How to make the outgroups list:
 # List of the outgroups in order of priority, and with OG in clades on the same line and separated by " ; "
@@ -117,15 +117,15 @@ for (z in 1:length(con.trees)) {                    # for each tree
   }
   
   ## Command for pxrr
-  #command <- paste(path_to_prog, " -t ", con.trees[[z]], " -g ", final_OG_names, " > ", sub("_tree", "", con.trees[[z]]), "_PxrrRooted.tre", sep="") # modify to get a cleaner output file name in the pxrr command if needed
+  command <- paste(path_to_prog, " -t ", con.trees[[z]], " -g ", final_OG_names, " > ", sub(pattern = pattern_trees, "", con.trees[[z]]), "_rooted.tre", sep="") # modify to get a cleaner output file name in the pxrr command if needed
   
   ## Command for nw
-  command <- paste(path_to_prog, con.tree.names[[z]], final_OG_names, ">", paste(con.tree.names[[z]], ".rooted.tre", sep = ""), sep = " ")
+  #command <- paste(path_to_prog, con.tree.names[[z]], final_OG_names, ">", paste(con.tree.names[[z]], ".rooted.tre", sep = ""), sep = " ")
   
   ## Write command
   write(command, file = paste(inputDir, output, sep = ""), append = TRUE)
   
-  cat("Extract outgroup names for tree", con.trees[[z]], "\n")
+  cat("Extract outgroup names for tree", con.tree.names[[z]], "\n")
 }
 
 ## Close plot screen
