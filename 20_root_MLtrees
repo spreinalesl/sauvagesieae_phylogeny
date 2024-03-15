@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=root
+#SBATCH --job-name=rooting
 #SBATCH --partition=short
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=10MB
@@ -25,20 +25,31 @@ mtype=exons
 fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/all_$mtype/iqtree_plus_models
 
 ## Activate conda environment
-source /home/sreinale/.bashrc
-source activate renv
+#source /home/sreinale/.bashrc
+#source activate renv
 
 ## Run r script
-Rscript --vanilla Root_trees_general_pxrr_v4.R
-
-echo END run R script!
-
-## Go to the alignments folder
-cd $fpath
+#Rscript --vanilla Root_trees_general_pxrr_v4.R
 
 ## Iterate the output file containing the commands to reroot trees
-cat a_root_commands | while read line
+cat $fpath/a_root_commands | while IFS= read line
 do
-  $line
-  echo Rooting tree $line
+ args=($(cat $line))
+ echo $args
+# ~/scratch/apps/conda/bin/nw_reroot $args
 done
+
+#args=$(cat $fpath/a_root_commands)
+#echo $args
+#~/scratch/apps/conda/bin/nw_reroot $args
+
+#sample_list=($(cat $namelist))
+#sample_list=($(cat $namelist))
+#sample=(${sample_list[$SLURM_ARRAY_TASK_ID]})
+
+
+#cat $fpath/a_root_commands_2 | while IFS= read line
+#do
+# echo $line
+# ~/scratch/apps/conda/bin/nw_reroot $(cat $line | cut -d ' ' -f 1) $(cat $line | cut -d ' ' -f 2) > $(cat $line | cut -d ' ' -f 3)
+#done

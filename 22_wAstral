@@ -2,7 +2,7 @@
 
 #SBATCH --job-name=wastral
 #SBATCH --partition=medium
-#SBATCH --cpus-per-task=16
+#SBATCH --cpus-per-task=32
 #SBATCH --mem=8G
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
@@ -11,45 +11,46 @@
 # NOTES
 ###########
 ## Options -r ans -s run with more rounds of placement for ensured optimality (default is 4 and 4)
-## To place taxa on an existing fully resolved species tree, use -c SPECIES_TREE_IN_NEWICK_FORMAT
 ## Option -u 0 to compute species tree topology only. Option -u 2 to add support and local-PP for all three resolutions of each branch
+## Option -a to force Astral to put together multiple individuals/genes in the species tree. Provide a correspondence map between species names and IDs
+## You must provide max (-x) and min (-n) of support value to the program; default to max=100, min=0
+
 
 ###########
 # COMMANDS
 ###########
 
+## Matrix path name
+mtype=all_exons
+
 ## Input trees
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/BS10_MLtrees
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/iqtree_plus_models
 
 ## Output path
-mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/astral-pro
-rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/astral-pro/re-run
+output=wastral
+mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$output
+rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$output
 
 ## Merge all gene trees in a single file
 cd $fpath
-cat *BS10.tre > $rpath/sauv_prlgs_all_BS10_gtrees.tre
+cat *rooted.tre > $rpath/sauv_"$mtype"_gtrees.tre
 
 ## Path to multi-sequence IDs map
-msID_map=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/paralog_maps/multiseqID_all.map
+#msID_map=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/paralog_maps/multiseqID_all.map
 
 ## Go to output path
 cd $rpath
 
-## Run Astral-pro withouth annotations
-~/scratch/apps/addprograms/ASTER/bin/astral-pro -t ${SLURM_CPUS_PER_TASK} \
-                                                -r 16 -s 16 \
-                                                -u 0 \
-                                                -a $msID_map \
-                                                -o sauv_prlgs_all_BS10_sptree.tre \
-                                                -i sauv_prlgs_all_BS10_gtrees.tre 2>sauv_prlgs_all_BS10_sptree.log
+## Define max and min support values
+maxv=100
+minv=33
 
 ## Run Astral-pro with annotations
-~/scratch/apps/addprograms/ASTER/bin/astral-pro -t ${SLURM_CPUS_PER_TASK} \
-                                                -r 16 -s 16 \
-                                                -u 2 \
-                                                -a $msID_map \
-                                                -o sauv_prlgs_all_BS10_sptree_annot.tre \
-                                                -i sauv_prlgs_all_BS10_gtrees.tre 2>sauv_prlgs_all_BS10_sptree_annot.log
+~/scratch/apps/addprograms/ASTER/bin/bin/astral-hybrid -t ${SLURM_CPUS_PER_TASK} \
+                                            	       -r 16 -s 16 \
+                                                       -u 2 \
+                                                       -x $maxv -n $minv \
+                                                       -o sauv_"$mtype"_sptree_annot.tre \
+                                                       -i sauv_"$mtype"_gtrees.tre 2>sauv_"$mtype"_sptree.log
 
-
-echo Astral-pro finished!
+echo wAstral finished!
