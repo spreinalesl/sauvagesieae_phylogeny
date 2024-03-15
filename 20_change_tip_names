@@ -1,0 +1,43 @@
+#!/bin/bash
+
+#SBATCH --job-name=idTOspp
+#SBATCH --partition=medium
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=50MB
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+## This script merges individual trees in a single file and change tip names from sample ID to species name
+## optional, it is possible to process individual trees, just dont run the merge commands.
+
+###########
+# COMMANDS
+###########
+
+## Matrix path name
+mtype=all_exons
+
+## Input trees
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/iqtree_plus_models
+
+## Output path
+output=names_ed
+mkdir -p $fpath/$output
+rpath=$fpath/$output
+
+## Merge all gene trees in a single file
+cat $fpath/*rooted.tre > $rpath/sauv_"$mtype"_gtrees.tre
+echo trees were merged!
+
+## Activate conda environment to run R
+source /home/sreinale/.bashrc
+source activate renv
+
+## Change sample IDs for species names
+## Run r script
+Rscript --vanilla change_tip_names.R
+
+echo "sample ID to species name done!"

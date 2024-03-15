@@ -24,16 +24,12 @@
 mtype=all_exons
 
 ## Input trees
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/iqtree_plus_models
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/iqtree_plus_models/names_ed
 
 ## Output path
 output=wastral
 mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$output
 rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$output
-
-## Merge all gene trees in a single file
-cd $fpath
-cat *rooted.tre > $rpath/sauv_"$mtype"_gtrees.tre
 
 ## Path to multi-sequence IDs map
 #msID_map=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/paralog_maps/multiseqID_all.map
