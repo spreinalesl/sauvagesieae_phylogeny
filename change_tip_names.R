@@ -15,7 +15,7 @@ fnamespath <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/name_li
 
 ## Output path
 ofolder <- "names_ed"
-opath <- paste(fpath, "/", ofolder, "/", sep = "")
+opath <- paste(fpath, ofolder, "/", sep = "")
 
 ## Read data and iterate files
 fpattern <- "gtrees.tre$"

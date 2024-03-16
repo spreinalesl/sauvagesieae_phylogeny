@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #SBATCH --job-name=wastral
-#SBATCH --partition=medium
-#SBATCH --cpus-per-task=32
-#SBATCH --mem=8G
+#SBATCH --partition=short
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=2G
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
@@ -24,7 +24,7 @@
 mtype=all_exons
 
 ## Input trees
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/iqtree_plus_models/names_ed
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/raxml
 
 ## Output path
 output=wastral
@@ -34,19 +34,16 @@ rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$ou
 ## Path to multi-sequence IDs map
 #msID_map=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/paralog_maps/multiseqID_all.map
 
-## Go to output path
-cd $rpath
-
 ## Define max and min support values
-maxv=100
-minv=33
+maxv=1
+minv=0.33
 
 ## Run Astral-pro with annotations
-~/scratch/apps/addprograms/ASTER/bin/bin/astral-hybrid -t ${SLURM_CPUS_PER_TASK} \
-                                            	       -r 16 -s 16 \
-                                                       -u 2 \
-                                                       -x $maxv -n $minv \
-                                                       -o sauv_"$mtype"_sptree_annot.tre \
-                                                       -i sauv_"$mtype"_gtrees.tre 2>sauv_"$mtype"_sptree.log
+/home/sreinale/scratch/apps/addprograms/ASTER/bin/astral-hybrid -t ${SLURM_CPUS_PER_TASK} \
+                                                        	-r 16 -s 16 \
+                                                                -u 2 \
+                                                                -x $maxv -n $minv \
+                                                                -o $rpath/sauv_"$mtype"_sptree_annot.tre \
+                                                                -i $fpath/sauv_"$mtype"_gtrees_ed.tre 2>$rpath/sauv_"$mtype"_sptree.log
 
 echo wAstral finished!
