@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #SBATCH --job-name=idTOspp
-#SBATCH --partition=medium
+#SBATCH --partition=short
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=50MB
+#SBATCH --mem=500MB
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
@@ -11,7 +11,7 @@
 # NOTES
 ###########
 ## This script merges individual trees in a single file and change tip names from sample ID to species name
-## optional, it is possible to process individual trees, just dont run the merge commands.
+## alternative, it is possible to process individual trees, just dont run the merge commands.
 
 ###########
 # COMMANDS
@@ -21,7 +21,7 @@
 mtype=all_exons
 
 ## Input trees
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/iqtree_plus_models
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/raxml
 
 ## Output path
 output=names_ed
@@ -29,8 +29,12 @@ mkdir -p $fpath/$output
 rpath=$fpath/$output
 
 ## Merge all gene trees in a single file
-cat $fpath/*rooted.tre > $rpath/sauv_"$mtype"_gtrees.tre
+cat $fpath/*rooted.tre > $fpath/sauv_"$mtype"_gtrees.tre
 echo trees were merged!
+
+## Fix a %$#$@#% problem caused by the MAFFT function --accurateX
+sed -i -e 's/_R_SPRL_145/SPRL_145/g' $fpath/sauv_"$mtype"_gtrees.tre
+echo MAFFT problem fixed!
 
 ## Activate conda environment to run R
 source /home/sreinale/.bashrc
@@ -40,4 +44,4 @@ source activate renv
 ## Run r script
 Rscript --vanilla change_tip_names.R
 
-echo "sample ID to species name done!"
+echo "sample IDs to species names done!"

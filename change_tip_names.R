@@ -8,18 +8,18 @@ library(ape)
 
 ## Input paths
 mtype <- "all_exons"
-fpath <- paste("~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/", mtype, "/iqtree_plus_models", sep = "")
+fpath <- paste("~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/", mtype, "/raxml/", sep = "")
 
 # ID to species names table
 fnamespath <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/name_list/sppidTOsppname.csv"
 
 ## Output path
 ofolder <- "names_ed"
-opath <- paste(fpath, "/", ofolder, sep = "")
+opath <- paste(fpath, "/", ofolder, "/", sep = "")
 
 ## Read data and iterate files
-fpattern <- "tre"
-ffiles  <- list.files(fpath, pattern = fpattern, full.names = T)
+fpattern <- "gtrees.tre$"
+ffiles  <- list.files(fpath, pattern = fpattern)
 
 ## Iterate files
 for(i in ffiles){
@@ -28,11 +28,11 @@ for(i in ffiles){
   smp_names <- read.csv(fnamespath, as.is = T)
    
   ## Read tree
-  t <- read.tree(i)
-  
+  to <- read.tree(paste(fpath, i, sep = ""))
+ 
   ## Test multiphylo
-  if(class(t) == "multiPhylo"){
-    tl <- length(t)
+  if(inherits(to, "multiPhylo")){
+    tl <- length(to)
   } else{
     tl <- 1
   }
@@ -41,9 +41,9 @@ for(i in ffiles){
   for(mp in 1:tl){
     
     if(tl > 1){
-      tr <- t[[mp]]  
+      tr <- to[[mp]]  
     }else{
-      tr <- t
+      tr <- to
     }
     
     ## Iterate sample names
@@ -67,5 +67,4 @@ for(i in ffiles){
     ## Write modified tree
     write.tree(tr, file = paste(opath, i, sep = ""), append = T)
   }
-  cat("Editing tree", i, "\n")
 }
