@@ -19,21 +19,25 @@
 
 ## Matrix path name
 mtype=all_exons
+program=raxml
 
 ## Input trees
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/raxml
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$program
 
 ## Output path
 output=names_ed
 mkdir -p $fpath/$output
 rpath=$fpath/$output
 
+## Go to tree folder
+cd $fpath
+
 ## Merge all gene trees in a single file
-cat $fpath/*rooted.tre > $fpath/sauv_"$mtype"_gtrees.tre
+cat *.support > sauv_"$mtype"_gtrees.tre
 echo trees were merged!
 
 ## Fix a %$#$@#% problem caused by the MAFFT function --accurateX
-sed -i -e 's/_R_SPRL_145/SPRL_145/g' $fpath/sauv_"$mtype"_gtrees.tre
+sed -i -e 's/_R_SPRL_145/SPRL_145/g' sauv_"$mtype"_gtrees.tre
 echo MAFFT problem fixed!
 
 ## Activate conda environment to run R
@@ -42,6 +46,6 @@ source activate renv
 
 ## Change sample IDs for species names
 ## Run r script
-Rscript --vanilla change_tip_names.R
+Rscript --vanilla ~/scripts/sauvagesieae_phylogeny/change_tip_names.R
 
 echo "sample IDs to species names done!"

@@ -20,15 +20,16 @@
 
 ## Define names
 mtype=exons
+program=raxml
 
 ## Input trees
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/all_$mtype/raxml
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/all_$mtype/$raxml
 
 ## Activate conda environment
 source /home/sreinale/.bashrc
 source activate renv
 
-## Run r script
+## Run r script to generate the list of outgroups for each gene tree
 Rscript --vanilla Root_trees_general_pxrr_v4.R
 
 echo Root_trees_general_pxrr_v4.R script finished!

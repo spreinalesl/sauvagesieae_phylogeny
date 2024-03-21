@@ -8,14 +8,15 @@ library(ape)
 
 ## Input paths
 mtype <- "all_exons"
-fpath <- paste("~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/", mtype, "/raxml/", sep = "")
+program <- "raxml"
+fpath <- "./"
 
 # ID to species names table
 fnamespath <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/name_list/sppidTOsppname.csv"
 
 ## Output path
 ofolder <- "names_ed"
-opath <- paste(fpath, ofolder, "/", sep = "")
+opath <- paste("~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees", mtype, program, ofolder, sep = "/")
 
 ## Read data and iterate files
 fpattern <- "gtrees.tre$"
@@ -65,6 +66,6 @@ for(i in ffiles){
     }
     
     ## Write modified tree
-    write.tree(tr, file = paste(opath, i, sep = ""), append = T)
+    write.tree(tr, file = paste(opath, "/", i, sep = ""), append = T)
   }
 }
