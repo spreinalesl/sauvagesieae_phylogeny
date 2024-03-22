@@ -2,38 +2,39 @@
 
 #SBATCH --job-name=raxml-dist
 #SBATCH --partition=short
-#SBATCH --array=0-609%20
-#SBATCH --cpus-per-task=1
-#SBATCH --mem=1G
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=100MB
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
 # NOTES
 ###########
-# The option --rfdist compute the topological Robinson-Foulds (RF) distance among all resulting trees. It's possible to use this metrics as a measure of topological uncertainty by
-# examining the .rfDistances file.
-# Output file contains 4 columns: 1st and 2nd column contain tree indices in the NEWICK file, 3rd column shows the absolute RF distance between those two trees, and 4th column shows the
-# relative or normalized RF distance ranging from 0 to 1. Relative RF distance is calculated by dividing the absolute value (column 3) by the maximum possible RF distance for this tree pair
+# The option --rfdist compute the topological Robinson-Foulds (RF) distance among all resulting trees. It's possible to use this metrics as a measure of
+# topological uncertainty by examining the .rfDistances file.
+# Output file contains 4 columns: 1st and 2nd column contain tree indices in the NEWICK file, 3rd column shows the absolute RF distance between those two trees,
+# and 4th column shows the relative or normalized RF distance ranging from 0 to 1. Relative RF distance is calculated by dividing the absolute value (column 3)
+# by the maximum possible RF distance for this tree pair
 
 ###########
 # COMMANDS
 ###########
 
+## Matrix path name
+mtype=all_exons
+program=iqtree_plus_models
+
 ## Input trees
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/raxml
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$program
 
-## Go to the alignments folder
-cd $fpath
+## Go to the local disk
+cd $TMPDIR
 
-## Define variable to list all alignment and iterate over each element using the SLURM_ARRAY_TASK_ID variable
-## Path to a list of selected genes (all schn plus a353 genes with more than 25% of taxa represented)
-glistpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/get_seqs_summ/selected_genes.txt
-gene_list=($(cat $glistpath))
-gene=(${gene_list[$SLURM_ARRAY_TASK_ID]})
+## Extract .tar.gz filetrees
+tar -xvzf 
 
 ## Estimate RF distances among resulting trees
-~/scratch/apps/addprograms/raxml-ng/build/bin/raxml-ng-mpi --threads ${SLURM_CPUS_PER_TASK} \
+~/scratch/apps/addprograms/raxml-ng/build/bin/raxml-ng-mpi --threads auto{8} \
                                                            --rfdist \
                                                            --tree $gene.raxml.mlTrees \
                                                            --prefix "$gene"_RF
