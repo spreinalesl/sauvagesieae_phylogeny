@@ -22,21 +22,39 @@
 
 ## Matrix path name
 mtype=all_exons
-program=iqtree_plus_models
-
-## Input trees
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$program
+program=raxml
+method=taper
 
 ## Go to the local disk
 cd $TMPDIR
 
-## Extract .tar.gz filetrees
-tar -xvzf 
+## Input trees
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$program
 
-## Estimate RF distances among resulting trees
-~/scratch/apps/addprograms/raxml-ng/build/bin/raxml-ng-mpi --threads auto{8} \
-                                                           --rfdist \
-                                                           --tree $gene.raxml.mlTrees \
-                                                           --prefix "$gene"_RF
+## Extract files
+tar -xzf $fpath/mlTrees.tar.gz
+echo tree extraction done!
 
-echo RF distances estimated for gene $gene
+## Estimate RF distances among mltrees
+for i in `ls *`
+do
+ ~/scratch/apps/addprograms/raxml-ng/build/bin/raxml-ng-mpi --threads auto{8} \
+                                                            --rfdist \
+                                                            --tree $i \
+                                                            --prefix RF_$i
+done
+
+## Copy results
+mv -v ./RF_* $fpath
+
+## Estimate RF distances among resulting unrooted trees
+#cd $fpath
+#for i in *nm_ed.tre
+#do
+# ~/scratch/apps/addprograms/raxml-ng/build/bin/raxml-ng-mpi --threads auto{8} \
+#                                                            --rfdist \
+#                                                            --tree $i \
+#                                                            --prefix RF_$i
+#done
+
+echo RF distances estimated!
