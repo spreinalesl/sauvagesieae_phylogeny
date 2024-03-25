@@ -23,7 +23,7 @@
 ## Matrix path name
 mtype=all_exons
 program=raxml
-method=taper
+method=trimal
 
 ## Go to the local disk
 cd $TMPDIR
@@ -35,7 +35,7 @@ fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$pr
 tar -xzf $fpath/mlTrees.tar.gz
 echo tree extraction done!
 
-## Estimate RF distances among mltrees
+## Estimate RF distances among mltrees (unrooted)
 for i in `ls *`
 do
  ~/scratch/apps/addprograms/raxml-ng/build/bin/raxml-ng-mpi --threads auto{8} \
