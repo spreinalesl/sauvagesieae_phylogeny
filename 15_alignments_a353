@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #SBATCH --job-name=mafft
-#SBATCH --partition=short
-#SBATCH --array=0-340%50
+#SBATCH --partition=medium
+#SBATCH --array=0-3
 #SBATCH --cpus-per-task=4
-#SBATCH --mem=12G
+#SBATCH --mem=80G
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
@@ -15,9 +15,7 @@
 ## and multiple genomic sequences of a gene from closely related species, which has several conserved motifs embedded in long unalignable regions.
 ## As E-INS-i has the minimum assumption of the three methods, this is recommended if the nature of sequences to be aligned is not clear.
 ## Most genes run well with 8 to 12 G of memory. Nevetheless, genes with few samples and large amount of missing data are difficult to  align
-## Consequentlyl, they need more memory. For gene 4527 after testing with up to 60 G of memory and
-## using the --oldgenafpair it was imposible to align using the E-INS-i algorithm, then, 
-## I removed the following files: 5599, 5634, 4527 and 5421
+## Consequentlyl, they need more memory. For gene 6717 60 G of memory was enought. But, 5599 failed with 80G then, it was removed from the analysis.
 
 ###########
 # COMMANDS
@@ -29,22 +27,26 @@ source activate hybpiper
 
 ## Define names
 probe=a353
-mtype=exons
+imtype=exons
+omtype=rm_out_exons
+
+## Define fasta file path
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/fasta_files/$probe/$imtype/rm_out
 
 ## Output path
-mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/all_$mtype
-rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/all_$mtype
+mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$omtype
+rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$omtype
+
+## Go to input-files folder
+cd $fpath
 
 ## Define variable to list fasta files and iterate over each element using the SLURM_ARRAY_TASK_ID variable
 ## Path to a list of selected genes
-glistpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/get_seqs_summ/selected_genes_all_$probe.txt
-gene_list=($(cat $glistpath))
+gene_list=($(ls * | grep FNA$))
 gene=(${gene_list[$SLURM_ARRAY_TASK_ID]})
-
-## Define fasta file path
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/fasta_files/$probe/$mtype
+gnm=$(echo $gene | sed 's/\.FNA//')
 
 ## Run mafft
-mafft --thread ${SLURM_CPUS_PER_TASK} --genafpair --adjustdirectionaccurately --maxiterate 1000 $fpath/$gene*.FNA > $rpath/"$gene"_align.fas
+mafft --thread ${SLURM_CPUS_PER_TASK} --genafpair --adjustdirectionaccurately --maxiterate 1000 $gene > $rpath/"$gnm"_align.fas
 
 echo MAFFT finished for gene $gene

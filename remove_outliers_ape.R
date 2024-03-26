@@ -8,7 +8,7 @@ library(ape)
 
 ## Input paths
 namesfile <- "sppidTOsppname.csv"
-probename <- "a353"
+probename <- "schn"
 type <- "exons"
 namespath <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/name_list/"
 fpath <- paste0("~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/fasta_files",
@@ -24,7 +24,7 @@ out3 <- paste0("rm_samples_", probename, ".csv", collapse = "")
 
 ## Read data and iterate fasta files containing all sequences per loci, to
 # remove samples with shortest sequences
-ffiles  <- list.files(fpath, pattern = "\\.FNA")
+ffiles  <- list.files(fpath, pattern = "\\.FNA$")
 
 # To save summary
 lstats <- data.frame(loci = vector(),
@@ -52,7 +52,7 @@ for(i in ffiles){
   
   ## Change sample names from a ID to spp names file
   smp_names <- read.csv(paste0(namespath, namesfile, collapse = ""), as.is = T)
-  
+ 
   fnames <- unlist(lapply(X = names(fasta),
                                    FUN = function(x) strsplit(x, split = " ")[[1]][1]))
   for(n in 1:length(fnames)){
@@ -62,7 +62,7 @@ for(i in ffiles){
   ## Extract number of samples included in the fasta file
   smp_num_org <- length(fasta)
   
-  ## Skip the current iteration because the alignment is empty
+  ## Skip the current iteration because the fasta file is empty (i.e. no sequences were retriueved for this locus)
   if(length(fasta) == 0){
     write(locus_name, file = paste0(outpath1, out1, collapse = ""), sep = "\n", append = T)
     next
@@ -120,8 +120,8 @@ for(i in ffiles){
   #diqr <- q3 - q1
   #minv <- floor(q1 - 3*diqr)
   
-  ## Establish 1/4 of the median sequence length for that loci as the minimum allowed seq length,
-  # just if that minimum is shortest than 150 bp. The idea is not to remove sequences that can be
+  ## Establish 1/4 of the median sequence length for that locus as the minimum allowed seq length,
+  # just if that minimum is shortest than 150 bp. The idea is to avoid removing sequences that can be
   # aligned
   minv <- ceiling(median(seq_length)*0.25)
   

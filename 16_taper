@@ -13,7 +13,8 @@
 ###########
 ## TAPER looks for errors in small species-specific stretches of the multiple sequence alignments. This command will detect erronous sequences and will replace them with N
 ## in the output, and all N characters are treated as a dash. A cutoff (make sense to > 1) to control aggressiveness of error detection. The lower the cutoff is,
-## the more aggressive the TAPER becomes. Values below 1 are allowed but discouraged. The default cutoff is -c 3. For example, if you want TAPER be more precautious, you can try -c 10.
+## the more aggressive the TAPER becomes. Values below 1 are allowed but discouraged. The default cutoff is -c 3. For example, if you want TAPER be more precautious,
+## you can try -c 10.
 
 ###########
 # COMMANDS
@@ -24,14 +25,14 @@ source /home/sreinale/.bashrc
 source activate julia
 
 ## Define names
-mtype=exons
+mtype=all_exons
 
 ## Input fasta files
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/all_$mtype
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$mtype
 
 ## Output path
-mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/all_$mtype/trimmed_alignm
-rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/all_$mtype/trimmed_alignm
+mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$mtype/trimmed_alignm
+rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$mtype/trimmed_alignm
 
 ## Go to the alignments folder
 cd $fpath
