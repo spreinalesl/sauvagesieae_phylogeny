@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --job-name=idTOspp
-#SBATCH --partition=short
+#SBATCH --partition=medium
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=500MB
 #SBATCH --mail-user=s.reinales@kew.org
@@ -22,7 +22,7 @@ mtype=all_exons
 program=raxml
 
 ## Input trees
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$program
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$program/tsearch30
 
 ## Output path
 output=names_ed

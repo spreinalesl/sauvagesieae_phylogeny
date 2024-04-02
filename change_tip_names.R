@@ -8,7 +8,7 @@ library(ape)
 
 ## Input paths
 mtype <- "all_exons"
-program <- "raxml"
+program <- "raxml/tsearch30"
 fpath <- "./"
 
 # ID to species names table

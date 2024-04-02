@@ -10,7 +10,7 @@
 library(ape)
 
 ## Input paths
-probe <- "a353"
+probe <- "schn"
 ppath <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/paralogs/"
 fpath <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/fasta_files/"
 aptpth <- paste(ppath, probe, "/trees/", sep = "")
@@ -35,7 +35,7 @@ non_monop <- c()
 
 ## Iterate tree files containing all paralogous sequences
 for(i in tfiles){
-
+ 
   ## Extract locus name
   lnm <- gsub(pattern = "_.+", replacement = "", x = i)
   
@@ -95,8 +95,8 @@ for(i in tfiles){
         write.FASTA(x = aplgsf, file = gsub(x = ff, pattern = "/exons/", replacement = "/exons/putative_orth/"))
       }
       
-      ## Test if .main sequences and the other sequences reconstruct the same relationships
-      # that is a good idea but its implementation is challenging :/ at least for now
+      ## Test if .main sequences and other sequences (i.e. x.0, x.1) form the same clades 
+      # that is a good idea but its implementation is challenging :/ at least at this moment
     }
   }
   
@@ -105,5 +105,5 @@ for(i in tfiles){
 
 ## Print warnings
 cat("Those loci were not tagged as containing paralogs by Hybpiper" , warning_list,
-    "Those paralogs do not form a clade in the gene tree. Then the .main sequence retreived by Hybpiper were removed from the fasta file", non_monop,
-    "Those paralogs form a clade and the .main sequence were keept in the fasta file", monop, sep = "\n", file = paste(ffnew, "/out.log", sep = ""))
+    "Those paralogs do not form a clade in the gene tree. Then, the .main sequence retreived by Hybpiper was removed from the fasta file", non_monop,
+    "Those paralogs form a clade and the .main sequence was keept in the fasta file", monop, sep = "\n", file = paste(ffnew, "/out.log", sep = ""))

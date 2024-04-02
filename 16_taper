@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #SBATCH --job-name=taper
-#SBATCH --partition=short
-#SBATCH --array=0-610%50
+#SBATCH --partition=medium
+#SBATCH --array=0-613%50
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=1G
+#SBATCH --mem=500G
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
@@ -15,6 +15,7 @@
 ## in the output, and all N characters are treated as a dash. A cutoff (make sense to > 1) to control aggressiveness of error detection. The lower the cutoff is,
 ## the more aggressive the TAPER becomes. Values below 1 are allowed but discouraged. The default cutoff is -c 3. For example, if you want TAPER be more precautious,
 ## you can try -c 10.
+## Most samples run with 500M, just 4 (4527, g2009517, g2011628, g2026803) need 1G
 
 ###########
 # COMMANDS
@@ -25,7 +26,7 @@ source /home/sreinale/.bashrc
 source activate julia
 
 ## Define names
-mtype=all_exons
+mtype=rm_out_exons
 
 ## Input fasta files
 fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$mtype

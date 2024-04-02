@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --job-name=wastral
-#SBATCH --partition=short
+#SBATCH --partition=medium
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=500MB
 #SBATCH --mail-user=s.reinales@kew.org
@@ -22,29 +22,29 @@
 
 ## Matrix path name
 mtype=all_exons
-program=iqtree_plus_models
+program=raxml
 
 ## Input trees
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$program
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$program/tsearch30
 
 ## Output path
 output=wastral
-mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$output
-rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$output
+mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$output/tsearch30
+rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$output/tsearch30
 
 ## Path to multi-sequence IDs map
 #msID_map=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/paralog_maps/multiseqID_all.map
 
 ## Define max and min support values
-maxv=100
-minv=10
+maxv=1
+minv=0.33
 
 ## Run Astral-pro with annotations
 /home/sreinale/scratch/apps/addprograms/ASTER/bin/astral-hybrid -t ${SLURM_CPUS_PER_TASK} \
                                                         	-r 16 -s 16 \
                                                                 -u 2 \
                                                                 -x $maxv -n $minv \
-                                                                -o $rpath/"$program"_sauv_"$mtype"_sptree_annot.tre \
-                                                                -i $fpath/sauv_"$mtype"_gtrees_nm_ed.tre 2>$rpath/"$program"_sauv_"$mtype"_sptree.log
+                                                                -o $rpath/"$program"30_sauv_"$mtype"_BS33_sptree_annot.tre \
+                                                                -i $fpath/sauv_"$mtype"_gtrees_nm_ed.tre 2>$rpath/"$program"30_sauv_"$mtype"_BS33_sptree.log
 
 echo wAstral finished!

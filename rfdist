@@ -26,26 +26,27 @@ program=raxml
 method=trimal
 
 ## Go to the local disk
-cd $TMPDIR
+#cd $TMPDIR
 
 ## Input trees
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$program
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$program/tsearch30
 
 ## Extract files
-tar -xzf $fpath/mlTrees.tar.gz
-echo tree extraction done!
+#tar -xzf $fpath/mlTrees.tar.gz
+#echo tree extraction done!
 
+cd $fpath
 ## Estimate RF distances among mltrees (unrooted)
-for i in `ls *`
+for i in `ls *.mlTrees`
 do
  ~/scratch/apps/addprograms/raxml-ng/build/bin/raxml-ng-mpi --threads auto{8} \
                                                             --rfdist \
                                                             --tree $i \
-                                                            --prefix RF_$i
+                                                            --prefix $i.RF
 done
 
 ## Copy results
-mv -v ./RF_* $fpath
+#mv -v ./RF_* $fpath
 
 ## Estimate RF distances among resulting unrooted trees
 #cd $fpath
