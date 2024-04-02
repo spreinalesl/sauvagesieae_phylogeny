@@ -11,7 +11,7 @@ tpattern2 <- "rooted_"
 tpattern3 <- "plus_models_"
 
 ## Data path
-dpath <- "~/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/hybpiper/assembly_stats/hybpiper_all_summary_ed.csv" 
+dpath <- "~/Documents/hybpiper_all_summary_ed.csv" 
 
 #####################################
 ## Plot species tree
@@ -23,7 +23,7 @@ library(ggimage) ## To plot pies on the tree
 library(gridExtra) ## To arrange all plots into one pdf
 library(ggpubr) ## To plot one tree per page into one pdf
 library(ggdist) ## To plot densities in the boxplots
-library(ggnewscale) ## To include a heatmap with recovery data
+library(ggnewscale) ## To include two heatmaps in the same plot, adding a new scale
 
 ## Plot names and title
 ptitle <- "wASTRAL_all_exons"
@@ -108,7 +108,7 @@ for(i in 1:length(tfiles)){
            xlim_tree(70) +
            ggtitle(paste("Node labels:", ptitle, tname))
   
-  ## Plot basic tree
+  ## Plot a basic tree
   t_all <- ggtree(mtree@phylo, ladderize = T, branch.length = "none") +
             geom_tiplab(size = 2, hjust=-.2) +
             xlim_tree(70) +
@@ -119,10 +119,6 @@ for(i in 1:length(tfiles)){
 
   ## Insert pies to the basic tree
   t_pies <- inset(t_all, pies_t_all, width = 0.04, height = 0.04)
-  
-  ## Make barplots instead of pies (It doesn't work)
-  #bars <- nodebar(Q_t_all, cols = 1:3, position = 'dodge', color = c(Q1 = 'darkblue', Q2 = 'green', Q3 = 'gray'), alpha = 0.8)
-  #t_bars <- inset(t_all, bars, x = 'node', width = 0.04, height = 0.04)
   
   ## create plot including text annotations
   # Q scores
@@ -141,24 +137,24 @@ for(i in 1:length(tfiles)){
               geom_tiplab(size = 2.5, hjust = -0.05) + xlim_tree(70) + 
               ggtitle(paste("Local probability tree:", ptitle, tname))
   
-  ## Q scores and LPP
+  ## Tree with Q scores as pies and LPP as annotations on the branches
   t_complete <- inset(t_textp, pies_t_all, width = 0.04, height = 0.04)
   
-  ## tcomplete plus recovery info as heatmap
-  t_hmap_g <- gheatmap(t_complete, df1, offset = 10, width = 0.1, font.size = 2, 
-                       colnames_angle = 0, hjust = 0) +
-              scale_fill_viridis_c(option = "A", name = "NumGenesWithSeqs")
+  ## tcomplete plus recovery info as heatmaps
+  t_hmap_l <- gheatmap(t_complete, df2, offset = 14, width = 0.1, colnames = F) +
+                       scale_fill_viridis_c(option = "C", name = "TotalSeqLenght", direction = -1)
   
-  t_hmap_l <- gheatmap(t_complete, df2, offset = 10, width = 0.1, font.size = 2,
-                       colnames_angle = 0, hjust = 0) +
-              scale_fill_viridis_c(option = "A", name = "RecoverySeqLenght")
+  t_hmap_g <- t_hmap_l + new_scale_fill()
+  
+  t_hmap_g <- gheatmap(t_hmap_g, df1, offset = 10, width = 0.1, colnames = F) +
+                       scale_fill_viridis_c(option = "D", name = "NumGenesWithSeqs", direction = -1)
   
   ## arrange all the plots in the same page
   #grid.arrange(t_nl, t_textq, t_pies, t_complete) # All plots for each tree in the same page
   #multi.page <- ggarrange(t_nl, t_textq, t_textp, t_pies, t_complete, nrow = 1, ncol = 1) # for one plot per page
   #ggexport(multi.page, filename = paste(tpath, "/", ptitle, "_", tname, ".pdf", sep = ""), width = 480, height = 520)
   
-  plots <- list(t_nl, t_textq, t_textp, t_pies, t_complete, t_hmap_g, t_hmap_l)
+  plots <- list(t_nl, t_textq, t_textp, t_pies, t_complete, t_hmap_g)
   ggsave(filename = paste(tpath, "/", ptitle, "_", tname, ".pdf", sep = ""), 
          plot = marrangeGrob(plots, nrow = 1, ncol = 1),
          width = 15, height = 20)
