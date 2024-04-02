@@ -2,16 +2,15 @@
 
 #SBATCH --job-name=mafft
 #SBATCH --partition=short
-#SBATCH --array=0
+#SBATCH --array=0-273%50
 #SBATCH --cpus-per-task=4
-#SBATCH --mem=60G
+#SBATCH --mem=12G
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
 # NOTES
 ###########
-# 0-273%50
 ## Align DNA sequences for each locus using the algorith E-INS-i inplemented in mafft. This algorithm is suitable to align multiple cDNAs
 ## and multiple genomic sequences of a gene from closely related species, which has several conserved motifs embedded in long unalignable regions.
 ## As E-INS-i has the minimum assumption of the three methods, this is recommended if the nature of sequences to be aligned is not clear.
