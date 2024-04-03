@@ -2,9 +2,9 @@
 
 #SBATCH --job-name=iqtree
 #SBATCH --partition=medium
-#SBATCH --array=0-1223%20
+#SBATCH --array=0-613%20
 #SBATCH --cpus-per-task=4
-#SBATCH --mem=1G
+#SBATCH --mem=350MB
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
@@ -29,24 +29,23 @@
 ###########
 
 ## Define names
-mtype=exons
+mtype=putative_orth
 
 ## Input files: alignments
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/all_$mtype/trimmed_alignm
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$mtype/trimmed_alignm
 
 ## Output path
 mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees
-mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/all_$mtype
-mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/all_$mtype/iqtree_plus_models
-rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/all_$mtype/iqtree_plus_models
-
-## Define variable to list all alignment and iterate over each element using the SLURM_ARRAY_TASK_ID variable
-## Path to a list of selected genes (all schn plus a353 genes with more than 25% of taxa represented)
-gene_list=($(ls $fpath | grep align.fas$))
-gene=(${gene_list[$SLURM_ARRAY_TASK_ID]})
+mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype
+mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/iqtree
+rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/iqtree
 
 ## Go to input-file folder
 cd $fpath
+
+## Define variable to list all alignment and iterate over each element using the SLURM_ARRAY_TASK_ID variable
+gene_list=($(ls * | grep fas$))
+gene=(${gene_list[$SLURM_ARRAY_TASK_ID]})
 
 ## Run IQtree
 #iqtree -s $gene -m MF -mset raxml -merit AICc -nt AUTO -ntmax ${SLURM_CPUS_PER_TASK} ## just to find the best model
@@ -62,21 +61,7 @@ mv -v $gene.mldist $rpath # Maybe distances among bootstrap trees? I didnt find 
 mv -v $gene.boottrees $rpath # Bootstrap trees
 mv -v $gene.contree $rpath # Consensus tree with assigned branch supports where branch lengths are optimized on the original alignment
 mv -v $gene.bionj $rpath # NJ starting tree
+mv -v $gene.model.gz $rpath # Summary model
+mv -v $gene.uniqueseq.phy $rpath # trimmed alignment
 
-# For optional output
-#test=$(ls | grep $gene.uniqueseq.phy)
-
-#if [ -n "$test" ]; then
-# mv -v $gene.uniqueseq.phy $rpath
-#fi
-
-## Remove check points created by Iqtree because there are unuseful at least for this moment
-
-test=$(ls | grep $gene | grep gz)
-
-if [ -n "$test" ]; then
- rm -r -v $gene.ckp.gz
- rm -r -v $gene.model.gz
-fi
-
-echo END copy results
+echo copy results done!

@@ -4,7 +4,7 @@
 #SBATCH --partition=medium
 #SBATCH --array=0-613%50
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=500G
+#SBATCH --mem=1G
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
@@ -26,7 +26,7 @@ source /home/sreinale/.bashrc
 source activate julia
 
 ## Define names
-mtype=rm_out_exons
+mtype=putative_orth
 
 ## Input fasta files
 fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$mtype
