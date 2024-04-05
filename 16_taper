@@ -2,9 +2,9 @@
 
 #SBATCH --job-name=taper
 #SBATCH --partition=short
-#SBATCH --array=0-324%50
+#SBATCH --array=0-273%20
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=500MB
+#SBATCH --mem=1G
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
@@ -16,6 +16,7 @@
 ## the more aggressive the TAPER becomes. Values below 1 are allowed but discouraged. The default cutoff is -c 3. For example, if you want TAPER be more precautious,
 ## you can try -c 10.
 ## Most samples run with 500M, just 4 (4527, g2009517, g2011628, g2026803) need 1G
+## For supercontig 1G was required
 
 ###########
 # COMMANDS
