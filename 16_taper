@@ -2,9 +2,9 @@
 
 #SBATCH --job-name=taper
 #SBATCH --partition=medium
-#SBATCH --array=0-613%50
+#SBATCH --array=0-598%50
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=1G
+#SBATCH --mem=500MB
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
@@ -26,7 +26,7 @@ source /home/sreinale/.bashrc
 source activate julia
 
 ## Define names
-mtype=putative_orth
+mtype=supercontig
 
 ## Input fasta files
 fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$mtype

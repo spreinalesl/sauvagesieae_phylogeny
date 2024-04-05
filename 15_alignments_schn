@@ -2,20 +2,22 @@
 
 #SBATCH --job-name=mafft
 #SBATCH --partition=short
-#SBATCH --array=0-273%50
+#SBATCH --array=0-7
 #SBATCH --cpus-per-task=4
-#SBATCH --mem=12G
+#SBATCH --mem=60G
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
 # NOTES
 ###########
+# 0-273%50
 ## Align DNA sequences for each locus using the algorith E-INS-i inplemented in mafft. This algorithm is suitable to align multiple cDNAs
 ## and multiple genomic sequences of a gene from closely related species, which has several conserved motifs embedded in long unalignable regions.
 ## As E-INS-i has the minimum assumption of the three methods, this is recommended if the nature of sequences to be aligned is not clear.
 ## Most genes run well with 8 to 12 G of memory. Nevetheless, genes with few samples and large amount of missing data are difficult to  align
 ## Consequentlyl, they need more memory. For g2009517 60G were necessary.
+## For supercontig, 12G were not enought for 21 loci. Finally they required 20G.
 
 ###########
 # COMMANDS
@@ -27,24 +29,23 @@ source activate hybpiper
 
 ## Define names
 probe=schn
-imtype=exons
-omtype=putative_orth
+imtype=supercontig
 
 ## Define fasta file path
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/fasta_files/$probe/$imtype/$omtype
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/fasta_files/$probe/$imtype
 
 ## Output path
-mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$omtype
-rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$omtype
+mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$imtype
+rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$imtype
 
 ## Go to input-files folder
 cd $fpath
 
 ## Define variable to list fasta files and iterate over each element using the SLURM_ARRAY_TASK_ID variable
 ## Path to a list of selected genes
-gene_list=($(ls * | grep FNA$))
+gene_list=($(ls * | grep fasta$))
 gene=(${gene_list[$SLURM_ARRAY_TASK_ID]})
-gnm=$(echo $gene | sed 's/\.FNA//')
+gnm=$(echo $gene | sed 's/\.supercontig\.fasta//')
 
 ## Run mafft
 mafft --thread ${SLURM_CPUS_PER_TASK} --genafpair --adjustdirectionaccurately --maxiterate 1000 $gene > $rpath/"$gnm"_align.fas

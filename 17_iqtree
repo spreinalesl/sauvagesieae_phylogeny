@@ -3,7 +3,7 @@
 #SBATCH --job-name=iqtree
 #SBATCH --partition=medium
 #SBATCH --array=0-613%20
-#SBATCH --cpus-per-task=4
+#SBATCH --cpus-per-task=8
 #SBATCH --mem=350MB
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
@@ -29,7 +29,7 @@
 ###########
 
 ## Define names
-mtype=putative_orth
+mtype=putative_orth_exons
 
 ## Input files: alignments
 fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$mtype/trimmed_alignm
