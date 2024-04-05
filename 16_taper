@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #SBATCH --job-name=taper
-#SBATCH --partition=medium
-#SBATCH --array=0-598%50
+#SBATCH --partition=short
+#SBATCH --array=0-324%50
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=500MB
 #SBATCH --mail-user=s.reinales@kew.org
@@ -39,7 +39,6 @@ rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$mtyp
 cd $fpath
 
 ## Define variable to list all alignment and iterate over each element using the SLURM_ARRAY_TASK_ID variable
-## Path to a list of selected genes (all schn plus a353 genes with more than 25% of taxa represented)
 gene_list=($(ls * | grep fas$))
 gene=(${gene_list[$SLURM_ARRAY_TASK_ID]})
 
