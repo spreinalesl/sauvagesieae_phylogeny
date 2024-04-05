@@ -1,7 +1,9 @@
-###########################################
-## This script detects and remove extreme 
-## outliers from the alignments
-###########################################
+#################################################
+## This script detects and removes extreme 
+## outliers from the alignments. i.e. extremely
+## short sequences and sequences with high amount
+## of known positions 'N'
+##################################################
 
 ## Packages
 library(ape)
@@ -20,7 +22,6 @@ outpath2 <- paste(fpath, "rm_out/", sep = "")
 out1 <- paste0("lociNOseqs_", probename, ".txt", collapse = "")
 out2 <- paste0("samplesTOremove_", probename, ".csv", collapse = "")
 out3 <- paste0("rm_samples_", probename, ".csv", collapse = "")
-
 
 ## Read data and iterate fasta files containing all sequences per loci, to
 # remove samples with shortest sequences
@@ -49,15 +50,6 @@ for(i in ffiles){
   
   ## Read fasta file
   fasta <- read.FASTA(paste0(fpath, i, collapse = ""))
-  
-  ## Change sample names from a ID to spp names file
-  smp_names <- read.csv(paste0(namespath, namesfile, collapse = ""), as.is = T)
- 
-  fnames <- unlist(lapply(X = names(fasta),
-                                   FUN = function(x) strsplit(x, split = " ")[[1]][1]))
-  for(n in 1:length(fnames)){
-    names(fasta)[n] <- smp_names$abbrev[which(smp_names$seqID == fnames[n])]
-  }
   
   ## Extract number of samples included in the fasta file
   smp_num_org <- length(fasta)
@@ -121,12 +113,14 @@ for(i in ffiles){
   #minv <- floor(q1 - 3*diqr)
   
   ## Establish 1/4 of the median sequence length for that locus as the minimum allowed seq length,
-  # just if that minimum is shortest than 150 bp. The idea is to avoid removing sequences that can be
-  # aligned
+  # just if that minimum is shortest than 150 bp, but for shortest alignments (i.e. 200 bp),
+  # the min allowed length could be 70bp. The idea is to avoid removing sequences that can be aligned.
   minv <- ceiling(median(seq_length)*0.25)
   
   if(minv > 150){
       minv <- 150
+  }else{
+    minv <- 70
   }
   
   ## List of samples with sequences shorter than the min allowed length (extreme outliers)
@@ -134,14 +128,35 @@ for(i in ffiles){
   extremvp <- which(names(fasta) %in% smp_extremv) 
   
   ## If there are samples with extreme values remove them and write
-  ## edited fasta files
+  ## the edited fasta files
   
   if(length(smp_extremv) > 0){
     fasta <- fasta[-extremvp]
   }
    
-  ## Extract a list of samples to remove
-  samplesToRemove <- unique(c(smp_extremv, smp_ambp))
+  ## Change sample names from ID to spp names file
+  smp_names <- read.csv(paste0(namespath, namesfile, collapse = ""), as.is = T)
+  
+  if(length(smp_extremv) > 0 | length(smp_ambp) > 0){
+    
+    nextremv <- vector()
+    nambp <- vector()
+    
+    for(fnx in smp_extremv){
+      fname <- gsub(fnx, pattern = " .+", replacement = "")
+      nextremv <- c(nextremv, smp_names$abbrev[which(smp_names$seqID == fname)])
+    }
+    
+    for(fnb in smp_ambp){
+      fname <- gsub(fnb, pattern = " .+", replacement = "")
+      nambp <- c(nambp, smp_names$abbrev[which(smp_names$seqID == fname)])
+    }
+    
+    ## Extract a list of samples to remove
+    smp_extremv <- nextremv
+    smp_ambp <- nambp 
+    samplesToRemove <- unique(c(smp_extremv, smp_ambp))  
+  }
   
   ## lstats contains final number of samples per loci, samples removed (i.e. extreme values),
   # samples removed for N, and max and min length allowed for this alignment.  
