@@ -1,8 +1,8 @@
 #################################################
 ## This script detects and removes extreme 
-## outliers from the alignments. i.e. extremely
+## outliers from the alignments, i.e. extremely
 ## short sequences and sequences with high amount
-## of known positions 'N'
+## of unknown positions 'N'
 ##################################################
 
 ## Packages
