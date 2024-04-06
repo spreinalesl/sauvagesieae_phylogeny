@@ -2,9 +2,9 @@
 
 #SBATCH --job-name=mafft
 #SBATCH --partition=short
-#SBATCH --array=0-340%20
+#SBATCH --array=0
 #SBATCH --cpus-per-task=4
-#SBATCH --mem=12G
+#SBATCH --mem=60G
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
@@ -49,6 +49,7 @@ gene=(${gene_list[$SLURM_ARRAY_TASK_ID]})
 gnm=$(echo $gene | sed 's/\.FNA//')
 
 ## Run mafft
-mafft --thread ${SLURM_CPUS_PER_TASK} --genafpair --adjustdirectionaccurately --maxiterate 1000 $gene > $rpath/"$gnm"_align.fas
+#mafft --thread ${SLURM_CPUS_PER_TASK} --genafpair --adjustdirectionaccurately --maxiterate 1000 $gene > $rpath/"$gnm"_align.fas
+mafft --thread ${SLURM_CPUS_PER_TASK} --globalpair --adjustdirectionaccurately --maxiterate 500 $gene > $rpath/"$gnm"_align.fas
 
 echo MAFFT finished for gene $gene
