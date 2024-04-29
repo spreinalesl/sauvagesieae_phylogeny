@@ -20,9 +20,10 @@
 
 ## Matrix path name
 mtype=supercontig
+program=iqtree
 
 ## Input trees
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/iqtree
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$program
 
 ## Output path
 output=names_ed
