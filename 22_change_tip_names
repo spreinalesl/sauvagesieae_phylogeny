@@ -3,7 +3,7 @@
 #SBATCH --job-name=idTOspp
 #SBATCH --partition=short
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=500MB
+#SBATCH --mem=200MB
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
@@ -12,16 +12,17 @@
 ###########
 ## This script merges individual trees in a single file and change tip names from sample ID to species name
 ## alternative, it is possible to process individual trees, just dont run the merge commands.
+## Min mem req 200MB
 
 ###########
 # COMMANDS
 ###########
 
 ## Matrix path name
-mtype=supercontig
+mtype=putative_orth_exons
 
 ## Input trees
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/iqtree
 
 ## Output path
 output=names_ed
@@ -32,7 +33,7 @@ rpath=$fpath/$output
 cd $fpath
 
 ## Merge all gene trees in a single file
-cat *.support > sauv_"$mtype"_gtrees.tre
+cat *.treefile > sauv_"$mtype"_gtrees.tre
 echo trees were merged!
 
 ## Fix a %$#$@#% problem caused by the MAFFT function --accurateX
@@ -40,7 +41,6 @@ sed -i -e 's/_R_SPRL_145/SPRL_145/g' sauv_"$mtype"_gtrees.tre
 echo MAFFT problem fixed!
 
 ## Activate conda environment to run R
-source /home/sreinale/.bashrc
 source activate renv
 
 ## Change sample IDs for species names

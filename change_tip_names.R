@@ -7,8 +7,8 @@
 library(ape)
 
 ## Input paths
-mtype <- "all_exons"
-program <- "raxml/tsearch30"
+mtype <- "putative_orth_exons"
+program <- "iqtree"
 fpath <- "./"
 
 # ID to species names table

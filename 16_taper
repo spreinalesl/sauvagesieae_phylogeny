@@ -2,7 +2,7 @@
 
 #SBATCH --job-name=taper
 #SBATCH --partition=short
-#SBATCH --array=0-273%20
+#SBATCH --array=0-613%100
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=1G
 #SBATCH --mail-user=s.reinales@kew.org
@@ -27,7 +27,7 @@ source /home/sreinale/.bashrc
 source activate julia
 
 ## Define names
-mtype=supercontig
+mtype=rm_out_exons
 
 ## Input fasta files
 fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$mtype
