@@ -2,7 +2,7 @@
 
 #SBATCH --job-name=iqtree
 #SBATCH --partition=short
-#SBATCH --array=0-6
+#SBATCH --array=0-598%20
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=1G
 #SBATCH --mail-user=s.reinales@kew.org
@@ -11,7 +11,6 @@
 ###########
 # NOTES
 ###########
-# 0-598%20
 ## These commands use IQtree to select the best substitution model for each gene, to be used as parameter in RAxML.
 ## The ModelFinder option tests the FreeRate model (+I+R) as well.
 ## Option -nt AUTO will tell IQ-TREE to automatically determine the best number of cores given the current data and computer.

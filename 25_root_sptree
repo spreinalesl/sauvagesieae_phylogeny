@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #SBATCH --job-name=rooting
-#SBATCH --partition=medium
+#SBATCH --partition=short
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=1G
+#SBATCH --mem=3MB
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
@@ -17,10 +17,10 @@
 ###########
 
 ## Define names
-mtype=all_exons
+mtype=supercontig
 
 ## Input trees
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/wastral/tsearch30
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/wastral
 
 ## Root sp tree using two outgroups (Bonn_stricta_Benko-Iseppon1726 = SRR10951426 and Hype_perforatum_OneKP132735 = ERR2040370)
 cd $fpath
