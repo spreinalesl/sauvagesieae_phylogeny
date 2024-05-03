@@ -5,10 +5,8 @@
 ## Tree paths
 tpath <- "~/Documents"
 tfiles <- list.files(pattern = ".tre$", tpath)
-tpattern <- "_sauv_all_exons"
+tpattern <- "rooted_sauv_"
 tpattern1 <- "_sptree_annot.tre"
-tpattern2 <- "rooted_"
-tpattern3 <- "plus_models_"
 
 ## Data path
 dpath <- "~/Documents/hybpiper_all_summary_ed.csv" 
@@ -18,15 +16,13 @@ dpath <- "~/Documents/hybpiper_all_summary_ed.csv"
 #####################################
 ## Required packages
 library(treeio) ## Installed using BiocManager::install("treeio")
-library(ggtree) ## Installed using remotes::install_github('YuLab-SMU/ggtree')
+library(ggplot2)
+library(ggtree) ## Installed using BiocManager::install("ggtree")
 library(ggimage) ## To plot pies on the tree
 library(gridExtra) ## To arrange all plots into one pdf
 library(ggpubr) ## To plot one tree per page into one pdf
 library(ggdist) ## To plot densities in the boxplots
 library(ggnewscale) ## To include two heatmaps in the same plot, adding a new scale
-
-## Plot names and title
-ptitle <- "wASTRAL_all_exons"
 
 ## Read table with information about gene recovery and sequence length
 sdata <- read.table(dpath, header = T, sep = ",")
@@ -75,8 +71,9 @@ for(i in 1:length(tfiles)){
   ## Tree name
   tname <- gsub(pattern = tpattern, replacement = "", tfiles[i])
   tname <- gsub(pattern = tpattern1, replacement = "", tname)
-  tname <- gsub(pattern = tpattern2, replacement = "", tname)
-  tname <- gsub(pattern = tpattern3, replacement = "", tname)
+  
+  ## Plot names and title
+  ptitle <- paste("wASTRAL", tname, sep = "_")
   
   ## Read tree
   mtree <- read.astral(paste(tpath, "/", tfiles[i], sep = ""))
@@ -106,13 +103,13 @@ for(i in 1:length(tfiles)){
            geom_text(aes(label = node), size = 2, hjust=-.3) +
            geom_tiplab(size = 2, hjust=-.2) +
            xlim_tree(70) +
-           ggtitle(paste("Node labels:", ptitle, tname))
+           ggtitle(paste("Node labels:", ptitle))
   
   ## Plot a basic tree
   t_all <- ggtree(mtree@phylo, ladderize = T, branch.length = "none") +
             geom_tiplab(size = 2, hjust=-.2) +
             xlim_tree(70) +
-            ggtitle(paste("Basic tree:", ptitle, tname))
+            ggtitle(paste("Basic tree:", ptitle))
   
   ## Make pie charts (takes some time if tree is big)
   pies_t_all <- nodepie(Q_t_all, cols = 1:3, color = c(Q1='darkblue', Q2='green', Q3='grey'), alpha = 0.8) # change style as needed, alpha is for transparency
@@ -127,7 +124,7 @@ for(i in 1:length(tfiles)){
   t_textq <- ggtree(mtree@phylo, ladderize = T, branch.length = "none") %<+% Q_t_all + 
               geom_nodelab(aes(x = branch, label = QS), vjust = -0.5, size = 2) +
               geom_tiplab(size = 2.5, hjust = -0.05) + xlim_tree(70) + 
-              ggtitle(paste("Q scores tree:", ptitle, tname))
+              ggtitle(paste("Q scores tree:", ptitle))
   
   # Local probability LPP
   P_t_all <- as.data.frame(P_t_all)
@@ -135,7 +132,7 @@ for(i in 1:length(tfiles)){
   t_textp <- ggtree(mtree@phylo, ladderize = T, branch.length = "none") %<+% P_t_all + 
               geom_nodelab(aes(x = branch, label = LP), vjust = -0.5, size = 2) +
               geom_tiplab(size = 2.5, hjust = -0.05) + xlim_tree(70) + 
-              ggtitle(paste("Local probability tree:", ptitle, tname))
+              ggtitle(paste("Local probability tree:", ptitle))
   
   ## Tree with Q scores as pies and LPP as annotations on the branches
   t_complete <- inset(t_textp, pies_t_all, width = 0.04, height = 0.04)
@@ -152,10 +149,10 @@ for(i in 1:length(tfiles)){
   ## arrange all the plots in the same page
   #grid.arrange(t_nl, t_textq, t_pies, t_complete) # All plots for each tree in the same page
   #multi.page <- ggarrange(t_nl, t_textq, t_textp, t_pies, t_complete, nrow = 1, ncol = 1) # for one plot per page
-  #ggexport(multi.page, filename = paste(tpath, "/", ptitle, "_", tname, ".pdf", sep = ""), width = 480, height = 520)
+  #ggexport(multi.page, filename = paste(tpath, "/", ptitle, ".pdf", sep = ""), width = 480, height = 520)
   
   plots <- list(t_nl, t_textq, t_textp, t_pies, t_complete, t_hmap_g)
-  ggsave(filename = paste(tpath, "/", ptitle, "_", tname, ".pdf", sep = ""), 
+  ggsave(filename = paste(tpath, "/", ptitle, ".pdf", sep = ""), 
          plot = marrangeGrob(plots, nrow = 1, ncol = 1),
          width = 15, height = 20)
   
