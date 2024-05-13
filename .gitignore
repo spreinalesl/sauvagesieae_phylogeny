@@ -5,6 +5,10 @@ slurm-*
 .Rhistory
 .Rapp.history
 
+# Emacs temp
+*~
+*#
+
 # Session Data files
 .RData
 .RDataTmp
