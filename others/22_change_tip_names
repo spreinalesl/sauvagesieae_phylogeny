@@ -1,0 +1,28 @@
+#!/bin/bash
+
+#SBATCH --job-name=idTOspp
+#SBATCH --partition=short
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=500MB
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+## This script run the R script to change tip names from sample ID to species name.
+## It runs on individual trees or a file containing multiple trees.
+## Min mem req
+
+###########
+# COMMANDS
+###########
+
+## Activate conda environment to run R
+source activate renv
+
+## Change sample IDs for species names
+## Run r script
+Rscript --vanilla ~/scripts/sauvagesieae_phylogeny/others/change_tip_names.R
+
+echo "sample IDs to species names done!"

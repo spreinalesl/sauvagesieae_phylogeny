@@ -1,0 +1,56 @@
+#!/bin/bash
+
+#SBATCH --job-name=mafft
+#SBATCH --partition=short
+#SBATCH --array=0-1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=24G
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+## Align DNA sequences for each locus using the algorith E-INS-i inplemented in mafft. This algorithm is suitable to align multiple cDNAs
+## and multiple genomic sequences of a gene from closely related species, which has several conserved motifs embedded in long unalignable regions.
+## As E-INS-i has the minimum assumption of the three methods, this is recommended if the nature of sequences to be aligned is not clear.
+## But, given that this analysis is just for Rhytidanthera and alies, we assume that entire region can be aligned. Consequently we use G-INS-i algorithm.
+## Most genes run well with 8 to 12 G of memory.
+## For exons 335 genes
+## For supercontig XX genes
+
+###########
+# COMMANDS
+###########
+
+## Activate conda environment (because mafft was installed as part of hybpiper)
+source activate hybpiper
+
+## Define names
+probe=schn
+mtype=paralogs
+
+## Path to fasta files
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/$mtype/$probe/"$mtype"_all
+
+## Output path
+mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/"$mtype"_all
+rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/"$mtype"_all
+
+## Go to fpath
+cd $fpath
+echo "number of files to be aligned:"
+ls -1 | wc -l
+
+## Define variable to list fasta files and iterate over each element using the SLURM_ARRAY_TASK_ID variable
+## Path to a list of selected genes
+gene_list=($(ls * | grep fasta$))
+gene=(${gene_list[$SLURM_ARRAY_TASK_ID]})
+gnm=$(echo $gene | sed 's/\.fasta//')
+
+echo $gnm
+
+## Run mafft
+mafft --thread ${SLURM_CPUS_PER_TASK} --globalpair --adjustdirectionaccurately --maxiterate 1000 $gene > $rpath/"$gnm"_align.fas
+
+echo MAFFT finished for gene $gene

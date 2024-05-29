@@ -1,0 +1,49 @@
+#!/bin/bash
+
+#SBATCH --job-name=wastral
+#SBATCH --partition=short
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=2G
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+## Options -r ans -s run with more rounds of placement for ensured optimality (default is 4 and 4)
+## Option -u 0 to compute species tree topology only. Option -u 2 to add support and local-PP for all three resolutions of each branch
+## Option -a to force Astral to put together multiple individuals/genes in the species tree. Provide a correspondence map between species names and IDs
+## You must provide max (-x) and min (-n) of support value to the program; default to max=100, min=0
+
+###########
+# COMMANDS
+###########
+
+## Matrix path name
+mtype=putative_orth_exons
+program=iqtree
+
+## Input trees
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$program/put_orth
+
+## Output path
+output=wastral
+mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$output/put_orth
+rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$output/put_orth
+
+## Path to multi-sequence IDs map
+#msID_map=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/paralog_maps/multiseqID_all.map
+
+## Define max and min support values
+maxv=100
+minv=33
+
+## Run Astral-pro with annotations
+/home/sreinale/scratch/apps/addprograms/ASTER/bin/astral-hybrid -t ${SLURM_CPUS_PER_TASK} \
+                                                        	-r 16 -s 16 \
+                                                                -u 2 \
+                                                                -x $maxv -n $minv \
+                                                                -o $rpath/sauv_put_orth_BS33_sptree_annot.tre \
+                                                                -i $fpath/sauv_put_orth_gtrees_nm_ed.tre 2>$rpath/sauv_put_orth_BS33_sptree_annot.log
+
+echo wAstral finished!
