@@ -1,0 +1,31 @@
+#!/bin/bash
+
+#SBATCH --job-name=hybphaser1a
+#SBATCH --partition=short
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=250MB
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+## Run R script 1a_count_snps to generate a table with the proportions of SNPs in each locus and sample as well as a table with recovered sequence length.
+## Ambiguity characters that code for 3 different nucleotides are weighted twice of the ones coding for 2 different nucleotides.
+## Before running the script it is necessary to edit the config.txt file. It is in the same directory of R script.
+## For one sample the script requires 150MB
+
+###########
+# COMMANDS
+###########
+
+## Activate conda environment
+source activate hybphaser
+
+## Go to Hybphaser directory
+cd ~/scratch/apps/conda/envs/hybphaser/HybPhaser
+
+## Run r script
+Rscript --vanilla 1a_count_snps.R
+
+echo HybPhaser 1a end!

@@ -2,7 +2,7 @@
 
 #SBATCH --job-name=iqtree
 #SBATCH --partition=medium
-#SBATCH --array=0-613%100
+#SBATCH --array=0-613%20
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=1G
 #SBATCH --mail-user=s.reinales@kew.org
