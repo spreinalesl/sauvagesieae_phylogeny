@@ -2,9 +2,9 @@
 
 #SBATCH --job-name=hybphaser1
 #SBATCH --partition=short
-#SBATCH --array=0-11
+#SBATCH --array=0-15
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=250MB
+#SBATCH --mem=200MB
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
@@ -21,7 +21,7 @@
 ## and in at least 15% of the reads.
 ## -c clean-up: If set, reads and mapping files are removed (.bam, .vcf.gz)
 ## In mean the script requires 60 MB per sample but some samples require 85MB, 98MB, so run it with 120MB. Each sample is processed in ca. 15min using a single core mode.
-## For ochn genes 12 samples faild with 120MB. I used 500MB to re-run those samples (Perhaps 250 MB is enough).
+## For ochn genes 12 samples faild with 120MB. I used 500MB to re-run those samples (Perhaps 200 MB is enough).
 ## Multithread seems to have a weird behaviour.
 
 ###########
@@ -35,11 +35,11 @@ source activate hybphaser
 export PATH=/home/sreinale/scratch/apps/conda/envs/hybphaser/bin:$PATH
 
 ## Define names
-probe=schn
-mtype=sauv_sprl
+#probe=schn
+mtype=addseqs_a353
 
 ## Define fasta file path
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/$mtype/$probe
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/$mtype
 
 ## Path to sample list
 namelist=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/name_list/namelist_hybphaser_test.txt
@@ -48,8 +48,8 @@ sampnm=(${sample_list[$SLURM_ARRAY_TASK_ID]})
 echo $sampnm
 
 ## Output path
-mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybphaser/$probe
-rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybphaser/$probe
+mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybphaser/$mtype
+rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybphaser/$mtype
 
 ## Temporary folder
 cd $TMPDIR
@@ -64,4 +64,4 @@ echo end extraction!
 #bash ~/scratch/apps/conda/envs/hybphaser/HybPhaser/1_generate_consensus_sequences.sh -n $namelist -o $rpath -c -t ${SLURM_CPUS_PER_TASK} ## using a sample list
 bash ~/scratch/apps/conda/envs/hybphaser/HybPhaser/1_generate_consensus_sequences.sh -s $sampnm -o $rpath -c -t ${SLURM_CPUS_PER_TASK} ## using an array to process one sample per job
 
-echo HybPhaser 1 end!
+echo HybPhaser 1

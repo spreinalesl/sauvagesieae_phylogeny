@@ -3,7 +3,7 @@
 #SBATCH --job-name=hybphaser1b
 #SBATCH --partition=short
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=250MB
+#SBATCH --mem=200MB
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
