@@ -19,8 +19,8 @@
 ###########
 
 ## Matrix path name
-mtype=putative_orth_exons
-program=iqtree
+mtype=orthlg_exons
+program=
 
 ## Input trees
 fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$program
