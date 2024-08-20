@@ -7,7 +7,7 @@
 library(ape)
 
 ## Input paths
-mtype <- "supercontig"
+mtype <- "putative_orth_exons"
 program <- "iqtree"
 fpath <- "./"
 

@@ -19,7 +19,7 @@
 ###########
 
 ## Matrix path name
-mtype=supercontig
+mtype=putative_orth_exons
 program=iqtree
 
 ## Input trees
