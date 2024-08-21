@@ -7,8 +7,8 @@
 library(ape)
 
 ## Input paths
-mtype <- "orthlg_exons"
-program <- ""
+mtype <- "all_exons"
+program <- "iqtree"
 fpath <- "./"
 
 # ID to species names table

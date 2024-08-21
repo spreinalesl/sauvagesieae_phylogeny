@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #SBATCH --job-name=idTOspp
-#SBATCH --partition=short
+#SBATCH --partition=medium
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=200MB
+#SBATCH --mem=500MB
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
@@ -13,14 +13,15 @@
 ## This script merges individual trees in a single file and change tip names from sample ID to species name
 ## alternative, it is possible to process individual trees, just dont run the merge commands.
 ## Min mem req 200MB
+## For all_exons 500MB
 
 ###########
 # COMMANDS
 ###########
 
 ## Matrix path name
-mtype=orthlg_exons
-program=
+mtype=all_exons
+program=iqtree
 
 ## Input trees
 fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$program
