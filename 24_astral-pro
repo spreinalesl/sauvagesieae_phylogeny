@@ -18,38 +18,40 @@
 # COMMANDS
 ###########
 
+## Matrix path name
+mtype=all_paralogs
+program=iqtree
+
 ## Input trees
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/BS10_MLtrees
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$program
 
 ## Output path
-mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/astral-pro
-rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/astral-pro/re-run
-
-## Merge all gene trees in a single file
-cd $fpath
-cat *BS10.tre > $rpath/sauv_prlgs_all_BS10_gtrees.tre
+output=astral-pro
+mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$output
+rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$output
 
 ## Path to multi-sequence IDs map
-msID_map=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/paralog_maps/multiseqID_all.map
+#msID_map=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/paralog_maps/multiseqID_all.map
 
-## Go to output path
-cd $rpath
+## Collapsing threshold
+BS=BS10
 
 ## Run Astral-pro withouth annotations
 ~/scratch/apps/addprograms/ASTER/bin/astral-pro -t ${SLURM_CPUS_PER_TASK} \
                                                 -r 16 -s 16 \
                                                 -u 0 \
-                                                -a $msID_map \
-                                                -o sauv_prlgs_all_BS10_sptree.tre \
-                                                -i sauv_prlgs_all_BS10_gtrees.tre 2>sauv_prlgs_all_BS10_sptree.log
+                                                #-a $msID_map \
+                                                -o $rpath/sauv_"$mtype"_"$BS"_sptree.tre \
+                                                -i $fpath/sauv_"$mtype"_gtrees_nm_ed.tre 2>sauv_"$mtype"_"BS"_sptree.log
+
+echo Astral-pro NO annotations finished!
 
 ## Run Astral-pro with annotations
 ~/scratch/apps/addprograms/ASTER/bin/astral-pro -t ${SLURM_CPUS_PER_TASK} \
                                                 -r 16 -s 16 \
                                                 -u 2 \
-                                                -a $msID_map \
-                                                -o sauv_prlgs_all_BS10_sptree_annot.tre \
-                                                -i sauv_prlgs_all_BS10_gtrees.tre 2>sauv_prlgs_all_BS10_sptree_annot.log
+                                                #-a $msID_map \
+                                                -o $rpath/sauv_"$mtype"_"$BS"_sptree_annot.tre \
+                                                -i $fpath/sauv_"$mtype"_gtrees_nm_ed.tre 2>sauv_"$mtype"_"BS"_sptree_annot.log
 
-
-echo Astral-pro finished!
+echo Astral-pro whith annotations finished!

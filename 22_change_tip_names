@@ -20,7 +20,7 @@
 ###########
 
 ## Matrix path name
-mtype=all_exons
+mtype=all_paralogs
 program=iqtree
 
 ## Input trees

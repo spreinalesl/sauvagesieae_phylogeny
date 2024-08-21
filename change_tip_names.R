@@ -7,7 +7,7 @@
 library(ape)
 
 ## Input paths
-mtype <- "all_exons"
+mtype <- "all_paralogs"
 program <- "iqtree"
 fpath <- "./"
 
