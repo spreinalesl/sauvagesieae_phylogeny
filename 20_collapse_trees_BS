@@ -1,0 +1,49 @@
+#!/bin/bash
+
+#SBATCH --job-name=BS_collapse
+#SBATCH --partition=medium
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=10MB
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+## This command aims to collapse branches with BS below 10% from ML bootstraped gene trees, to improve ASTRAL accuracy.
+## These trees were estimated by RaxMl-ng using the TBE bootstrap method or iqtree nonparametric bootstrap.
+## nw_ed iterates over the nodes in a specific order (Newick order by default), and for each node they evaluate
+## a logical expression provided by the user. If the expression is true, they perform a user-specified action.
+## Option i is the condition: true iff node is strictly internal (i.e., not root!)
+## Option b<=33 is the condition lesser tahn or equal to 33% of Bootstrap support.
+## Option o is the action: splice out the node (i.e. collapse branch). Applied on unsupported nodes (lesser than or equal to X% BS)
+## Tutorial: https://gensoft.pasteur.fr/docs/newick-utils/1.6/nwutils_tutorial.pdf
+
+###########
+# COMMANDS
+###########
+
+## Define names
+mtype=all_paralogs
+program=iqtree
+
+## Input trees
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$program
+
+## Output folder
+mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$program/BScollapsed_trees
+rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$program/BScollapsed_trees
+
+## Go to folder
+cd $fpath
+
+## Iterate tree files in the input folder and collapse unsupported nodes
+FILES=$(ls * | grep trimal)
+
+for filenm in $FILES; do
+ echo $filenm
+ ~/scratch/apps/conda/bin/nw_ed $filenm 'i & b<=33' o > $rpath/"BS33"_$filenm
+ echo $filenm tree was edited using nw_ed
+done
+
+echo nw_ed finished!
