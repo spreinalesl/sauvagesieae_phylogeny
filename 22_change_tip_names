@@ -20,9 +20,9 @@
 ###########
 
 ## Matrix path name
-mtype=all_paralogs
+mtype=rm_out_exons
 program=iqtree
-addf=BScollapsed_trees
+addf=
 
 ## Input trees
 fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$program/$addf

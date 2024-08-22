@@ -1,9 +1,9 @@
 #!/bin/bash
 
 #SBATCH --job-name=wastral
-#SBATCH --partition=medium
+#SBATCH --partition=short
 #SBATCH --cpus-per-task=16
-#SBATCH --mem=2G
+#SBATCH --mem=100MB
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
@@ -20,7 +20,7 @@
 ###########
 
 ## Matrix path name
-mtype=all_exons
+mtype=rm_out_exons
 program=iqtree
 
 ## Input trees
@@ -38,12 +38,25 @@ rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$ou
 maxv=100
 minv=33
 
+## Collapsing threshold
+BS=BS33
+
 ## Run Astral-pro with annotations
 /home/sreinale/scratch/apps/addprograms/ASTER/bin/astral-hybrid -t ${SLURM_CPUS_PER_TASK} \
-                                                        	-r 16 -s 16 \
-                                                                -u 2 \
+                                                                -r 16 -s 16 \
+                                                                -u 0 \
                                                                 -x $maxv -n $minv \
-                                                                -o $rpath/sauv_"$mtype"_BS33_sptree_annot.tre \
-                                                                -i $fpath/sauv_"$mtype"_gtrees_nm_ed.tre 2>$rpath/sauv_"$mtype"_BS33_sptree.log
+                                                                -o $rpath/sauv_"$mtype"_"$BS"_sptree.tre \
+                                                                -i $fpath/sauv_"$mtype"_gtrees_nm_ed.tre 2>$rpath/sauv_"$mtype"_"$BS"_sptree.log
 
-echo wAstral finished!
+#echo wAstral NO annotations finished!
+
+## Run Astral-pro with annotations
+#/home/sreinale/scratch/apps/addprograms/ASTER/bin/astral-hybrid -t ${SLURM_CPUS_PER_TASK} \
+#                                                        	-r 16 -s 16 \
+#                                                                -u 2 \
+#                                                                -x $maxv -n $minv \
+#                                                                -o $rpath/sauv_"$mtype"_"$BS"_sptree_annot.tre \
+#                                                                -i $fpath/sauv_"$mtype"_gtrees_nm_ed.tre 2>$rpath/sauv_"$mtype"_"$BS"_sptree_annot.log
+
+#echo wAstral with annotations finished!

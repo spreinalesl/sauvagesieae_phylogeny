@@ -3,7 +3,7 @@
 #SBATCH --job-name=astral-pro
 #SBATCH --partition=medium
 #SBATCH --cpus-per-task=16
-#SBATCH --mem=8G
+#SBATCH --mem=100MB
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
