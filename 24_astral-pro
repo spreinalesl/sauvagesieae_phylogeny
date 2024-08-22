@@ -13,6 +13,7 @@
 ## Options -r ans -s run with more rounds of placement for ensured optimality (default is 4 and 4)
 ## To place taxa on an existing fully resolved species tree, use -c SPECIES_TREE_IN_NEWICK_FORMAT
 ## Option -u 0 to compute species tree topology only. Option -u 2 to add support and local-PP for all three resolutions of each branch
+## Option -a $pathTOmap uses a map to force samples to be a clade (e.g. different contigs of the same sample or different samples for the same species)
 
 ###########
 # COMMANDS
@@ -21,9 +22,10 @@
 ## Matrix path name
 mtype=all_paralogs
 program=iqtree
+addf=BScollapsed_trees
 
 ## Input trees
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$program
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$program/$addf
 
 ## Output path
 output=astral-pro
@@ -34,15 +36,14 @@ rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$ou
 #msID_map=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/paralog_maps/multiseqID_all.map
 
 ## Collapsing threshold
-BS=BS10
+BS=BS33
 
 ## Run Astral-pro withouth annotations
 ~/scratch/apps/addprograms/ASTER/bin/astral-pro -t ${SLURM_CPUS_PER_TASK} \
                                                 -r 16 -s 16 \
                                                 -u 0 \
-                                                #-a $msID_map \
                                                 -o $rpath/sauv_"$mtype"_"$BS"_sptree.tre \
-                                                -i $fpath/sauv_"$mtype"_gtrees_nm_ed.tre 2>sauv_"$mtype"_"BS"_sptree.log
+                                                -i $fpath/sauv_"$mtype"_gtrees_nm_ed.tre 2>$rpath/sauv_"$mtype"_"BS"_sptree.log
 
 echo Astral-pro NO annotations finished!
 
@@ -50,8 +51,7 @@ echo Astral-pro NO annotations finished!
 ~/scratch/apps/addprograms/ASTER/bin/astral-pro -t ${SLURM_CPUS_PER_TASK} \
                                                 -r 16 -s 16 \
                                                 -u 2 \
-                                                #-a $msID_map \
                                                 -o $rpath/sauv_"$mtype"_"$BS"_sptree_annot.tre \
-                                                -i $fpath/sauv_"$mtype"_gtrees_nm_ed.tre 2>sauv_"$mtype"_"BS"_sptree_annot.log
+                                                -i $fpath/sauv_"$mtype"_gtrees_nm_ed.tre 2>$rpath/sauv_"$mtype"_"BS"_sptree_annot.log
 
 echo Astral-pro whith annotations finished!

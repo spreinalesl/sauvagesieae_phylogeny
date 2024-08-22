@@ -8,7 +8,7 @@ library(ape)
 
 ## Input paths
 mtype <- "all_paralogs"
-program <- "iqtree"
+program <- "iqtree/BScollapsed_trees"
 fpath <- "./"
 
 # ID to species names table
