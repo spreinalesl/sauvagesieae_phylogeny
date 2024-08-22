@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --job-name=astral-pro
-#SBATCH --partition=medium
+#SBATCH --partition=short
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=100MB
 #SBATCH --mail-user=s.reinales@kew.org
@@ -22,7 +22,7 @@
 ## Matrix path name
 mtype=all_paralogs
 program=iqtree
-addf=BScollapsed_trees
+addf=
 
 ## Input trees
 fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$program/$addf
@@ -36,14 +36,14 @@ rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$ou
 #msID_map=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/paralog_maps/multiseqID_all.map
 
 ## Collapsing threshold
-BS=BS33
+BS=BS0
 
 ## Run Astral-pro withouth annotations
 ~/scratch/apps/addprograms/ASTER/bin/astral-pro -t ${SLURM_CPUS_PER_TASK} \
                                                 -r 16 -s 16 \
                                                 -u 0 \
                                                 -o $rpath/sauv_"$mtype"_"$BS"_sptree.tre \
-                                                -i $fpath/sauv_"$mtype"_gtrees_nm_ed.tre 2>$rpath/sauv_"$mtype"_"BS"_sptree.log
+                                                -i $fpath/sauv_"$mtype"_gtrees_nm_ed.tre 2>$rpath/sauv_"$mtype"_"$BS"_sptree.log
 
 echo Astral-pro NO annotations finished!
 
@@ -52,6 +52,6 @@ echo Astral-pro NO annotations finished!
                                                 -r 16 -s 16 \
                                                 -u 2 \
                                                 -o $rpath/sauv_"$mtype"_"$BS"_sptree_annot.tre \
-                                                -i $fpath/sauv_"$mtype"_gtrees_nm_ed.tre 2>$rpath/sauv_"$mtype"_"BS"_sptree_annot.log
+                                                -i $fpath/sauv_"$mtype"_gtrees_nm_ed.tre 2>$rpath/sauv_"$mtype"_"$BS"_sptree_annot.log
 
 echo Astral-pro whith annotations finished!
