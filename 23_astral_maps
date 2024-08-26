@@ -1,9 +1,9 @@
 #!/bin/bash
 
-#SBATCH --job-name=p-maps
+#SBATCH --job-name=prlgs-map
 #SBATCH --partition=short
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=1G
+#SBATCH --mem=100MB
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
@@ -17,15 +17,17 @@
 ###########
 
 ## Create an output folder
-mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/paralog_maps
+mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/paralogs_map
 
 ## Activate conda environment
-source /home/sreinale/.bashrc
 source activate renv
 
 ## Run r script
 Rscript --vanilla multiseq_map.R
 
 ## Merge all maps in a single file
-cd ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/paralog_maps
+cd ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/paralogs_map
+
 cat *.map | sort | uniq > multiseqID_all.map
+
+echo paralogs_map created!
