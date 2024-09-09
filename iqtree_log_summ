@@ -1,0 +1,20 @@
+#!/bin/bash
+
+## Read log files
+cd /home/spreinalesl/Documents
+logfiles=$(ls | grep taper)
+
+## Iterate logfiles and extract information
+
+for i in $logfiles; do
+ ## Extract info
+ FNM=$(grep "Input file name" $i | cut -d " " -f 4) ## File name
+ GNM=$(echo $FNM | sed 's/taper_//')
+ GNM=$(echo $GNM | sed 's/_align.fas//') ## Gene name
+ NSAMP=$(grep "Input data" $i | cut -d " " -f 3) ## Number of samples in this tree
+ NSITES=$(grep "Input data" $i | cut -d " " -f 6) ## Number of sites
+ PINFS=$(grep "Number of parsimony informative sites" $i | cut -d " " -f 6) ## Number of prs info sites
+ 
+ ## Write info in a file
+ echo "$FNM;$GNM;$NSAMP;$NSITES;$PINFS" >> ./gtrees_iqtree_summary/iqtree_summ.txt
+done
