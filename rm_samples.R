@@ -1,16 +1,22 @@
+#################################################
+## This script removes samples with less than 
+## XX% of bp and genes recovered 
+##################################################
+
+## Packages
 library(ape)
 
 ## Paths
-fpath <- "~/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/hybpiper/fasta_files/schn/exons"
-tablespath <- "~/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/hybpiper/filtering_test/medium_filtering_by_coverage"
+fpath <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/fasta_files/a353/exons"
+tablespath <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/name_list"
 smpTOrm <- "samplesTOremove33_all.csv"
-outfastadir <- "~/Documents/fasta_edited"
-outnm <- "rm30_smpANDgns_summ.csv"
+outfastadir <- paste(fpath, "smprm", sep = "/")
+outnm <- "rm30_smpANDgns_a353_summ.csv"
 
 ## Set min number of sampling to remove a gene
 # for a353 35 samples is the min samples number
 # for schn 46 samples is the min sample number
-minsmp <- 45
+minsmp <- 34
   
 ## Read tables
 smpnm <- read.csv(paste(tablespath, smpTOrm, sep = "/"), sep = "\t")
