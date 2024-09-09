@@ -7,16 +7,16 @@
 library(ape)
 
 ## Paths
-fpath <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/paralogs/a353/paralogs_all"
+fpath <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/paralogs/schn/paralogs_all"
 tablespath <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/name_list"
 smpTOrm <- "samplesTOremove33_all.csv"
 outfastadir <- paste(fpath, "smprm", sep = "/")
-outnm <- "rm30_smpANDgns_a353prlgs_summ.csv"
+outnm <- "rm30_smpANDgns_schnprlgs_summ.csv"
 
 ## Set min number of sampling to remove a gene
 # for a353 35 samples is the min samples number
 # for schn 46 samples is the min sample number
-minsmp <- 35
+minsmp <- 45
   
 ## Read tables
 smpnm <- read.csv(paste(tablespath, smpTOrm, sep = "/"), sep = "\t")
