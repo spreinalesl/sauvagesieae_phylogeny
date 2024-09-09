@@ -3,7 +3,7 @@
 #SBATCH --job-name=rm_smp
 #SBATCH --partition=short
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=200MB
+#SBATCH --mem=180MB
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
@@ -20,7 +20,7 @@
 source activate renv
 
 ## Define dataset
-probe=a353
+probe=schn
 
 ## Paths
 fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/fasta_files/$probe/exons
