@@ -3,7 +3,7 @@
 #SBATCH --job-name=rm_smp
 #SBATCH --partition=short
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=180MB
+#SBATCH --mem=250MB
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
@@ -20,15 +20,15 @@
 source activate renv
 
 ## Define dataset
-probe=schn
+probe=a353
 
 ## Paths
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/fasta_files/$probe/exons
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/paralogs/$probe/paralogs_all
 
 # Out path
 mkdir -p $fpath/smprm
 
 ## Run r script
-Rscript --vanilla rm_samples.R
+Rscript --vanilla rm_samples_prlgs.R
 
 echo END run!
