@@ -11,7 +11,7 @@ fpath <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/par
 tablespath <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/name_list"
 smpTOrm <- "samplesTOremove33_all.csv"
 outfastadir <- paste(fpath, "smprm", sep = "/")
-outnm <- "rm30_smpANDgns_a353_summ.csv"
+outnm <- "rm30_smpANDgns_a353prlgs_summ.csv"
 
 ## Set min number of sampling to remove a gene
 # for a353 35 samples is the min samples number
@@ -54,8 +54,8 @@ for(i in 1:length(fastafl)){
   }
   
   ## Extract tip labels
-  tips <- unlist(lapply(strsplit(labels(fastaf), split = "\\."), function(x) x[1]))
-  tips[1]
+  tips <- unlist(lapply(strsplit(labels(fastaf), split = " "), function(x) x[1]))
+  tips <- unlist(lapply(strsplit(tips, split = "\\."), function(x) x[1]))
 
   ## Positions to remove
   rmpst <- which(tips %in% smpnm)

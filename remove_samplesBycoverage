@@ -3,7 +3,7 @@
 #SBATCH --job-name=rm_smp
 #SBATCH --partition=short
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=250MB
+#SBATCH --mem=500MB
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
