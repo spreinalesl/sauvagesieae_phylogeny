@@ -2,16 +2,16 @@
 
 #SBATCH --job-name=mafft
 #SBATCH --partition=short
-#SBATCH --array=0
+#SBATCH --array=0-333%10
 #SBATCH --cpus-per-task=4
-#SBATCH --mem=60G
+#SBATCH --mem=250MB
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
 # NOTES
 ###########
-## Align DNA sequences for each locus using the algorith E-INS-i inplemented in mafft. This algorithm is suitable to align multiple cDNAs
+## Align DNA sequences for each locus using the algorith E-INS-i inplemented in mafft for supercontig. This algorithm is suitable to align multiple cDNAs
 ## and multiple genomic sequences of a gene from closely related species, which has several conserved motifs embedded in long unalignable regions.
 ## As E-INS-i has the minimum assumption of the three methods, this is recommended if the nature of sequences to be aligned is not clear.
 ## Most genes run well with 8 to 12 G of memory. Nevetheless, genes with few samples and large amount of missing data are difficult to  align
@@ -25,12 +25,11 @@
 ###########
 
 ## Activate conda environment (because mafft was installed as part of hybpiper)
-source /home/sreinale/.bashrc
 source activate hybpiper
 
 ## Define names
 probe=a353
-imtype=rm_out
+imtype=smprm
 
 ## Define fasta file path
 fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/fasta_files/$probe/exons/$imtype
@@ -49,7 +48,7 @@ gene=(${gene_list[$SLURM_ARRAY_TASK_ID]})
 gnm=$(echo $gene | sed 's/\.FNA//')
 
 ## Run mafft
-#mafft --thread ${SLURM_CPUS_PER_TASK} --genafpair --adjustdirectionaccurately --maxiterate 1000 $gene > $rpath/"$gnm"_align.fas
-mafft --thread ${SLURM_CPUS_PER_TASK} --globalpair --adjustdirectionaccurately --maxiterate 500 $gene > $rpath/"$gnm"_align.fas
+#mafft --thread ${SLURM_CPUS_PER_TASK} --genafpair --adjustdirectionaccurately --maxiterate 1000 $gene > $rpath/"$gnm"_align.fas ## For supercontig
+mafft --thread ${SLURM_CPUS_PER_TASK} --globalpair --adjustdirectionaccurately --maxiterate 1000 $gene > $rpath/"$gnm"_align.fas ## For exons
 
 echo MAFFT finished for gene $gene
