@@ -2,9 +2,9 @@
 
 #SBATCH --job-name=mafft
 #SBATCH --partition=short
-#SBATCH --array=0-1
+#SBATCH --array=0-273%10
 #SBATCH --cpus-per-task=4
-#SBATCH --mem=60G
+#SBATCH --mem=500MB
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
@@ -24,12 +24,11 @@
 ###########
 
 ## Activate conda environment (because mafft was installed as part of hybpiper)
-source /home/sreinale/.bashrc
 source activate hybpiper
 
 ## Define names
 probe=schn
-imtype=rm_out
+imtype=smprm
 
 ## Define fasta file path
 fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/fasta_files/$probe/exons/$imtype
@@ -48,6 +47,7 @@ gene=(${gene_list[$SLURM_ARRAY_TASK_ID]})
 gnm=$(echo $gene | sed 's/\.FNA//')
 
 ## Run mafft
-mafft --thread ${SLURM_CPUS_PER_TASK} --genafpair --adjustdirectionaccurately --maxiterate 1000 $gene > $rpath/"$gnm"_align.fas
+#mafft --thread ${SLURM_CPUS_PER_TASK} --genafpair --adjustdirectionaccurately --maxiterate 1000 $gene > $rpath/"$gnm"_align.fas ## For supercontig
+mafft --thread ${SLURM_CPUS_PER_TASK} --globalpair --adjustdirectionaccurately --maxiterate 1000 $gene > $rpath/"$gnm"_align.fas ## For exons
 
 echo MAFFT finished for gene $gene
