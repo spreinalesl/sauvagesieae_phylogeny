@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #SBATCH --job-name=trimal
-#SBATCH --partition=medium
-#SBATCH --array=0-617%50
+#SBATCH --partition=short
+#SBATCH --array=0-607%10
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=150MB
+#SBATCH --mem=10MB
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
@@ -26,7 +26,7 @@
 source activate julia
 
 ## Define names
-mtype=paralogs_all
+mtype=smprm_exons
 
 ## Input fasta files
 fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$mtype

@@ -1,0 +1,61 @@
+#!/bin/bash
+
+#SBATCH --job-name=raxml-dist
+#SBATCH --partition=short
+#SBATCH --cpus-per-task=8
+#SBATCH --mem=100MB
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+# The option --rfdist compute the topological Robinson-Foulds (RF) distance among all resulting trees. It's possible to use this metrics as a measure of
+# topological uncertainty by examining the .rfDistances file.
+# Output file contains 4 columns: 1st and 2nd column contain tree indices in the NEWICK file, 3rd column shows the absolute RF distance between those two trees,
+# and 4th column shows the relative or normalized RF distance ranging from 0 to 1. Relative RF distance is calculated by dividing the absolute value (column 3)
+# by the maximum possible RF distance for this tree pair
+
+###########
+# COMMANDS
+###########
+
+## Matrix path name
+mtype=all_exons
+program=raxml
+method=trimal
+
+## Go to the local disk
+#cd $TMPDIR
+
+## Input trees
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$program/tsearch30
+
+## Extract files
+#tar -xzf $fpath/mlTrees.tar.gz
+#echo tree extraction done!
+
+cd $fpath
+## Estimate RF distances among mltrees (unrooted)
+for i in `ls *.mlTrees`
+do
+ ~/scratch/apps/addprograms/raxml-ng/build/bin/raxml-ng-mpi --threads auto{8} \
+                                                            --rfdist \
+                                                            --tree $i \
+                                                            --prefix $i.RF
+done
+
+## Copy results
+#mv -v ./RF_* $fpath
+
+## Estimate RF distances among resulting unrooted trees
+#cd $fpath
+#for i in *nm_ed.tre
+#do
+# ~/scratch/apps/addprograms/raxml-ng/build/bin/raxml-ng-mpi --threads auto{8} \
+#                                                            --rfdist \
+#                                                            --tree $i \
+#                                                            --prefix RF_$i
+#done
+
+echo RF distances estimated!

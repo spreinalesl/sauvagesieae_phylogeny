@@ -20,7 +20,7 @@
 ###########
 
 ## Matrix path name
-mtype=all_paralogs
+mtype=smprm_exons
 program=iqtree
 addf=
 

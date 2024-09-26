@@ -20,7 +20,7 @@
 ###########
 
 ## Matrix path name
-mtype=rm_out_exons
+mtype=smprm_exons
 program=iqtree
 
 ## Input trees
@@ -49,14 +49,14 @@ BS=BS33
                                                                 -o $rpath/sauv_"$mtype"_"$BS"_sptree.tre \
                                                                 -i $fpath/sauv_"$mtype"_gtrees_nm_ed.tre 2>$rpath/sauv_"$mtype"_"$BS"_sptree.log
 
-#echo wAstral NO annotations finished!
+echo wAstral NO annotations finished!
 
 ## Run Astral-pro with annotations
-#/home/sreinale/scratch/apps/addprograms/ASTER/bin/astral-hybrid -t ${SLURM_CPUS_PER_TASK} \
-#                                                        	-r 16 -s 16 \
-#                                                                -u 2 \
-#                                                                -x $maxv -n $minv \
-#                                                                -o $rpath/sauv_"$mtype"_"$BS"_sptree_annot.tre \
-#                                                                -i $fpath/sauv_"$mtype"_gtrees_nm_ed.tre 2>$rpath/sauv_"$mtype"_"$BS"_sptree_annot.log
+/home/sreinale/scratch/apps/addprograms/ASTER/bin/astral-hybrid -t ${SLURM_CPUS_PER_TASK} \
+                                                        	-r 16 -s 16 \
+                                                                -u 2 \
+                                                                -x $maxv -n $minv \
+                                                                -o $rpath/sauv_"$mtype"_"$BS"_sptree_annot.tre \
+                                                                -i $fpath/sauv_"$mtype"_gtrees_nm_ed.tre 2>$rpath/sauv_"$mtype"_"$BS"_sptree_annot.log
 
-#echo wAstral with annotations finished!
+echo wAstral with annotations finished!

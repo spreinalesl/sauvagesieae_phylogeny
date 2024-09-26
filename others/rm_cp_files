@@ -1,0 +1,90 @@
+#!/bin/bash
+
+#SBATCH --job-name=cp
+#SBATCH --partition=short
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=50MB
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+## Path
+#topath=/home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybphaser/all_samp_all_genes
+
+## Remove the first cagada
+#echo "begin rm"
+
+#rm -r $topath/01_data
+
+## Copy files a353 to all_smp_all_genes
+#cp -r -v /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybphaser/a353/01_data $topath
+
+## Copy addseq_a353 to all_smp_all_genes
+#cp -v /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybphaser/addseqs_a353/01_data/ERR* $topath/01_data
+
+#echo "rm END"
+
+## Compress hybphaser results
+#cd /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybphaser/a353/01_data
+
+#tar -czvf a353_01_data.tar.gz SPRL_*
+
+## Extract folders
+#cd $topath/01_data
+
+#tar -xzvf a353_01_data.tar.gz
+
+#echo "xtar DONE"
+
+## Copy addseq_a353 to all_smp_all_genes
+#cd /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybphaser/addseqs_schn/01_data/
+
+#tar -czvf addschn_01_data.tar.gz SRR*
+
+#mv -v addschn_01_data.tar.gz $topath/01_data
+
+## Extract files
+#cd $topath/01_data
+
+#tar -xzvf addschn_01_data.tar.gz
+
+#echo "xtar addschn DONE"
+
+## Copy schn results
+#cd /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybphaser/schn/01_data
+
+#echo "begin schn tar"
+#tar -czf schn_01_data.tar.gz SPRL_*
+#echo "tar end"
+
+#mv -v schn_01_data.tar.gz $topath/schn
+
+## Extract folders
+#cd $topath/schn
+
+## Remove failed extraction
+#rm -r SPRL_*
+
+## Begin extraction agin
+#echo "begin schn xtar"
+#tar -xzvf schn_01_data.tar.gz
+#echo "xtar schn DONE"
+
+## Merg a353 and schn hyphaser results
+## From path
+frompath=/home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybphaser/all_samp_all_genes/schn
+
+## To path
+topath=/home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybphaser/all_samp_all_genes/01_data
+
+## List of samples
+smp=$(cat /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/name_list/namelist_sprl.txt)
+
+## Copy files
+for i in $smp; do
+ cp -v $frompath/$i/consensus/* $topath/$i/consensus
+ cp -v $frompath/$i/contigs/* $topath/$i/contigs
+ cp -v $frompath/$i/mapping_files/* $topath/$i/mapping_files
+ cp -v $frompath/$i/reads/* $topath/$i/reads
+done
+
+echo Copy END!
