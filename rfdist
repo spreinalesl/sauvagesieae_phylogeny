@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#SBATCH --job-name=raxml-dist
+#SBATCH --job-name=RF
 #SBATCH --partition=short
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=100MB
@@ -20,42 +20,32 @@
 # COMMANDS
 ###########
 
-## Matrix path name
-mtype=all_exons
-program=raxml
-method=trimal
-
-## Go to the local disk
-#cd $TMPDIR
-
 ## Input trees
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$program/tsearch30
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/RFdist
 
 ## Extract files
 #tar -xzf $fpath/mlTrees.tar.gz
 #echo tree extraction done!
 
-cd $fpath
 ## Estimate RF distances among mltrees (unrooted)
-for i in `ls *.mlTrees`
-do
- ~/scratch/apps/addprograms/raxml-ng/build/bin/raxml-ng-mpi --threads auto{8} \
-                                                            --rfdist \
-                                                            --tree $i \
-                                                            --prefix $i.RF
-done
+#for i in `ls *.mlTrees`
+#do
+# ~/scratch/apps/addprograms/raxml-ng/build/bin/raxml-ng-mpi --threads auto{8} \
+#                                                            --rfdist \
+#                                                            --tree $i \
+#                                                            --prefix $i.RF
+#done
 
 ## Copy results
 #mv -v ./RF_* $fpath
 
 ## Estimate RF distances among resulting unrooted trees
-#cd $fpath
-#for i in *nm_ed.tre
-#do
-# ~/scratch/apps/addprograms/raxml-ng/build/bin/raxml-ng-mpi --threads auto{8} \
-#                                                            --rfdist \
-#                                                            --tree $i \
-#                                                            --prefix RF_$i
-#done
+cd $fpath
+for i in *.tre; do
+ ~/scratch/apps/addprograms/raxml-ng/build/bin/raxml-ng-mpi --threads auto{8} \
+                                                            --rfdist \
+                                                            --tree $i \
+                                                            --prefix RF_$i
+done
 
 echo RF distances estimated!

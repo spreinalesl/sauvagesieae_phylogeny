@@ -7,7 +7,7 @@
 library(ape)
 
 ## Input paths
-mtype <- "smprm_exons"
+mtype <- "smp30_prlgbothgns_rm_exons"
 program <- "iqtree"
 fpath <- "./"
 

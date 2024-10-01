@@ -1,17 +1,18 @@
 #!/bin/bash
 
-#SBATCH --job-name=hybphaser1b
+#SBATCH --job-name=hybphaser1c
 #SBATCH --partition=short
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=150MB
+#SBATCH --mem=250MB
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
 # NOTES
 ###########
-## Run R script 1b_assess_dataset to generate tables and graphs to assess the dataset in regards of sequence length recovered and proportion of SNPs per sample and gene.
-## Tables and graphs are saved in a subfolder (02_assessment).
+## Run R script 1c_generate_sequence_lists creates sequence lists for each locus and for each sample for contigs and consensus sequences.
+## These sequence lists for loci can be aligned in order to perform phylogenetic analyses. The sequence lists for samples can be used for references
+## in the clade association and phasing parts.
 ## Before running the script it is necessary to edit the config.txt file. It is in the same directory of R script.
 
 ###########
@@ -25,6 +26,6 @@ source activate hybphaser
 cd ~/scratch/apps/conda/envs/hybphaser/HybPhaser
 
 ## Run r script
-Rscript --vanilla 1b_assess_dataset.R
+Rscript --vanilla 1c_generate_sequence_lists.R
 
-echo HybPhaser 1b end!
+echo HybPhaser 1c end!

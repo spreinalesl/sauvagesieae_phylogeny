@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --job-name=wastral
-#SBATCH --partition=short
+#SBATCH --partition=medium
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=100MB
 #SBATCH --mail-user=s.reinales@kew.org
@@ -20,7 +20,7 @@
 ###########
 
 ## Matrix path name
-mtype=smprm_exons
+mtype=smp30_prlgbothgns_rm_exons
 program=iqtree
 
 ## Input trees
