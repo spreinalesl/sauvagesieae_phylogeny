@@ -1,9 +1,9 @@
 #!/bin/bash
 
-#SBATCH --job-name=cp
-#SBATCH --partition=short
+#SBATCH --job-name=cpANDextract
+#SBATCH --partition=medium
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=50MB
+#SBATCH --mem=10M
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
@@ -71,20 +71,65 @@
 
 ## Merg a353 and schn hyphaser results
 ## From path
-frompath=/home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybphaser/all_samp_all_genes/schn
+#frompath=/home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybphaser/all_samp_all_genes/schn
 
 ## To path
-topath=/home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybphaser/all_samp_all_genes/01_data
+#topath=/home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybphaser/all_samp_all_genes/01_data
 
 ## List of samples
-smp=$(cat /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/name_list/namelist_sprl.txt)
+#smp=$(cat /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/name_list/namelist_sprl.txt)
 
 ## Copy files
+#for i in $smp; do
+# cp -v $frompath/$i/consensus/* $topath/$i/consensus
+# cp -v $frompath/$i/contigs/* $topath/$i/contigs
+# cp -v $frompath/$i/mapping_files/* $topath/$i/mapping_files
+# cp -v $frompath/$i/reads/* $topath/$i/reads
+#done
+
+#echo Copy END!
+
+########################## To run Hybphaser 2
+
+## Temp folder
+cd /home/sreinale/scratch/private/hybphaser
+mkdir -p sauv_sprl_a353
+
+## As all sample runs have to be in the same directory, extract assembly directories
+#echo begin extraction addseqs_schn!
+#tar -xvzf /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/addseqs_schn/assembly_results.tar.gz
+
+#echo begin extraction addseqs_a353!
+#tar -xvzf /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/addseqs_a353/assembly_results.tar.gz
+
+## Copy reads from addseqs_a353 to addseqs_schn for samples which have sequences for both probe sets
+#mv -v ERR5034038/*/ SRR10951608
+#rm -r ERR5034038
+#mv -v ERR5034069/*/ SRR14767573
+#rm -r ERR5034069
+#mv -v ERR5034040/*/ SRR10951585
+#rm -r ERR5034040
+#mv -v ERR5034152/*/ SRR14767669
+#rm -r ERR5034152
+#mv -v ERR5034076/*/ SRR14767553
+#rm -r ERR5034076
+
+## Extract sau_sprl reads
+#echo begin extraction sauv_sprl_schn!
+#tar -xvzf /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/sauv_sprl/schn/assembly_results.tar.gz
+
+cd /home/sreinale/scratch/private/hybphaser/sauv_sprl_a353
+echo begin extraction sauv_sprl_a353!
+tar -xvzf /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/sauv_sprl/a353/assembly_results.tar.gz
+
+## Move reads from a353 to schn
+# List of samples
+smp=$(cat /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/name_list/namelist_sprl.txt)
+
+# iterate sample names to move directories
 for i in $smp; do
- cp -v $frompath/$i/consensus/* $topath/$i/consensus
- cp -v $frompath/$i/contigs/* $topath/$i/contigs
- cp -v $frompath/$i/mapping_files/* $topath/$i/mapping_files
- cp -v $frompath/$i/reads/* $topath/$i/reads
+ echo $i
+ mv -v $i/*/ home/sreinale/scratch/private/hybphaser/$i
 done
 
-echo Copy END!
+echo copy END!

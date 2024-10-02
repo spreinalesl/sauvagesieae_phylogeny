@@ -1,0 +1,36 @@
+#!/bin/bash
+
+#SBATCH --job-name=hybphaser2
+#SBATCH --partition=short
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=250MB
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+## The bash script extract_mapped_reads.sh generates read files for each sample that only contain reads that mapped to the target sequence file
+## Option -s reads with the same name and sequence or just with same sequence are removed (This might be useful when there is a high coverage, but might skew the results)
+## -b <path> to base folder HybPhaser 01_data
+## -o <path> to output folder. Default is ./mapped_reads
+## -n <path> to namelist. If not set, all folders in samples directory are used as samples
+## The script generated new read files, which can be used for the clade association analysis
+
+###########
+# COMMANDS
+###########
+
+## Activate conda environment
+source activate hybphaser
+
+## Datasets
+mtype=all_samp_all_genes
+
+## Paths
+dpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybphaser/$mtype/01_data
+
+## Run bash script
+bash ~/scratch/apps/conda/envs/hybphaser/HybPhaser/2_extract_mapped_reads.sh -b $dpath
+
+echo HybPhaser extract_mapped_reads end!
