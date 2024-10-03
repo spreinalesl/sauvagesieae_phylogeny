@@ -92,15 +92,16 @@
 ########################## To run Hybphaser 2
 
 ## Temp folder
-cd /home/sreinale/scratch/private/hybphaser
-mkdir -p sauv_sprl_a353
+cd /home/sreinale/scratch/private/hybphaser/schn
+#mkdir -p sauv_sprl_a353
 
 ## As all sample runs have to be in the same directory, extract assembly directories
-#echo begin extraction addseqs_schn!
-#tar -xvzf /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/addseqs_schn/assembly_results.tar.gz
+echo begin extraction addseqs_schn!
+tar -xvzf /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/addseqs_schn/assembly_results.tar.gz SRR10951608 SRR14767573 SRR10951585 SRR14767669 SRR14767553
 
-#echo begin extraction addseqs_a353!
-#tar -xvzf /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/addseqs_a353/assembly_results.tar.gz
+cd /home/sreinale/scratch/private/hybphaser/a353
+echo begin extraction addseqs_a353!
+tar -xvzf /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/addseqs_a353/assembly_results.tar.gz ERR5034038 ERR5034069 ERR5034040 ERR5034152 ERR5034076
 
 ## Copy reads from addseqs_a353 to addseqs_schn for samples which have sequences for both probe sets
 #mv -v ERR5034038/*/ SRR10951608
@@ -115,21 +116,22 @@ mkdir -p sauv_sprl_a353
 #rm -r ERR5034076
 
 ## Extract sau_sprl reads
-#echo begin extraction sauv_sprl_schn!
-#tar -xvzf /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/sauv_sprl/schn/assembly_results.tar.gz
+cd /home/sreinale/scratch/private/hybphaser/schn
+echo begin extraction sauv_sprl_schn!
+tar -xvzf /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/sauv_sprl/schn/assembly_results.tar.gz
 
-cd /home/sreinale/scratch/private/hybphaser/sauv_sprl_a353
+cd /home/sreinale/scratch/private/hybphaser/a353
 echo begin extraction sauv_sprl_a353!
 tar -xvzf /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/sauv_sprl/a353/assembly_results.tar.gz
 
 ## Move reads from a353 to schn
 # List of samples
-smp=$(cat /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/name_list/namelist_sprl.txt)
+#smp=$(cat /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/name_list/namelist_sprl.txt)
 
 # iterate sample names to move directories
-for i in $smp; do
- echo $i
- mv -v $i/*/ home/sreinale/scratch/private/hybphaser/$i
-done
+#for i in $smp; do
+# echo $i
+# mv -v $i/*/ /home/sreinale/scratch/private/hybphaser/$i/
+#done
 
 echo copy END!
