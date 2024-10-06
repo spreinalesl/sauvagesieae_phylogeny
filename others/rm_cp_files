@@ -3,7 +3,7 @@
 #SBATCH --job-name=cpANDextract
 #SBATCH --partition=medium
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=10M
+#SBATCH --mem=100MB
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
@@ -92,16 +92,16 @@
 ########################## To run Hybphaser 2
 
 ## Temp folder
-cd /home/sreinale/scratch/private/hybphaser/schn
+#cd /home/sreinale/scratch/private/hybphaser/schn
 #mkdir -p sauv_sprl_a353
 
 ## As all sample runs have to be in the same directory, extract assembly directories
-echo begin extraction addseqs_schn!
-tar -xvzf /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/addseqs_schn/assembly_results.tar.gz SRR10951608 SRR14767573 SRR10951585 SRR14767669 SRR14767553
+#echo begin extraction addseqs_schn!
+#tar -xvzf /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/addseqs_schn/assembly_results.tar.gz SRR10951608 SRR14767573 SRR10951585 SRR14767669 SRR14767553
 
-cd /home/sreinale/scratch/private/hybphaser/a353
-echo begin extraction addseqs_a353!
-tar -xvzf /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/addseqs_a353/assembly_results.tar.gz ERR5034038 ERR5034069 ERR5034040 ERR5034152 ERR5034076
+#cd /home/sreinale/scratch/private/hybphaser/a353
+#echo begin extraction addseqs_a353!
+#tar -xvzf /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/addseqs_a353/assembly_results.tar.gz ERR5034038 ERR5034069 ERR5034040 ERR5034152 ERR5034076
 
 ## Copy reads from addseqs_a353 to addseqs_schn for samples which have sequences for both probe sets
 #mv -v ERR5034038/*/ SRR10951608
@@ -116,13 +116,27 @@ tar -xvzf /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae
 #rm -r ERR5034076
 
 ## Extract sau_sprl reads
-cd /home/sreinale/scratch/private/hybphaser/schn
-echo begin extraction sauv_sprl_schn!
-tar -xvzf /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/sauv_sprl/schn/assembly_results.tar.gz
+cd /home/sreinale/scratch/private/hybphaser/all_schn
+#echo begin extraction sauv_sprl_schn!
+#tar -xvzf /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/sauv_sprl/schn/assembly_results.tar.gz
 
-cd /home/sreinale/scratch/private/hybphaser/a353
-echo begin extraction sauv_sprl_a353!
-tar -xvzf /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/sauv_sprl/a353/assembly_results.tar.gz
+#echo begin "tar" schn!
+#tar -cvzf all_schn_assembly_results.tar.gz *
+#echo END "tar" schn!
+
+#mv all_schn_assembly_results.tar.gz /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/
+rm -r -v *
+
+## all_a353
+cd /home/sreinale/scratch/private/hybphaser/all_a353
+#echo begin extraction sauv_sprl_a353!
+#tar -xvzf /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/sauv_sprl/a353/assembly_results.tar.gz
+
+echo begin "tar" a353!
+tar -cvzf all_a353_assembly_results.tar.gz *
+echo END "tar" a353!
+
+##mv all_a353_assembly_results.tar.gz /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/
 
 ## Move reads from a353 to schn
 # List of samples
@@ -133,5 +147,3 @@ tar -xvzf /home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae
 # echo $i
 # mv -v $i/*/ /home/sreinale/scratch/private/hybphaser/$i/
 #done
-
-echo copy END!

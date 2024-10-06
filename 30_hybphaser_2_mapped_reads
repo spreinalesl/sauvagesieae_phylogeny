@@ -25,12 +25,15 @@
 source activate hybphaser
 
 ## Datasets
-mtype=all_samp_all_genes
+probe=a353
+mtype=all_$probe
 
 ## Paths
 dpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybphaser/$mtype/01_data
+outpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybphaser/$mtype
 
 ## Run bash script
+cd $outpath
 bash ~/scratch/apps/conda/envs/hybphaser/HybPhaser/2_extract_mapped_reads.sh -b $dpath
 
 echo HybPhaser extract_mapped_reads end!
