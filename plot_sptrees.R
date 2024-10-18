@@ -3,7 +3,7 @@
 #######################################
 
 ## Tree paths
-tpath <- "~/Documents"
+tpath <- "~/Documents/plot_trees"
 tfiles <- list.files(pattern = ".tre$", tpath)
 tpattern <- "rooted_sauv_"
 tpattern1 <- "_BS33_sptree_annot.tre"
@@ -157,10 +157,10 @@ for(i in 1:length(tfiles)){
                     scale_fill_viridis_c(option = "A", name = "PctParalogs", direction = -1)
   
   ## Plot one tree per page
-  plots <- list(t_nl, t_textq, t_textp, t_pies, t_complete, t_hmap_p)
-  ggsave(filename = paste(tpath, "/", ptitle, ".pdf", sep = ""), 
-         plot = marrangeGrob(plots, nrow = 1, ncol = 1),
-         width = 15, height = 20)
+  #plots <- list(t_nl, t_textq, t_textp, t_pies, t_complete, t_hmap_p)
+  #ggsave(filename = paste(tpath, "/", ptitle, ".pdf", sep = ""), 
+  #       plot = marrangeGrob(plots, nrow = 1, ncol = 1),
+  #       width = 15, height = 20)
   
   ## Alternative arrange all plots per dataset in the same page
   #grid.arrange(t_textq, t_complete) # All plots for each tree in the same page
@@ -268,7 +268,7 @@ dev.off()
 clades <- list(blastemanthus = c("B_gemmiflorus_Prance15495", "B_sp_Amaralsn", "B_gemmiflorus_Castaño3445", "B_grandiflorus_Ducke23783"),
                cespclade = c("F_felicis_Haba445", "F_felicis_Haba18", "R_regalis_Reinales159", "R_splendida_Reinales128"),
                poePLUSwala = c("Poe_pumila_Maas5732", "W_insignis_Kawasaki243", "W_multiflora_Berry5926"),
-               asianclade = c("Indov_calophylla_Brooke9671", "Sch_henningsii_Hoogland8954", "Schll_angustifolia_Bramley100471"),
+               asianclade = c("Indov_calophylla_Brooke9671", "Schll_angustifolia_Bramley100471"),
                cortyleria = c("T_silvana_Liesner22006", "Ad_bicarpellata_Huber10214", "Ad_bicarpellata_Pipoly7299"),
                sauvagesiaA = c("S_elegantissima_Lovo428", "S_glandulosa_rb_Cardoso3942", "S_insignis_Cardoso2656"),
                sauvagesiaB = c("S_sprengelii_Oliveira085", "S_aliciae_Sastre2339_sprl", "S_longifolia_Harley56621", "S_linearifolia_Cardenas21665", "S_ramosa_Cardenas44000", "S_guianensis_Maguire32554"))
@@ -328,7 +328,7 @@ cladesumm$q3 <- as.numeric(cladesumm$q3)
 write.csv(cladesumm, file = paste(tpath, "/", "clades_sum.csv", sep = ""), row.names = F)
 
 ## colors for clades
-#cols <- c("#fde725", "#90d743", "#0d0887", "#f37819", "#35b779", "#9c179e", "#000004")
+cols <- c("#fde725", "#90d743", "#0d0887", "#f37819", "#35b779", "#9c179e", "#000004")
 
 ## Colors for dataset
 #cols2 <- c("#0d0887", "#fde725", "#90d743", "#9c179e")
