@@ -1,0 +1,30 @@
+#!/bin/bash
+
+#SBATCH --job-name=hybphaser2a
+#SBATCH --partition=short
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=250MB
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+## The bash script  2a_prepare_bbsplit_results.R can be used to generate the executable command line files that run
+## the clade association mapping.
+## Befor run this script, some variables must be set in the configuration file config.txt
+
+###########
+# COMMANDS
+###########
+
+## Activate conda environment
+source activate hybphaser
+
+## Go to Hybphaser directory
+cd ~/scratch/apps/conda/envs/hybphaser/HybPhaser
+
+## Run r script
+Rscript --vanilla 2a_prepare_bbsplit_results.R
+
+echo HybPhaser prepare bbsplit end!
