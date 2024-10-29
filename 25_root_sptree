@@ -41,7 +41,7 @@
 
 ## For just one folder with one or more trees
 ## Define names
-mtype=smp30_prlgbothgns_outliers_rm_exons
+mtype=smprm_exons
 
 ## Input trees
 fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/*astral*

@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #SBATCH --job-name=iqtree
-#SBATCH --partition=short
-#SBATCH --array=0-20
+#SBATCH --partition=medium
+#SBATCH --array=0-21
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=250MB
 #SBATCH --mail-user=s.reinales@kew.org
