@@ -1,18 +1,5 @@
-#######################################
-## Plot gene trees and species trees
-#######################################
-
-## Tree paths
-tpath <- "~/Documents/plot_trees"
-tfiles <- list.files(pattern = ".tre$", tpath)
-tpattern <- "rooted_sauv_"
-tpattern1 <- "_BS33_sptree_annot.tre"
-
-## Data path
-dpath <- "~/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/hybpiper/assembly_stats/hybpiper_all_summary_ed.csv" 
-
 #####################################
-## Plot species tree
+## Plot trees
 #####################################
 ## Required packages
 library(treeio) ## Installed using BiocManager::install("treeio")
@@ -23,6 +10,15 @@ library(gridExtra) ## To arrange all plots into one pdf
 library(ggpubr) ## To plot one tree per page into one pdf
 library(ggdist) ## To plot densities in the boxplots
 library(ggnewscale) ## To include two heatmaps in the same plot, adding a new scale
+
+## Tree paths
+tpath <- "~/Documents/plot_trees"
+tfiles <- list.files(pattern = ".tre$", tpath)
+tpattern <- "rooted_sauv_"
+tpattern1 <- "_BS33_sptree_annot.tre"
+
+## Data path
+dpath <- "~/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/hybpiper/assembly_stats/hybpiper_all_summary_ed.csv" 
 
 ## Read table with information about gene recovery and sequence length
 sdata <- read.table(dpath, header = T, sep = ";", dec = ",")
@@ -67,10 +63,10 @@ LP_calc <- function(LP_A) {
 }
 
 ## Iterate tree files, read trees from Astral and export plots to pdf
-#pdf(paste(tpath, "/", "wASTRAL_all_trees.pdf", sep = ""), width = 15, height = 30) # All plots for each tree in the same page
 tree_summ_q <- data.frame()
 tree_summ_p <- data.frame()
 
+#pdf(paste(tpath, "/", "wASTRAL_all_trees.pdf", sep = ""), width = 15, height = 30) # All plots for each tree in the same page
 for(i in 1:length(tfiles)){
   
   ## Tree name
@@ -143,24 +139,24 @@ for(i in 1:length(tfiles)){
   t_complete <- inset(t_textp, pies_t_all, width = 0.04, height = 0.04)
   
   ## tcomplete plus recovery info as heatmaps
-  t_hmap_l <- gheatmap(t_complete, df2, offset = 14, width = 0.1, colnames = F) +
-                      scale_fill_viridis_c(option = "C", name = "TotalSeqLenght", direction = -1)
+  #t_hmap_l <- gheatmap(t_complete, df2, offset = 14, width = 0.1, colnames = F) +
+  #                    scale_fill_viridis_c(option = "C", name = "TotalSeqLenght", direction = -1)
   
-  t_hmap_g <- t_hmap_l + new_scale_fill()
+  #t_hmap_g <- t_hmap_l + new_scale_fill()
   
-  t_hmap_g <- gheatmap(t_hmap_g, df1, offset = 10, width = 0.1, colnames = F) +
-                     scale_fill_viridis_c(option = "D", name = "NumGenesWithSeqs", direction = -1)
+  #t_hmap_g <- gheatmap(t_hmap_g, df1, offset = 10, width = 0.1, colnames = F) +
+  #                   scale_fill_viridis_c(option = "D", name = "NumGenesWithSeqs", direction = -1)
   
-  t_hmap_p <- t_hmap_g + new_scale_fill()
+  #t_hmap_p <- t_hmap_g + new_scale_fill()
   
-  t_hmap_p <- gheatmap(t_hmap_p, df3, offset = 18, width = 0.1, colnames = F) +
-                    scale_fill_viridis_c(option = "A", name = "PctParalogs", direction = -1)
+  #t_hmap_p <- gheatmap(t_hmap_p, df3, offset = 18, width = 0.1, colnames = F) +
+  #                  scale_fill_viridis_c(option = "A", name = "PctParalogs", direction = -1)
   
   ## Plot one tree per page
-  #plots <- list(t_nl, t_textq, t_textp, t_pies, t_complete, t_hmap_p)
-  #ggsave(filename = paste(tpath, "/", ptitle, ".pdf", sep = ""), 
-  #       plot = marrangeGrob(plots, nrow = 1, ncol = 1),
-  #       width = 15, height = 20)
+  plots <- list(t_nl, t_textq, t_textp, t_pies, t_complete)#, t_hmap_p)
+  ggsave(filename = paste(tpath, "/", ptitle, ".pdf", sep = ""), 
+         plot = marrangeGrob(plots, nrow = 1, ncol = 1),
+         width = 15, height = 20)
   
   ## Alternative arrange all plots per dataset in the same page
   #grid.arrange(t_textq, t_complete) # All plots for each tree in the same page
