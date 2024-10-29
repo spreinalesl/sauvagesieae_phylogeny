@@ -40,7 +40,8 @@ for(i in 1:length(tfiles)){
 
 ## Plot trees using phytools
 # Create all combinations among input trees
-comb <- expand.grid(1:length(tfiles), 1:length(tfiles))
+comb <- as.data.frame(t(combn(1:length(tfiles), m = 2)))
+colnames(comb) <- c("Var1", "Var2")
 
 for(j in 1:nrow(comb)){
 
