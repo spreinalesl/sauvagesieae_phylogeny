@@ -2,9 +2,9 @@
 
 #SBATCH --job-name=iqtree
 #SBATCH --partition=medium
-#SBATCH --array=0-21
+#SBATCH --array=0-608%10
 #SBATCH --cpus-per-task=4
-#SBATCH --mem=250MB
+#SBATCH --mem=500MB
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
@@ -29,7 +29,7 @@
 ###########
 
 ## Define names
-mtype=smprm_exons
+mtype=rmout_infprlgs
 
 ## Input files: alignments
 fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$mtype/trimmed_alignm
@@ -51,7 +51,7 @@ gene=(${gene_list[$SLURM_ARRAY_TASK_ID]})
 #iqtree -s $gene -m MF -mset raxml -merit AICc -nt AUTO -ntmax ${SLURM_CPUS_PER_TASK} ## just to find the best model
 iqtree -s $gene -m MFP -merit AICc -mset raxml -b 200 -nt AUTO -ntmax ${SLURM_CPUS_PER_TASK} ## estimate best subs model and tree with BS support
 
-echo Run tree and substitution model for $gene
+echo Run tree for $gene
 
 ## Move result to output folder
 mv -v $gene.iqtree $rpath ## Full result of the run, including a text version of the tree. This is the main report file

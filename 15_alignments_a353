@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #SBATCH --job-name=mafft
-#SBATCH --partition=short
-#SBATCH --array=0-1
+#SBATCH --partition=medium
+#SBATCH --array=0-343%10
 #SBATCH --cpus-per-task=4
-#SBATCH --mem=4G
+#SBATCH --mem=100MB
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
@@ -14,9 +14,8 @@
 ## Align DNA sequences for each locus using the algorith E-INS-i inplemented in mafft for supercontig. This algorithm is suitable to align multiple cDNAs
 ## and multiple genomic sequences of a gene from closely related species, which has several conserved motifs embedded in long unalignable regions.
 ## As E-INS-i has the minimum assumption of the three methods, this is recommended if the nature of sequences to be aligned is not clear.
-## Most genes run well with 8 to 12 G of memory. Nevetheless, genes with few samples and large amount of missing data are difficult to  align
-## Consequentlyl, they need more memory. For gene 6717 60 G of memory was enought. For 4527, 5421 and 5421 100G were necessary.
-## 5599 failed after all attempts, due to it has just 5 tips, it was removed from the analysis.
+## Most genes run well with 100MB of memory. Nevetheless, genes with few samples and large amount of missing data are difficult to  align
+## Consequentlyl, they need more memory, three rounds were enoght for remaining genes 250 MB, 2G e 12 G. Some genes such as 4527, 6717, 5421, 5599, 5634 were removed because the have > 20 spp.
 ## For supercontig the following files were remove before alignment because they have 0 or just 2 sequences:4806, 5656,5958, 6449, 6514, 6893, 7024, 7325, 7371, 7583,
 ## 5599, 6886, 6717, 5347, 6401, 5260, 4744, 6430, 6955
 
@@ -29,14 +28,15 @@ source activate hybpiper
 
 ## Define names
 probe=a353
-imtype=smprm
+imtype=rmout_infprlgs
+addf=rmprlgs
 
 ## Define fasta file path
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/fasta_files/$probe/exons/$imtype
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/fasta_files/$probe/exons/$imtype/$addf
 
 ## Output path
-mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/"$imtype"_exons
-rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/"$imtype"_exons
+mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$imtype
+rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$imtype
 
 ## Go to input-files folder
 cd $fpath
@@ -48,7 +48,6 @@ gene=(${gene_list[$SLURM_ARRAY_TASK_ID]})
 gnm=$(echo $gene | sed 's/\.FNA//')
 
 ## Run mafft
-#mafft --thread ${SLURM_CPUS_PER_TASK} --genafpair --adjustdirectionaccurately --maxiterate 1000 $gene > $rpath/"$gnm"_align.fas ## For supercontig
-mafft --thread ${SLURM_CPUS_PER_TASK} --globalpair --adjustdirectionaccurately --maxiterate 1000 $gene > $rpath/"$gnm"_align.fas ## For exons
+mafft --thread ${SLURM_CPUS_PER_TASK} --genafpair --adjustdirectionaccurately --maxiterate 1000 $gene > $rpath/"$gnm"_align.fas
 
 echo MAFFT finished for gene $gene

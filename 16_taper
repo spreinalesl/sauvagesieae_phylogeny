@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #SBATCH --job-name=taper
-#SBATCH --partition=short
-#SBATCH --array=0-613%100
+#SBATCH --partition=medium
+#SBATCH --array=0-9
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=1G
 #SBATCH --mail-user=s.reinales@kew.org
@@ -15,7 +15,7 @@
 ## in the output, and all N characters are treated as a dash. A cutoff (make sense to > 1) to control aggressiveness of error detection. The lower the cutoff is,
 ## the more aggressive the TAPER becomes. Values below 1 are allowed but discouraged. The default cutoff is -c 3. For example, if you want TAPER be more precautious,
 ## you can try -c 10.
-## Most samples run with 500M, just 4 (4527, g2009517, g2011628, g2026803) need 1G
+## Most samples run with 250MB, just 4 (4527, g2009517, g2011628, g2026803) need 1G
 ## For supercontig 1G was required
 
 ###########
@@ -23,11 +23,10 @@
 ###########
 
 ## Activate conda environment
-source /home/sreinale/.bashrc
 source activate julia
 
 ## Define names
-mtype=rm_out_exons
+mtype=rmout_infprlgs
 
 ## Input fasta files
 fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$mtype
@@ -44,6 +43,6 @@ gene_list=($(ls * | grep fas$))
 gene=(${gene_list[$SLURM_ARRAY_TASK_ID]})
 
 ## Run TAPER
-julia ~/scratch/apps/addprograms/taper/correction_multi.jl -m N -a N -c 10 $gene > $rpath/taper_$gene
+julia ~/scratch/apps/addprograms/taper/correction_multi.jl -m N -a N -c 8 $gene > $rpath/taper_$gene
 
 echo TAPER finished for gene $gene
