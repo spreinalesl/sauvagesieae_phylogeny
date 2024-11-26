@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #SBATCH --job-name=rooting
-#SBATCH --partition=short
+#SBATCH --partition=medium
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=3MB
 #SBATCH --mail-user=s.reinales@kew.org
@@ -41,16 +41,17 @@
 
 ## For just one folder with one or more trees
 ## Define names
-mtype=rmout_infprlgs
+mtype=smp30_prlgbothgns_outliers_rm_exons
 
 ## Input trees
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/*astral*
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/astral-pro3
 
 ## Root sp tree using two outgroups (Bonn_stricta_Benko-Iseppon1726 = SRR10951426 and Hype_perforatum_OneKP132735 = ERR2040370)
 cd $fpath
 for i in *.tre; do
   echo $i
-  /home/sreinale/scratch/apps/conda/bin/pxrr -t $i -g Bonn_stricta_Benko-Iseppon1726,Hype_perforatum_OneKP132735 > rooted_$i
+  #/home/sreinale/scratch/apps/conda/bin/pxrr -t $i -g Bonn_stricta_Benko-Iseppon1726,Hype_perforatum_OneKP132735 > rooted_$i
+  /home/sreinale/scratch/apps/conda/bin/pxrr -t $i -g Bonnetia_stricta,Hypericum_perforatum > rooted_$i
 done
 
 echo "Rooting done!"
