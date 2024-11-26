@@ -10,7 +10,7 @@ library(ape)
 
 ## Input paths
 namesfile <- "sppidTOsppname.csv"
-probename <- "a353"
+probename <- "schn"
 type <- "exons"
 namespath <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/name_list/"
 fpath <- paste0("~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/fasta_files",
@@ -18,7 +18,7 @@ fpath <- paste0("~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpi
 
 # output files
 outpath1 <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/get_seqs_summ/"
-outpath2 <- paste(fpath, "rm_out/", sep = "")
+outpath2 <- paste(fpath, "rmout_infprlgs/", sep = "")
 out1 <- paste0("lociNOseqs_", probename, ".txt", collapse = "")
 out2 <- paste0("samplesTOremove_", probename, ".csv", collapse = "")
 out3 <- paste0("rm_samples_", probename, ".csv", collapse = "")

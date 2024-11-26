@@ -15,10 +15,10 @@ ppath <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/par
 fpath <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/fasta_files/"
 aptpth <- paste(ppath, probe, "/trees/", sep = "")
 aptl <- paste(ppath, probe, "/paralogs_above_threshold_report.txt", sep = "")
-apff <- paste(fpath, probe, "/exons/", sep = "")
+apff <- paste(fpath, probe, "/exons/rmout_infprlgs/edfast/", sep = "")
 
 # output files
-ffnew <- paste(fpath, probe, "/exons/putative_orth/", sep = "")
+ffnew <- paste(fpath, probe, "/exons/rmout_infprlgs/rmprlgs/", sep = "")
 
 ## Read paralogs_retrieve output from Hybpiper and extract the list of loci with
 ## paralogous sequences
@@ -29,6 +29,7 @@ loci_w_p <- plist[(p+1):length(plist)]
 ## List trees and fastas
 tfiles  <- list.files(aptpth, pattern = "\\.tre")
 ffiles <- list.files(apff, pattern = "\\.FNA", full.names = T)
+
 warning_list <- c()
 monop <- c()
 non_monop <- c()
@@ -92,7 +93,8 @@ for(i in tfiles){
         aplgsf <- aplgsf[-rmp]
         
         ## write fasta file without paralogs
-        write.FASTA(x = aplgsf, file = gsub(x = ff, pattern = "/exons/", replacement = "/exons/putative_orth/"))
+        outfile <- gsub(x = ff, pattern = "/exons/rmout_infprlgs/edfast/", replacement = "/exons/rmout_infprlgs/rmprlgs/")
+        write.dna(x = aplgsf, format = "fasta", nbcol = 1, colsep = "", colw = 60, indent = 0, blocksep = 0, file = outfile)
       }
       
       ## Test if .main sequences and other sequences (i.e. x.0, x.1) form the same clades 

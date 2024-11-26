@@ -1,0 +1,57 @@
+#!/bin/bash
+
+#SBATCH --job-name=astral-iv
+#SBATCH --partition=medium
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=250MB
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+## Options -r ans -s run with more rounds of placement for ensured optimality (default is 4 and 4)
+## To place taxa on an existing fully resolved species tree, use -c SPECIES_TREE_IN_NEWICK_FORMAT
+## Option -u 0 to compute species tree topology only. Option -u 2 to add support and local-PP for all three resolutions of each branch
+## Option -a $pathTOmap uses a map to force samples to be a clade (e.g. different contigs of the same sample or different samples for the same species)
+
+###########
+# COMMANDS
+###########
+
+## Matrix path name
+mtype=smp30_prlgbothgns_outliers_rm_exons
+program=iqtree
+addf=
+
+## Input trees
+fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$program/$addf
+
+## Output path
+output=astral-iv
+mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$output
+rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$output
+
+## Path to multi-sequence IDs map
+#msID_map=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/paralogs_map/multiseqID.map
+
+## Collapsing threshold
+BS=BS0
+
+## Run Astral-pro withouth annotations
+~/scratch/apps/addprograms/ASTER/bin/astral4 -t ${SLURM_CPUS_PER_TASK} \
+                                             -r 16 -s 16 \
+                                             -u 0 \
+                                             -o $rpath/sauv_"$mtype"_"$BS"_sptree.tre \
+                                             -i $fpath/sauv_"$mtype"_gtrees_nm_ed.tre 2>$rpath/sauv_"$mtype"_"$BS"_sptree.log
+
+echo Astral-iv NO annotations finished!
+
+## Run Astral-pro with annotations
+~/scratch/apps/addprograms/ASTER/bin/astral4 -t ${SLURM_CPUS_PER_TASK} \
+                                             -r 16 -s 16 \
+                                             -u 2 \
+                                             -o $rpath/sauv_"$mtype"_"$BS"_sptree_annot.tre \
+                                             -i $fpath/sauv_"$mtype"_gtrees_nm_ed.tre 2>$rpath/sauv_"$mtype"_"$BS"_sptree_annot.log
+
+echo Astral-iv whith annotations finished!

@@ -2,7 +2,7 @@
 
 #SBATCH --job-name=trimal
 #SBATCH --partition=short
-#SBATCH --array=0-607%10
+#SBATCH --array=0-608%20
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=10MB
 #SBATCH --mail-user=s.reinales@kew.org
@@ -26,13 +26,13 @@
 source activate julia
 
 ## Define names
-mtype=smprm_exons
+mtype=rmout_infprlgs
 
 ## Input fasta files
 fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$mtype
 
 ## Output path
-mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$mtype/trimmed_alignm 
+mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$mtype/trimmed_alignm
 rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$mtype/trimmed_alignm
 
 ## Go to the alignments folder

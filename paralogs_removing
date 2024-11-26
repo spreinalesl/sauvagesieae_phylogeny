@@ -3,7 +3,7 @@
 #SBATCH --job-name=rm_paralogs
 #SBATCH --partition=short
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=1G
+#SBATCH --mem=250MB
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
@@ -17,8 +17,15 @@
 ###########
 
 ## Activate conda environment
-source /home/sreinale/.bashrc
 source activate renv
+
+## Set names
+probe=schn
+mdata=exons
+dataset=rmout_infprlgs
+
+## Set path
+mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/fasta_files/$probe/$mdata/$dataset/rmprlgs
 
 ## Run r script
 Rscript --vanilla paralogs_removing.R
