@@ -2,9 +2,9 @@
 
 #SBATCH --job-name=taper
 #SBATCH --partition=medium
-#SBATCH --array=0-9
+#SBATCH --array=0-592%5
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=1G
+#SBATCH --mem=700MB
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
@@ -26,14 +26,18 @@
 source activate julia
 
 ## Define names
-mtype=rmout_infprlgs
+#mtype=rmout_infprlgs
 
 ## Input fasta files
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$mtype
+#fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$mtype
+fpath=~/scratch/private/phylonetworks/alignments
 
 ## Output path
-mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$mtype/trimmed_alignm
-rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$mtype/trimmed_alignm
+#mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$mtype/trimmed_alignm
+#rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$mtype/trimmed_alignm
+
+mkdir -p $fpath/trimmed_alignm
+rpath=$fpath/trimmed_alignm
 
 ## Go to the alignments folder
 cd $fpath
@@ -43,6 +47,6 @@ gene_list=($(ls * | grep fas$))
 gene=(${gene_list[$SLURM_ARRAY_TASK_ID]})
 
 ## Run TAPER
-julia ~/scratch/apps/addprograms/taper/correction_multi.jl -m N -a N -c 8 $gene > $rpath/taper_$gene
+julia ~/scratch/apps/addprograms/taper/correction_multi.jl -m N -a N -c 5 $gene > $rpath/$gene
 
 echo TAPER finished for gene $gene

@@ -41,14 +41,14 @@
 
 ## For just one folder with one or more trees
 ## Define names
-mtype=smprm_exons
+mtype=rmout_infprlgs
 
 ## Input trees
 fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/*astral*
 
 ## Root sp tree using two outgroups (Bonn_stricta_Benko-Iseppon1726 = SRR10951426 and Hype_perforatum_OneKP132735 = ERR2040370)
 cd $fpath
- for i in *.tre; do
+for i in *.tre; do
   echo $i
   /home/sreinale/scratch/apps/conda/bin/pxrr -t $i -g Bonn_stricta_Benko-Iseppon1726,Hype_perforatum_OneKP132735 > rooted_$i
 done
