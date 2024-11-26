@@ -36,7 +36,7 @@ rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$ou
 msID_map=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/paralogs_map/multiseqID.map
 
 ## Collapsing threshold
-BS=BS0
+BS=BS33
 
 ## Run Astral-pro withouth annotations
 ~/scratch/apps/addprograms/ASTER/bin/astral-pro3 -t ${SLURM_CPUS_PER_TASK} \

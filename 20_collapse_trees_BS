@@ -24,7 +24,7 @@
 ###########
 
 ## Define names
-mtype=all_paralogs
+mtype=smp30_prlgbothgns_outliers_rm_exons
 program=iqtree
 
 ## Input trees
@@ -38,11 +38,11 @@ rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$pr
 cd $fpath
 
 ## Iterate tree files in the input folder and collapse unsupported nodes
-FILES=$(ls * | grep trimal)
+FILES=$(ls * | grep treefile$)
 
 for filenm in $FILES; do
  echo $filenm
- ~/scratch/apps/conda/bin/nw_ed $filenm 'i & b<=33' o > $rpath/"BS33"_$filenm
+ ~/scratch/apps/conda/bin/nw_ed $filenm 'i & b<=33' o > $rpath/$filenm
  echo $filenm tree was edited using nw_ed
 done
 
