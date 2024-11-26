@@ -18,10 +18,10 @@ tpattern <- "rooted_sauv_"
 tpattern1 <- "_BS33_sptree_annot.tre"
 
 ## Data path
-dpath <- "~/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/hybpiper/assembly_stats/hybpiper_all_summary_ed.csv" 
+dpath <- "~/Documents/plot_trees/hybpiper_all_summary_ed.csv" 
 
 ## Read table with information about gene recovery and sequence length
-sdata <- read.table(dpath, header = T, sep = ";", dec = ",")
+sdata <- read.csv(dpath, header = T)
 
 # Extract info about number of gene recovered
 df1 <- tapply(X = sdata$genesWseqsFasta, INDEX = sdata$sppName, FUN = sum)
@@ -37,6 +37,16 @@ colnames(df2) <- "RecoveryLenght"
 df3 <- tapply(X = sdata$TotalParalogWarnings, INDEX = sdata$sppName, FUN = sum)
 df3 <- as.data.frame(round((df3/df1)*100, digits = 1), row.names = names(df3))
 colnames(df3) <- "PctParalogs"
+
+# Extract info about AD
+df4 <- tapply(X = sdata$AD, INDEX = sdata$sppName, FUN = mean)
+df4 <- as.data.frame(df4, row.names = names(df4))
+colnames(df4) <- "AD"
+
+# Extract info about LH
+df5 <- tapply(X = sdata$LH, INDEX = sdata$sppName, FUN = mean)
+df5 <- as.data.frame(df5, row.names = names(df5))
+colnames(df5) <- "LH"
 
 ## Function to format quartet information from astral tree annotation
 # The normalized quartet score QS represents the proportion of input gene tree quartet trees satisfied
@@ -139,21 +149,31 @@ for(i in 1:length(tfiles)){
   t_complete <- inset(t_textp, pies_t_all, width = 0.04, height = 0.04)
   
   ## tcomplete plus recovery info as heatmaps
-  #t_hmap_l <- gheatmap(t_complete, df2, offset = 14, width = 0.1, colnames = F) +
-  #                    scale_fill_viridis_c(option = "C", name = "TotalSeqLenght", direction = -1)
+  t_hmap_g <- gheatmap(t_complete, df1, offset = 10, width = 0.15, colnames = F) +
+              scale_fill_viridis_c(option = "D", name = "NumGenesWithSeqs", direction = -1)
   
-  #t_hmap_g <- t_hmap_l + new_scale_fill()
+  t_hmap_l <- t_hmap_g + new_scale_fill()
   
-  #t_hmap_g <- gheatmap(t_hmap_g, df1, offset = 10, width = 0.1, colnames = F) +
-  #                   scale_fill_viridis_c(option = "D", name = "NumGenesWithSeqs", direction = -1)
+  t_hmap_l <- gheatmap(t_hmap_l, df2, offset = 14, width = 0.15, colnames = F) +
+              scale_fill_viridis_c(option = "D", name = "TotalSeqLenght", direction = -1)
   
-  #t_hmap_p <- t_hmap_g + new_scale_fill()
+  t_hmap_p <- t_hmap_l + new_scale_fill()
   
-  #t_hmap_p <- gheatmap(t_hmap_p, df3, offset = 18, width = 0.1, colnames = F) +
-  #                  scale_fill_viridis_c(option = "A", name = "PctParalogs", direction = -1)
+  t_hmap_p <- gheatmap(t_hmap_p, df3, offset = 18, width = 0.15, colnames = F) +
+              scale_fill_viridis_c(option = "D", name = "PctParalogs", direction = -1)
+  
+  t_hmap_ad <- t_hmap_p + new_scale_fill()
+  
+  t_hmap_ad <- gheatmap(t_hmap_ad, df4, offset = 22, width = 0.15, colnames = F) +
+               scale_fill_viridis_c(option = "D", name = "AD", direction = -1)
+  
+  t_hmap_lh <- t_hmap_ad + new_scale_fill()
+  
+  t_hmap_lh <- gheatmap(t_hmap_lh, df5, offset = 26, width = 0.15, colnames = F) +
+               scale_fill_viridis_c(option = "D", name = "LH", direction = -1)
   
   ## Plot one tree per page
-  plots <- list(t_nl, t_textq, t_textp, t_pies, t_complete)#, t_hmap_p)
+  plots <- list(t_nl, t_textq, t_complete, t_hmap_lh)
   ggsave(filename = paste(tpath, "/", ptitle, ".pdf", sep = ""), 
          plot = marrangeGrob(plots, nrow = 1, ncol = 1),
          width = 15, height = 20)
@@ -322,12 +342,6 @@ cladesumm$q3 <- as.numeric(cladesumm$q3)
 
 ## Export report
 write.csv(cladesumm, file = paste(tpath, "/", "clades_sum.csv", sep = ""), row.names = F)
-
-## colors for clades
-cols <- c("#fde725", "#90d743", "#0d0887", "#f37819", "#35b779", "#9c179e", "#000004")
-
-## Colors for dataset
-#cols2 <- c("#0d0887", "#fde725", "#90d743", "#9c179e")
 
 # by tree by clade
 q1_tree <- ggplot(cladesumm, aes(x = tree, y = q1, fill = clade)) + 
