@@ -110,7 +110,7 @@ ntips <- ggplot(data, aes(x = dataset, y = gene, fill = ntips)) +
                 axis.text.x = element_text(size = 6),
                 legend.key.size = unit(0.4, 'cm'),
                 legend.text = element_text(size = 4), legend.title = element_text(size = 6)) +
-           scale_x_discrete(labels = c("rmout\ninfprlgs", "rmout\ninfprlgs\nGTErm", "all_exons", "rm_out", "str\nmssdata", "str_mssdata\nprlgs", "putative\northlgs", "inform\nprlgs", "all_paralogs")) +
+           scale_x_discrete(labels = c("rmout\ninfprlgs", "all_exons", "rm_out", "str\nmssdata", "str_mssdata\nprlgs", "putative\northlgs", "inform\nprlgs", "all_paralogs")) +
            scale_fill_viridis(direction = -1, option = "A", alpha = 0.9, name = "nsamples")
 
 nsites <- ggplot(data, aes(x = dataset, y = gene, fill = nsites)) +
@@ -120,7 +120,7 @@ nsites <- ggplot(data, aes(x = dataset, y = gene, fill = nsites)) +
                  axis.text.x = element_text(size = 6),
                  legend.key.size = unit(0.4, 'cm'),
                  legend.text = element_text(size = 4), legend.title = element_text(size = 6)) +
-           scale_x_discrete(labels = c("rmout\ninfprlgs", "rmout\ninfprlgs\nGTErm", "all_exons", "rm_out", "str\nmssdata", "str_mssdata\nprlgs", "putative\northlgs", "inform\nprlgs", "all_paralogs")) +
+           scale_x_discrete(labels = c("rmout\ninfprlgs", "all_exons", "rm_out", "str\nmssdata", "str_mssdata\nprlgs", "putative\northlgs", "inform\nprlgs", "all_paralogs")) +
            scale_fill_viridis(direction = -1, option = "A", alpha = 0.9, transform = "log", name = "log(nsites)")
 
 ## Export occupancy
@@ -197,9 +197,9 @@ qprp_clade <- ggplot(cladesumm, aes(x = clade, y = prop_q2_q3, fill = tree, alph
                      legend.position = "none")
 
 ## Export plot
-pdf(paste(outpath, "/", "astraltrees_q1_lpp_summ.pdf", sep = ""), width = 9)
-ggarrange(q1, q1_clade, lpp1, lpp1_clade, qprp, qprp_clade, widths = c(0.8, 1.5),
-          ncol = 2, nrow = 3, align = "hv", common.legend = T, legend = "bottom")
+pdf(paste(outpath, "/", "astraltrees_q1_lpp_summ.pdf", sep = ""), height = 6, width = 12)
+ggarrange(q1, q1_clade, lpp1, lpp1_clade, widths = c(0.8, 1.5),
+          ncol = 2, nrow = 2, align = "hv", common.legend = T, legend = "bottom")
 dev.off()
 
 ##########################

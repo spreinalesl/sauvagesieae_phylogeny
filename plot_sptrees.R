@@ -229,13 +229,6 @@ prop <- ggplot(tree_summ_q, aes(tree, log(prop_q2_q3, base = 10))) +
   theme_bw() +
   theme(axis.title.x = element_blank(), axis.text.x = element_text(size = 6, angle = 90, vjust = 0.5, hjust = 1), legend.position = "none")
 
-# alternative
-#ggplot(tree_summ_q, aes(tree, Q1)) +
-# geom_boxplot(width = .2) +
-# geom_point(shape = 21, colour = "black", fill = "grey", size = 1, stroke = 0.2, position = "jitter") +
-# theme_bw() +
-# theme(axis.title.x = element_blank(), axis.text.x = element_text(size = 6, angle = 90, vjust = 0.5, hjust = 1), legend.position = "none")
-
 ## Export pdf
 pdf(paste(tpath, "/", "q_plots.pdf", sep = ""), width = 9, height = 9)
 ggarrange(q1, q2, q3, prop,
@@ -334,7 +327,6 @@ for(i in 1:length(tfiles)){
   cat("Tree", tfiles[i], "done!", "\n")
 }
 
-## Plots
 cladesumm_org <- cladesumm
 cladesumm$q1 <- as.numeric(cladesumm$q1)
 cladesumm$q2 <- as.numeric(cladesumm$q2)
@@ -342,57 +334,3 @@ cladesumm$q3 <- as.numeric(cladesumm$q3)
 
 ## Export report
 write.csv(cladesumm, file = paste(tpath, "/", "clades_sum.csv", sep = ""), row.names = F)
-
-# by tree by clade
-q1_tree <- ggplot(cladesumm, aes(x = tree, y = q1, fill = clade)) + 
-             geom_boxplot() +
-             labs(fill = "clade") +
-             geom_point(position = position_jitterdodge(jitter.width = 0.05), alpha = .4) +
-             theme_bw() +
-             theme(axis.title.x = element_blank(),
-                   axis.text.x = element_text(size = 7, angle = 90, vjust = 0.5, hjust = 1),
-                   legend.position = "none")
-
-p1_tree <- ggplot(cladesumm, aes(x = tree, y = pp1, fill = clade)) + 
-             geom_boxplot() +
-             labs(fill = "clade") +
-             geom_point(position = position_jitterdodge(jitter.width = 0.05), alpha = .4) +
-             theme_bw() +
-             theme(axis.title.x = element_blank(),
-                   axis.text.x = element_text(size = 7, angle = 90, vjust = 0.5, hjust = 1),
-                   legend.position = "none")
-
-## Export pdf
-pdf(paste(tpath, "/", "trees-clades.pdf", sep = ""), width = 12, height = 10)
-ggarrange(q1_tree, p1_tree,
-          font.label = list(size = 12, color = "black", face = "bold", family = "serif"),
-          ncol = 1, nrow = 2,
-          common.legend = TRUE, legend = "bottom")
-dev.off()
-
-# by clade by tree
-q1_clade <- ggplot(cladesumm, aes(x = clade, y = q1, fill = tree)) + 
-             geom_boxplot() +
-             labs(fill = "tree") +
-             geom_point(position = position_jitterdodge(jitter.width = 0.05), alpha = .4) +
-             theme_bw() +
-             theme(axis.title.x = element_blank(),
-             axis.text.x = element_text(size = 7, angle = 90, vjust = 0.5, hjust = 1),
-             legend.position = "none")
-
-p1_clade <- ggplot(cladesumm, aes(x = clade, y = pp1, fill = tree)) + 
-             geom_boxplot() +
-             labs(fill = "tree") +
-             geom_point(position = position_jitterdodge(jitter.width = 0.05), alpha = .4) +
-             theme_bw() +
-             theme(axis.title.x = element_blank(),
-             axis.text.x = element_text(size = 7, angle = 90, vjust = 0.5, hjust = 1),
-             legend.position = "none")
-
-## Export pdf
-pdf(paste(tpath, "/", "clades-trees.pdf", sep = ""), width = 12, height = 10)
-ggarrange(q1_clade, p1_clade,
-          font.label = list(size = 12, color = "black", face = "bold", family = "serif"),
-          ncol = 1, nrow = 2,
-          common.legend = TRUE, legend = "bottom")
-dev.off()
