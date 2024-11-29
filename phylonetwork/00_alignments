@@ -1,0 +1,46 @@
+#!/bin/bash
+
+#SBATCH --job-name=mafft
+#SBATCH --partition=short
+#SBATCH --array=0-5
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=24G
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+## Align DNA sequences for each locus using the algorith E-INS-i inplemented in mafft for supercontig. This algorithm is suitable to align multiple cDNAs
+## and multiple genomic sequences of a gene from closely related species, which has several conserved motifs embedded in long unalignable regions.
+## As E-INS-i has the minimum assumption of the three methods, this is recommended if the nature of sequences to be aligned is not clear.
+## Most genes run well with 150MB of memory. Nevetheless, three additional runs were necessary 250MB, 500MB, 2G and 24G.
+
+
+###########
+# COMMANDS
+###########
+
+## Activate conda environment (because mafft was installed as part of hybpiper)
+source activate hybpiper
+
+## Define fasta file path
+fpath=~/scratch/private/phylonetworks/fastafiles
+
+## Output path
+mkdir -p ~/scratch/private/phylonetworks/alignments
+rpath=~/scratch/private/phylonetworks/alignments
+
+## Go to input-files folder
+cd $fpath
+
+## Define variable to list fasta files and iterate over each element using the SLURM_ARRAY_TASK_ID variable
+## Path to a list of selected genes
+gene_list=($(ls * | grep FNA$))
+gene=(${gene_list[$SLURM_ARRAY_TASK_ID]})
+gnm=$(echo $gene | sed 's/\.FNA//')
+
+## Run mafft
+mafft --thread ${SLURM_CPUS_PER_TASK} --genafpair --adjustdirectionaccurately --maxiterate 1000 $gene > $rpath/"$gnm"_align.fas
+
+echo MAFFT finished for gene $gene
