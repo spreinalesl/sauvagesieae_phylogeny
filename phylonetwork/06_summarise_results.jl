@@ -7,22 +7,19 @@ using RCall
 
 ### Read snaq rus and plot the best network
 net0 = readSnaqNetwork("/home/spreinalesl/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/phylonetworks/networks/snaq_sauvagesieae_h0.out")
-rootatnode!(net0, "Ochna_membranacea")
+rootatnode!(net0, "SRR10951426")
 PhyloPlots.plot(net0, :R);
 
 net1 = readSnaqNetwork("/home/spreinalesl/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/phylonetworks/networks/snaq_sauvagesieae_h1.out")
-rootatnode!(net1, "Ochna_membranacea")
+rootatnode!(net1, "SRR10951426")
 PhyloPlots.plot(net1, :R, showGamma = true);
 
 net2 = readSnaqNetwork("/home/spreinalesl/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/phylonetworks/networks/snaq_sauvagesieae_h2.out")
-rootatnode!(net2, "Ochna_membranacea")
+rootatnode!(net2, "SRR10951426")
 PhyloPlots.plot(net2, :R, showGamma = true);
 
-# read .networks
-netw2 = readMultiTopology("/home/spreinalesl/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/phylonetworks/networks/snaq_sauvagesieae_h2.networks")
-
 net3 = readSnaqNetwork("/home/spreinalesl/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/phylonetworks/networks/snaq_sauvagesieae_h3.out")
-rootatnode!(net3, "Ochna_membranacea")
+rootatnode!(net3, "SRR10951426")
 PhyloPlots.plot(net3, :R, showGamma = true);
 
 ### Select the best h and save it
@@ -42,24 +39,8 @@ scores_plot = Gadfly.plot(x=collect(0:3), y=scores, Geom.point, Geom.line,
 scores_svg = SVG("scores.svg", 6inch, 4inch)
 draw(scores_svg, scores_plot)
 
-##########################################
-############ Additional plots ############
 
-### Explore alternative networks from .networks file
-## This file contains the network with the best Ploglikelihood and a set of alternative networks after some topological perturbations
-## on the best network
+##################
+
+### Explore alternative networks
 netsh1 = readMultiTopology("/home/spreinalesl/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/phylonetworks/networks/snaq_sauvagesieae_h1.networks")
-rootatnode!(netsh1[3], "Ochna_membranacea")
-PhyloPlots.plot(netsh1[1], :R, showGamma = true);
-
-### Explore alternative networks from .out file
-## Before plotting networks delete the Dendroscope net and the whithe space before each net
-netsh1 = readMultiTopology("/home/spreinalesl/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/phylonetworks/networks/snaq_sauvagesieae_h1_ed.out")
-PhyloPlots.plot(netsh1[1], :R, showGamma = true);
-rootatnode!(netsh1[20], "Ochna_membranacea")
-
-# To read one topology
-addnet2 = readTopology("/home/spreinalesl/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/phylonetworks/networks/snaq_sauvagesieae_h2_ed.out")
-rootatnode!(addnet2, "Ochna_membranacea")
-PhyloPlots.plot(addnet2, :R, showGamma = true);
-
