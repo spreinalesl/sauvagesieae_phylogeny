@@ -2,8 +2,8 @@
 
 #SBATCH --job-name=mafft
 #SBATCH --partition=short
-#SBATCH --array=0-5
-#SBATCH --cpus-per-task=4
+#SBATCH --array=0
+#SBATCH --cpus-per-task=2
 #SBATCH --mem=24G
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
@@ -20,9 +20,6 @@
 ###########
 # COMMANDS
 ###########
-
-## Activate conda environment (because mafft was installed as part of hybpiper)
-source activate hybpiper
 
 ## Define fasta file path
 fpath=~/scratch/private/phylonetworks/fastafiles

@@ -2,9 +2,9 @@
 
 #SBATCH --job-name=taper
 #SBATCH --partition=short
-#SBATCH --array=0-594%20
+#SBATCH --array=0
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=1G
+#SBATCH --mem=1200MB
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
@@ -22,9 +22,6 @@
 # COMMANDS
 ###########
 
-## Activate conda environment
-source activate julia
-
 ## Input fasta files
 fpath=~/scratch/private/phylonetworks/alignments
 
@@ -40,6 +37,6 @@ gene_list=($(ls * | grep fas$))
 gene=(${gene_list[$SLURM_ARRAY_TASK_ID]})
 
 ## Run TAPER
-julia ~/scratch/apps/addprograms/taper/correction_multi.jl -m - -a N -c 5 $gene > $rpath/$gene
+/home/sreinale/apps/julia/bin/./julia ~/apps/taper/correction_multi.jl -m - -a N -c 5 $gene > $rpath/$gene
 
 echo TAPER finished for gene $gene

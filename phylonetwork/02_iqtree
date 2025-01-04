@@ -1,0 +1,61 @@
+#!/bin/bash
+
+#SBATCH --job-name=iqtree
+#SBATCH --partition=medium
+#SBATCH --array=0-591%10
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=50MB
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+## These commands use IQtree to select the best substitution model for each gene, to be used as parameter in RAxML.
+## The ModelFinder option tests the FreeRate model (+I+R) as well.
+## Option -nt AUTO will tell IQ-TREE to automatically determine the best number of cores given the current data and computer.
+## Option -ntmax specifies the maximal number of CPU cores -nt AUTO is allowed to allocate.
+## Option -b standard nonparametric bootstrap
+## Option -m MFP key word stands for ModelFinder Plus, which tells IQ-TREE to perform ModelFinder and the remaining analysis using the selected model
+## Option -mset Specify the name of a program (raxml, phyml or mrbayes) to restrict to only those models supported by the specified program
+## By default IQtree uses 100 parsimony trees + BIONJ tree
+## -pers Specify perturbation strength (between 0 and 1) for randomized NNI. DEFAULT: 0.5
+## -nstop Specify number of unsuccessful iterations to stop. DEFAULT: 100
+## Data sets with many short sequences should be analyzed with smaller perturbation strength (e.g. -pers 0.2) and larger number of stop iterations (e.g. -nstop 500)
+## This analysis uses about 3h per locus, but some locus requires more than 8h to complete bootstrapping, so, run it in the medium queue.
+
+###########
+# COMMANDS
+###########
+
+## Input fasta files
+fpath=~/scratch/private/phylonetworks/alignments/trimmed_alignm
+
+## Output path
+mkdir -p ~/scratch/private/phylonetworks/iqtree
+rpath=~/scratch/private/phylonetworks/iqtree
+
+## Go to the alignments folder
+cd $fpath
+
+## Define variable to list all alignment and iterate over each element using the SLURM_ARRAY_TASK_ID variable
+gene_list=($(ls * | grep fas$))
+gene=(${gene_list[$SLURM_ARRAY_TASK_ID]})
+
+## Run IQtree
+iqtree -s $gene -m MFP -merit AICc -mset raxml -B 1000 -bnni -nt AUTO -ntmax ${SLURM_CPUS_PER_TASK} ## estimate best subs model and tree with UFBS support
+
+echo Run tree for $gene
+
+## Move result to output folder
+mv -v $gene.iqtree $rpath ## Full result of the run, including a text version of the tree. This is the main report file
+mv -v $gene.log $rpath # Run log
+mv -v $gene.treefile $rpath # Maximum likelihood tree in NEWICK format
+mv -v $gene.mldist $rpath # Maybe distances among bootstrap trees? I didnt find info in the documentation
+mv -v $gene.boottrees $rpath # Bootstrap trees
+mv -v $gene.contree $rpath # Consensus tree with assigned branch supports where branch lengths are optimized on the original alignment
+mv -v $gene.bionj $rpath # NJ starting tree
+mv -v $gene.model.gz $rpath # Summary model
+mv -v $gene.uniqueseq.phy $rpath # trimmed alignment
+
+echo copy results done!

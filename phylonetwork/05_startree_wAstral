@@ -1,0 +1,54 @@
+#!/bin/bash
+
+#SBATCH --job-name=wastral
+#SBATCH --partition=medium
+#SBATCH --cpus-per-task=16
+#SBATCH --mem=100MB
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+## Options -r ans -s run with more rounds of placement for ensured optimality (default is 4 and 4)
+## Option -u 0 to compute species tree topology only. Option -u 2 to add support and local-PP for all three resolutions of each branch
+## Option -a to force Astral to put together multiple individuals/genes in the species tree. Provide a correspondence map between species names and IDs
+## You must provide max (-x) and min (-n) of support value to the program; default to max=100, min=0
+
+###########
+# COMMANDS
+###########
+
+## Input trees
+fpath=~/scratch/private/phylonetworks/iqtree
+
+## Output path
+mkdir -p ~/scratch/private/phylonetworks/snaq/startree
+rpath=~/scratch/private/phylonetworks/snaq/startree
+
+## Define max and min support values
+maxv=100
+minv=75
+
+## Collapsing threshold
+UFBoot=UFB75
+
+## Run Astral-pro with annotations
+/home/sreinale/apps/ASTER/bin/astral-hybrid -t ${SLURM_CPUS_PER_TASK} \
+                                            -r 16 -s 16 \
+                                            -u 0 \
+                                            -x $maxv -n $minv \
+                                            -o $rpath/startree.tre \
+                                            -i $fpath/lesstrees_allloci.newick 2>$rpath/startree.tre.log
+
+echo wAstral NO annotations finished!
+
+## Run Astral-pro with annotations
+/home/sreinale/apps/ASTER/bin/astral-hybrid -t ${SLURM_CPUS_PER_TASK} \
+                                            -r 16 -s 16 \
+                                            -u 2 \
+                                            -x $maxv -n $minv \
+                                            -o $rpath/startree_annot.tre \
+                                            -i $fpath/lesstrees_allloci.newick 2>$rpath/startree_annot.log
+
+echo wAstral with annotations finished!
