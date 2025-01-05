@@ -9,12 +9,15 @@ library(ape)
 ffpath <- "/home/spreinalesl/Documents/subsampling"
 
 ## List of selected taxa
-selspp <- read.csv("~/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/phylonetworks/sampling/sampling_sppnames.txt",
+selspp <- read.csv("~/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/phylonetworks/sampling/sampling_sppnames.csv",
                    sep = ",")
+
+unique(selspp$spp_name)
 
 ## Iterate fasta files
 warning_list1 <- c()
 fflist <- list.files(pattern = "FNA", ffpath, full.names = T)
+length(fflist)
 
 for(i in fflist){
   ff <- read.FASTA(i)
@@ -44,3 +47,25 @@ for(i in fflist){
 }
 
 cat("No samples selected for gene", warning_list1, sep = "\n")
+
+########################
+## Confirmation test
+########################
+fflist <- list.files(pattern = "FNA", "/home/spreinalesl/Documents/subsampling/ffed", full.names = T)
+
+tipnames <- vector()
+fftable <- data.frame(gene = NA, tipnum = NA)
+
+for(i in fflist){
+  ff <- read.FASTA(i)
+  tipnames <- c(tipnames, names(ff))
+  
+  fftable <- rbind(fftable, data.frame(gene = i, tipnum = length(names(ff))))
+}
+
+tipnames <- unique(tipnames)
+length(tipnames)
+
+table(sort(tipnames) == sort(unique(selspp$spp_name)))
+
+write.csv(fftable, "/home/spreinalesl/Documents/subsampling/ffed/fftable.csv", row.names = F)
