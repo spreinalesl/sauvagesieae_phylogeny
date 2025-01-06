@@ -10,21 +10,23 @@ library(ggplot2)
 library(gridExtra) ## for multiple plots
 library(viridis) ## heatmap colors
 library(ggpubr) ## for multiple plots aligned
+library(gtable) ## for complex layout
+library(grid) ## for complex layout
 
 ## Set path
 outpath <- "~/Documents/plot_trees"
 
 ## Read gtrees summary table
-data <- read.table("~/Documents/plot_trees/merge_iqtree_gtrees_sum.csv",
+data <- read.table("~/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/trees/plots/iqtree_summ/merge_iqtree_gtrees_sum.csv",
                    header = T, sep = ",")
+data <- subset(data, subset = (!(data$dataset == "0rmout_infprlgs_rmlociGTE")))
 
 ## Read q1 scores from astral by clades
-cladesumm <- read.csv("~/Documents/plot_trees/clades_sum.csv",
+cladesumm <- read.csv("~/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/trees/plots/clades_sum.csv",
                       sep = ",")
 
-## Overall q1 per dataset
-totalq1 <- aggregate(cladesumm$q1 ~ cladesumm$tree, FUN = function(x) round(median(x, na.rm = T), digits = 4))
-colnames(totalq1) <- c("dataset", "median_q1")
+## Read gCF scores
+gCFs <- read.csv("~/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/trees/concordance_factors/summary/summ_CFs_datasets.csv")
 
 ######################
 ## Plot iqtree summ
@@ -129,6 +131,21 @@ ggarrange(ntips, nsites, ncol = 2, nrow = 1, align = "hv")
 dev.off()
 
 ######################
+## Export gtrees figure
+######################
+## Align boxplots
+g1 <- ggplotGrob(bnsites)
+g2 <- ggplotGrob(totbrl_median)
+g3 <- ggplotGrob(bootsupport)
+g <- rbind(g1, g2, g3, size = "first")
+g$widths <- unit.pmax(g1$widths, g2$widths, g3$widths)
+
+## Complex layout
+pdf(paste(outpath, "/", "gtrees_summ_stats.pdf", sep = ""), width = 9, height = 7)
+ggarrange(ntips, g, ncol = 2, widths = c(1.2, 0.8))
+dev.off()
+
+######################
 ## Plot astral q1 values
 ######################
 ## Plot overall Q1
@@ -196,10 +213,33 @@ qprp_clade <- ggplot(cladesumm, aes(x = clade, y = prop_q2_q3, fill = tree, alph
                theme(axis.text.x = element_text(size = 5),
                      legend.position = "none")
 
+######################
+## Plot astral gCF values
+######################
+gCF <- ggplot(gCFs, aes(x = dataset, y = gCF, fill = dataset, alpha = 1.7)) + 
+        geom_boxplot(width = 0.3, outlier.size = 0.3) +
+        theme_bw() +
+        labs(x = "", y = "gCF") +
+        theme(axis.title.x = element_text(size = 6),
+              axis.text.x = element_blank(),
+              axis.ticks.x = element_blank(),
+              legend.position = "none")
+
+# by clades
+gCFs <- subset(gCFs, subset = !(is.na(gCFs$clade)))
+gCF_clade <- ggplot(gCFs, aes(x = clade, y = gCF, fill = dataset, alpha = 1.7)) + 
+              geom_boxplot(outlier.size = 0.3) +
+              theme_bw() +
+              labs(x = "", y = "") +
+              theme(axis.text.x = element_text(size = 5),
+                    legend.position = "none")
+
+#######################
 ## Export plot
-pdf(paste(outpath, "/", "astraltrees_q1_lpp_summ.pdf", sep = ""), height = 6, width = 12)
-ggarrange(q1, q1_clade, lpp1, lpp1_clade, widths = c(0.8, 1.5),
-          ncol = 2, nrow = 2, align = "hv", common.legend = T, legend = "bottom")
+#######################
+pdf(paste(outpath, "/", "astraltrees_q1_lpp_gCF_summ.pdf", sep = ""), height = 10, width = 12)
+ggarrange(q1, q1_clade, lpp1, lpp1_clade, gCF, gCF_clade, widths = c(0.8, 1.5),
+          ncol = 2, nrow = 3, align = "hv", common.legend = T, legend = "bottom")
 dev.off()
 
 ##########################
