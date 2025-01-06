@@ -45,7 +45,8 @@ for(i in 1:length(tfiles)){
 comb <- expand.grid(1:length(tfiles), 1:length(tfiles))
 
 ## Calculate TreeDistance for each pair of trees
-rfmatrix <- matrix(nrow = 7, ncol = 7, dimnames = list(tnames, tnames))
+rfmatrix <- matrix(nrow = 8, ncol = 8, dimnames = list(tnames, tnames))
+phylodif <- matrix(nrow = 8, ncol = 8, dimnames = list(tnames, tnames))
 
 for(i in 1:nrow(comb)){
   ## Select trees
@@ -57,12 +58,17 @@ for(i in 1:nrow(comb)){
       dimnames(rfmatrix)[[2]][tre2] == names(alltrees)[tre2], "\n")
   
   ## Save generalized RF distance in the matrix
+  ## This function returns the clustering information distance
   rfmatrix[tre1,tre2] <- TreeDistance(alltrees[[tre1]], alltrees[[tre2]])
+  
+  ## DifferentPhylogeneticInfo
+  ## The amount of information distinct to each of a pair of splits
+  phylodif[tre1,tre2] <- DifferentPhylogeneticInfo(alltrees[[tre1]], alltrees[[tre2]], normalize = T)
 }
 
 ## Some adjustments before plot
-rfmatrix[which(upper.tri(rfmatrix))] <- NA
-df <- data.frame(dataset = dimnames(rfmatrix)[[1]], rfmatrix)
+phylodif[which(upper.tri(phylodif))] <- NA
+df <- data.frame(dataset = dimnames(phylodif)[[1]], phylodif)
 df <- melt(df, id = "dataset")
 df$value <- round(df$value, digits = 3)
 
@@ -71,7 +77,7 @@ pdf(paste(tpath, "heatmap_gRFdistances.pdf", sep = "/"))
 ggplot(df, aes(x = dataset, y = variable, fill = value)) +
   geom_tile()+
   scale_fill_gradient(low ="#FFFF88", high = "#FF0000", na.value = "white",
-                      name="Generalized\nRF distances", limit = c(0, 0.2)) +
+                      name="Generalized\nRF distances", limit = c(0.022, 0.22)) +
   coord_fixed() +
   geom_text(aes(dataset, variable, label = value), color = "black", size = 4) +
   theme_minimal() +
