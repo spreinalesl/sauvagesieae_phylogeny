@@ -1,0 +1,41 @@
+#!/bin/bash
+
+#SBATCH --job-name=rooting
+#SBATCH --partition=medium
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=3MB
+#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-type=END,FAIL
+
+###########
+# NOTES
+###########
+## Run pxrr function of phyx package to root bootstrap trees 
+
+###########
+# COMMANDS
+###########
+
+## Input path
+cd ~/scratch/private/phylonetworks/iqtree
+
+## Outpath
+mkdir -p ~/scratch/private/phylonetworks/bootsnaq
+outpath=~/scratch/private/phylonetworks/bootsnaq
+
+## Untar tree files
+tar -xzvf bootrees.tar.gz
+
+echo "Number of tree files:"
+ls * | grep ufboot | wc -l
+
+## Run phyx to root trees using Ochna_membranacea
+for i in *.ufboot; do
+ echo $i
+ /home/sreinale/apps/conda/bin/pxrr -t $i -g Ochna_membranacea > $outpath/$i
+ echo "rooting done!"
+done
+
+## Remove original files
+rm -f *.ufboot
+echo "DONE!"
