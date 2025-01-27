@@ -5,7 +5,9 @@ using CSV
 using DataFrames
 using RCall
 
+#############################################
 ### Read snaq rus and plot the best network
+#############################################
 net0 = readSnaqNetwork("/home/spreinalesl/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/phylonetworks/attempt_iqtree/snaq/snaq_sauvagesieae_h0.out")
 rootatnode!(net0, "Ochna_membranacea")
 PhyloPlots.plot(net0, :R);
@@ -26,18 +28,32 @@ net4 = readSnaqNetwork("/home/spreinalesl/Dropbox/Sandra/Manuscritos/NGS_phyloOc
 rootatnode!(net4, "Ochna_membranacea")
 PhyloPlots.plot(net4, :R, showGamma = true);
 
-### Select the best h and save it
-#rootatnode!(net2, "panaque_cochliodon19170")
-#R"pdf('net2_best.pdf', width=25, height=20)"
-#PhyloPlots.plot(net2, :R, showGamma = true);
-#R"dev.off()"
+net5 = readSnaqNetwork("/home/spreinalesl/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/phylonetworks/attempt_iqtree/snaq/snaq_sauvagesieae_h5.out")
+rootatnode!(net5, "Ochna_membranacea")
+PhyloPlots.plot(net5, :R, showGamma = true);
 
-#net2_svg = SVG("net2.svg", 6inch, 4inch)
-#draw(net2_svg, net2_plot)
+#############################################
+### Get loglik scores for the best nets
+### per run/iteration
+#############################################
+scores = [net0.loglik, net1.loglik, net2.loglik, net3.loglik, net4.loglik, net5.loglik]
 
-### loglik scores for the best nets per iteration
-scores = [net0.loglik, net1.loglik, net2.loglik, net3.loglik, net4.loglik]
-scores_plot = Gadfly.plot(x=collect(0:4), y=scores, Geom.point, Geom.line,
+#############################################
+### Plot results
+#############################################
+### Networks
+## pdf
+R"pdf('/home/spreinalesl/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/phylonetworks/attempt_iqtree/snaq/net2_best.pdf',
+       width=25, height=20)"
+PhyloPlots.plot(net2, :R, showGamma = true);
+R"dev.off()"
+
+## svg
+net2_svg = SVG("/home/spreinalesl/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/phylonetworks/attempt_iqtree/snaq/net2.svg", 6inch, 4inch)
+draw(net2_svg, net2_plot)
+
+### Scores
+scores_plot = Gadfly.plot(x=collect(0:5), y=scores, Geom.point, Geom.line,
                           Guide.xlabel("h"), Guide.ylabel("Pseudo-deviance"))
 
 scores_svg = SVG("/home/spreinalesl/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/phylonetworks/attempt_iqtree/snaq/scores.svg", 6inch, 4inch)
@@ -63,5 +79,3 @@ rootatnode!(netsh1[20], "Ochna_membranacea")
 addnet2 = readTopology("/home/spreinalesl/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/phylonetworks/attempt_iqtree/snaq/snaq_sauvagesieae_h2_ed.out")
 rootatnode!(addnet2, "Ochna_membranacea")
 PhyloPlots.plot(addnet2, :R, showGamma = true);
-
-
