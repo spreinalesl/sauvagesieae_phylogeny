@@ -4,7 +4,7 @@
 #SBATCH --partition=long
 #SBATCH --array=1-100%5
 #SBATCH --cpus-per-task=6
-#SBATCH --mem=41G
+#SBATCH --mem=20G
 #SBATCH --mail-user=s.reinales@kew.org
 #SBATCH --mail-type=END,FAIL
 
