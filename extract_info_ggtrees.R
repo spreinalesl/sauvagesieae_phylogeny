@@ -70,3 +70,36 @@ allnames <- unique(do.call(c, allnames))
 ## Write tables
 write.csv(gtrees_summ, "~/Documents/iqtree_summ/gtrees_summ.csv", row.names = F)
 writeLines(allnames, "~/Documents/iqtree_summ/tipnames.csv", sep = "\n")
+
+################################
+## Get summary for table1
+################################
+dat <- read.csv("~/merge_iqtree_gtrees_sum.csv")
+
+## Prepare data
+dat$probe[which(grepl("g[0-9]", dat$flname))] <- "schn"
+dat$probe[which(is.na(dat$probe))] <- "a353"
+
+dat$dataset <- as.factor(dat$dataset)
+dat$probe <- as.factor(dat$probe)
+
+## Extract info
+## nloci
+nloci <- aggregate(dat$ngenes ~ dat$dataset + dat$probe, data = dat, FUN = length)
+
+## ntips
+ntips <- aggregate(dat$ntips ~ dat$dataset, data = dat, FUN = median)
+ntips$`dat$ntips` <- round(ntips$`dat$ntips`, digits = 1)
+
+ntipsp <- aggregate(dat$ntips ~ dat$dataset + dat$probe, data = dat, FUN = median)
+
+## nsites
+nsitest <- aggregate(dat$nsites ~ dat$dataset, data = dat, FUN = sum)
+nsitestp <- aggregate(dat$nsites ~ dat$dataset + dat$probe, data = dat, FUN = sum)
+
+nsitespl <- aggregate(dat$nsites ~ dat$dataset, data = dat, FUN = median)
+nsitesp <- aggregate(dat$nsites ~ dat$dataset + dat$probe, data = dat, FUN = median)
+
+## Pinformative sites
+npfsitest <- aggregate(dat$npars_inf_sites ~ dat$dataset, data = dat, FUN = sum)
+npfsitestp <- aggregate(dat$npars_inf_sites ~ dat$dataset + dat$probe, data = dat, FUN = sum)
