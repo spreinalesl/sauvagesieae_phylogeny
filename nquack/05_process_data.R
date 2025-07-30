@@ -1,6 +1,5 @@
 ## Load packages
 library(nQuack)
-library(dplyr)
 
 ## Paths
 outpath <- "/home/sreinale/scratch/private/nquack/example/sauv/processed/"

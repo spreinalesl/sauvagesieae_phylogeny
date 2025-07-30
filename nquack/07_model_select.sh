@@ -10,7 +10,8 @@
 ###########
 # NOTES
 ###########
-## Select the best model for each sample using BIC
+## Select the best model for each sample using BIC. Run this script with min 100MB
+## to load the environment
 
 ###########
 # COMMANDS

@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #SBATCH --job-name=nQuack
-#SBATCH --partition=medium
-#SBATCH --array=0-59%10
+#SBATCH --partition=short
+#SBATCH --array=0-59%30
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=1G
 #SBATCH --mail-user=spreinalesl@alumni.usp.br

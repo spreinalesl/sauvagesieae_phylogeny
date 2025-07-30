@@ -1,6 +1,5 @@
 ## Load packages
 library(nQuack)
-library(dplyr)
 
 ## Paths
 inpath <- "/home/sreinale/scratch/private/nquack/example/sauv/processed/"
@@ -12,13 +11,14 @@ sample <- commandArgs(trailingOnly = T)
 
 ## Sample name
 sample <- gsub("_dd.csv", "", sample)
+cat("Begin bootstrap for sample", sample, "\n")
 
 ## Read summary table and extract info for the best model
 mod <- read.csv(paste0(modpath, "bestModel.csv"))
 
 ## Run bootstrap replicates under the best model
 ## Read summary table and extract info for the best model
-nboots <- 500
+nboots <- 1000
 bestDist <- mod$BestDist[which(mod$sample == sample)]
 bestType <- mod$BestType[which(mod$sample == sample)]
 if(grepl("uniform", bestDist)){
