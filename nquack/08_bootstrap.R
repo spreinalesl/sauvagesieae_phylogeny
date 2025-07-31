@@ -16,11 +16,26 @@ cat("Begin bootstrap for sample", sample, "\n")
 ## Read summary table and extract info for the best model
 mod <- read.csv(paste0(modpath, "bestModel.csv"))
 
-## Run bootstrap replicates under the best model
-## Read summary table and extract info for the best model
+## To run bootstrap replicates under the best or second best model
+## first define the following options:
+## Define the number of bootstrap replicates
 nboots <- 1000
-bestDist <- mod$BestDist[which(mod$sample == sample)]
-bestType <- mod$BestType[which(mod$sample == sample)]
+
+## Define best (TRUE) or second best (FALSE) to run
+bestm <- FALSE
+
+## Read summary table and extract info for the best or the second best model
+if(bestm){
+ bestnm <- "best model"
+ bestDist <- mod$BestDist[which(mod$sample == sample)]
+ bestType <- mod$BestType[which(mod$sample == sample)]
+} else{
+ bestnm <- "second best model"
+ bestDist <- mod$SecondDist[which(mod$sample == sample)]
+ bestType <- mod$SecondType[which(mod$sample == sample)]
+}
+
+## Define if a uniform distribution for noise will be included in the model
 if(grepl("uniform", bestDist)){
  bestDist <- gsub("-uniform", "", bestDist)
  bestUnif <- 1
@@ -28,7 +43,7 @@ if(grepl("uniform", bestDist)){
  bestUnif <- 0
 }
 
-cat("Parameters:", bestDist, bestType, bestUnif, "\n")
+cat(paste0("Running under the ", bestnm, ":"), bestDist, bestType, bestUnif, "\n")
 
 ## Read table with allele frequencies      
 temp <- as.matrix(read.csv(paste0(inpath, sample, "_dd.csv")))
