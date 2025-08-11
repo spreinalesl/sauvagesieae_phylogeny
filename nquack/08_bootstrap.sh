@@ -1,10 +1,10 @@
 #!/bin/bash
 
-#SBATCH --job-name=nQuack
-#SBATCH --partition=short
-#SBATCH --array=0-59%30
+#SBATCH --job-name=nQuack08
+#SBATCH --partition=long
+#SBATCH --array=0-59%10
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=1G
+#SBATCH --mem=750MB
 #SBATCH --mail-user=spreinalesl@alumni.usp.br
 #SBATCH --mail-type=END,FAIL
 
@@ -12,6 +12,7 @@
 # NOTES
 ###########
 ## Bootstrap under the best model
+## first, set the analysis options in the R script
 
 ###########
 # COMMANDS

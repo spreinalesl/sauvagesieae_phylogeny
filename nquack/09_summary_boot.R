@@ -13,9 +13,9 @@ boots <- list.files(pattern = "boot.csv", inpath)
 ## for the original data set, and the second tallies the
 ## bootstrap replicates best model
 summtable <- data.frame(sample = NA,
-                      BestModelPloidialLevel = NA,
-                      BSsupport = NA,
-                      AlternativePloidalLevel = NA)
+                        BestModelPloidialLevel = NA,
+                        BSsupport = NA,
+                        AlternativePloidalLevel = NA)
 for(i in 1:length(boots)){
   booti <- read.csv(paste0(inpath, boots[i]), header = T)
   

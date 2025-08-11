@@ -11,19 +11,15 @@ outpath <- "/home/sreinale/scratch/private/nquack/example/sauv/processed/"
 ## i) denoise_data() which filters allele frequencies with a normal + uniform mixture model
 ## ii) Bclean() which utilizes the U-shaped beta distribution 
 
-# choose method
-denoiseD <- T
-filterm <- "nquire"
+# define truncation limits
+tmin <- 0.15
+tmax <- 0.85
 
-if(denoiseD){
- tmin <- 0.15 
- tmax <- 0.85
- mnm <- "dd"  
-}else{
- tmin <- 0
- tmax <- 0
- mnm <- "bc"
-}
+# choose method
+denoising <- TRUE
+dmethod <- "denoisedata" # "bclean" 
+filterm <- "both" # "nquire" "nquack"
+plotfreq <- FALSE
 
 ## Iterate files using an array job
 samp <- commandArgs(trailingOnly = T)
@@ -34,25 +30,47 @@ temp <- process_data(paste0(outpath, samp),
                      max.depth.quantile.prob = 1, 
                      error = 0.01, 
                      trunc = c(tmin, tmax))
-  
-## write a table
-samp <- gsub(".txt", "", samp)
-write.csv(temp, file = paste0(outpath, samp, "_", mnm, ".csv"),
-          row.names = FALSE)
 
-cat("Writing filtered data for", samp, "\n")
- 
-## Remove noise 
-if(denoiseD){
-  ## Using denoise_data
-  pdf(paste(outpath, "denoiseD_", samp, ".pdf", sep = ""))
-    denoise_data(temp, plot = T, filter = filterm)
-  dev.off()
-  cat("END denoise", " \n")
+## Change sample name
+samp <- gsub(".txt", "", samp)
+
+## If no denosing step will be run, write .csv table after truncation
+## conversely, choose one method to denoise the raw data and write the
+## table after runnig denoising
+if(!denoising){
+ write.csv(temp, file = paste0(outpath, samp, ".csv"),
+           row.names = FALSE)
+
+ cat("Writing filtered data for", samp, "\n")
+
 }else{
-  ## Using Bclean
-  pdf(paste(outpath, "bclean_", samp, ".pdf", sep = ""))
-   Bclean(temp, plot = TRUE, quick = F)
-  dev.off()
-  cat("END Bclean", "\n")
+
+ ## Open a plot window
+ if(plotfreq){
+  pdf(paste(outpath, "denoising_", samp, ".pdf", sep = ""))
+ }
+
+ ## Remove noise 
+  if(dmethod == "denoisedata"){
+    ## Using denoise_data
+    mnm <- "dd"
+    denoise_data(temp, plot = plotfreq, filter = filterm)
+    cat("END denoise using method", filterm, "\n")
+  }
+
+  if(dmethod == "bclean"){
+    ## Using Bclean
+    mnm <- "bc"
+    Bclean(temp, plot = plotfreq, quick = FALSE)
+    cat("END Bclean", "\n")
+   }
+
+  ## Write table after denoising
+  write.csv(temp, file = paste0(outpath, samp, "_", mnm, ".csv"),
+            row.names = FALSE)
+
+  cat("Writing filtered and denoised data for", samp, "\n")
+  
+  ## Close plot window
+  if(plotfreq){dev.off()}
 }

@@ -21,8 +21,8 @@ mod <- read.csv(paste0(modpath, "bestModel.csv"))
 ## Define the number of bootstrap replicates
 nboots <- 1000
 
-## Define best (TRUE) or second best (FALSE) to run
-bestm <- FALSE
+## Define best (TRUE) or second best (FALSE) model to run
+bestm <- TRUE
 
 ## Read summary table and extract info for the best or the second best model
 if(bestm){

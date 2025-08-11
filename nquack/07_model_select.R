@@ -32,7 +32,7 @@ for(i in 1:length(samples)){
     mcmx <- paste0(mcmx, collapse = "-")
   }
   
-  ## Extract info for the best model
+  ## Extract info for the best models
   temp <- subset(temp, temp$mixture %in% mixtures) # subset table to include just selected mixtures
   pminBIC <- which(temp$BIC == min(temp$BIC))
   temp2 <- temp[-pminBIC,] # Remove the best model to identify the second best

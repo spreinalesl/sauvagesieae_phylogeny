@@ -1,10 +1,10 @@
 #!/bin/bash
 
-#SBATCH --job-name=nQuack
-#SBATCH --partition=medium
-#SBATCH --array=0-59%10
+#SBATCH --job-name=nQuack06
+#SBATCH --partition=long
+#SBATCH --array=0-59%5
 #SBATCH --cpus-per-task=10
-#SBATCH --mem=200MB
+#SBATCH --mem=2G
 #SBATCH --mail-user=spreinalesl@alumni.usp.br
 #SBATCH --mail-type=END,FAIL
 
@@ -13,6 +13,7 @@
 ###########
 ## Test 18 model types for all three distributions (Normal, Beta and Beta-binomial),
 ## totalising 54 models
+## First, set analysis options in the R script
 
 ###########
 # COMMANDS
