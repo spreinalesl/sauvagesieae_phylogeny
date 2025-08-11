@@ -1,9 +1,13 @@
 ## Paths
 inpath <- "/home/sreinale/scratch/private/nquack/example/sauv/bootstrap/"
 IDtosppnm <- "/home/sreinale/scratch/private/nquack/example/sauv/sppidTOsppname.csv"
+modfile <- "/home/sreinale/scratch/private/nquack/example/sauv/models/interpret/bestModel.csv"
 
 ## Read species names
 spp <- read.csv(IDtosppnm)
+
+## Read file with info about models
+models <- read.csv(modfile)
 
 ## Iterate files
 boots <- list.files(pattern = "boot.csv", inpath)
@@ -13,15 +17,22 @@ boots <- list.files(pattern = "boot.csv", inpath)
 ## for the original data set, and the second tallies the
 ## bootstrap replicates best model
 summtable <- data.frame(sample = NA,
+                        BestModel = NA,
                         BestModelPloidialLevel = NA,
                         BSsupport = NA,
                         AlternativePloidalLevel = NA)
+
 for(i in 1:length(boots)){
   booti <- read.csv(paste0(inpath, boots[i]), header = T)
   
   ## Sample name
   summtable[i, "sample"] <- unique(booti$sample)
   
+  ## Extract best model info
+  summtable[i, "BestModel"] <- paste(models$BestDist[which(models$sample == unique(booti$sample))],
+                                     models$BestType[which(models$sample == unique(booti$sample))],
+                                     sep = "_")
+
   ## Extract inferred ploidal and bootstap support
   # Bootstrap replicates
   bsrep <- sum(booti[2,-4], na.rm = T)
@@ -34,17 +45,18 @@ for(i in 1:length(boots)){
   BSsupport <- round((booti[2, BestModelPloidialLevel]/bsrep)*100, digits = 1)
   summtable[i, "BSsupport"] <- BSsupport 
   
-  if(BSsupport < 85){
+  if(BSsupport < 100){
     AlternativePloidalLevel <- colnames(booti)[which(!(apply(booti[2,-4], 2, is.na)))]
-    AlternativePloidalLevel <- which(!(AlternativePloidalLevel %in% BestModelPloidialLevel))
+    AlternativePloidalLevel <- AlternativePloidalLevel[!(AlternativePloidalLevel %in% BestModelPloidialLevel)]
     if(length(AlternativePloidalLevel) > 1){
-      second <- paste(colnames(booti)[AlternativePloidalLevel[1]], "[", 
+      second <- paste(AlternativePloidalLevel[1], "[", 
                       (booti[2, AlternativePloidalLevel[1]]/bsrep)*100, "]", sep = "")
-      third <- paste(colnames(booti)[AlternativePloidalLevel[2]], "[", 
+      third <- paste(AlternativePloidalLevel[2], "[", 
                      (booti[2, AlternativePloidalLevel[2]]/bsrep)*100, "]", sep = "")
       summtable[i, "AlternativePloidalLevel"] <- paste0(second, third, collapse = "-")
     }else{
-      summtable[i, "AlternativePloidalLevel"] <- colnames(booti)[AlternativePloidalLevel]  
+      summtable[i, "AlternativePloidalLevel"] <- paste(AlternativePloidalLevel, "[", 
+                                                       (booti[2, AlternativePloidalLevel]/bsrep)*100, "]", sep = "")
     }
   }else{
     summtable[i, "AlternativePloidalLevel"] <- "NA"
