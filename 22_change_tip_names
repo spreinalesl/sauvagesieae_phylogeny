@@ -4,13 +4,13 @@
 #SBATCH --partition=short
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=500MB
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
 # NOTES
 ###########
-## This script merges individual trees in a single file and change tip names from sample ID to species name
+## This script merges individual trees in a single file and changes tip names from sample ID to species name
 ## alternative, it is possible to process individual trees, just dont run the merge commands.
 ## Min mem req 200MB
 ## For all_exons 500MB
@@ -25,7 +25,7 @@ program=iqtree
 addf=
 
 ## Input trees
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$program/$addf
+fpath=~/projects/trees/$mtype/$program/$addf
 
 ## Output path
 output=names_ed
@@ -39,7 +39,7 @@ cd $fpath
 cat *.treefile > sauv_"$mtype"_gtrees.tre
 echo trees were merged!
 
-## Fix a %$#$@#% problem caused by the MAFFT function --accurateX
+## Fix a %$#$@#% problem caused by the MAFFT function --adjustdirectionaccurately
 sed -i -e 's/_R_SPRL_145/SPRL_145/g' sauv_"$mtype"_gtrees.tre
 echo MAFFT problem fixed!
 
@@ -48,6 +48,6 @@ source activate renv
 
 ## Change sample IDs for species names
 ## Run r script
-Rscript --vanilla ~/scripts/sauvagesieae_phylogeny/change_tip_names.R
+Rscript --vanilla ~/scripts/change_tip_names.R
 
 echo "sample IDs to species names done!"

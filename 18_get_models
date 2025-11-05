@@ -3,8 +3,8 @@
 #SBATCH --job-name=models
 #SBATCH --partition=short
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=1G
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mem=50MB
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
@@ -19,7 +19,7 @@
 ## Define names
 mtype=exons
 
-cd ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/all_$mtype/iqtree_plus_models
+cd ~/projects/trees/all_$mtype/iqtree_plus_models
 
 grep Best-fit *.iqtree > best_fit_models_summ.txt
 

@@ -4,7 +4,7 @@
 #SBATCH --partition=medium
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=100MB
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
@@ -20,11 +20,11 @@
 ###########
 
 ## Input trees
-fpath=~/scratch/private/phylonetworks/iqtree
+fpath=~/projects/phylonetworks/iqtree
 
 ## Output path
-mkdir -p ~/scratch/private/phylonetworks/snaq/startree
-rpath=~/scratch/private/phylonetworks/snaq/startree
+mkdir -p ~/projects/phylonetworks/snaq/startree
+rpath=~/projects/phylonetworks/snaq/startree
 
 ## Define max and min support values
 maxv=100

@@ -4,25 +4,28 @@
 #SBATCH --partition=short
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=4G
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
 # NOTES
 ###########
 
-# According to https://sbc.shef.ac.uk/workshops/2020-02-12-command-line/read-quality.nb.html fastqc take less than 1 min per file
-# In my case, using 1 thread took 15 min processing two files. Using 8 threads took 36 min and 2.56G to process 192 files.
+# According to https://sbc.shef.ac.uk/workshops/2020-02-12-command-line/read-quality.nb.html fastqc takes less than 1 min per file
+# In my case, using 1 thread it took 15 min processing two files. Using 8 threads, 36 min and 2.56G to process 192 files.
 # For each input FASTQ file, FastQC create a .zip file and a .html file, so, it's necessary to create an output directory
 # Use -o option to redirect otput files
 # -p stops a message from appearing if the directory already exists
-# -t specifies the number of files which can be processed simultaneously. One file is processed per thread. Each thread will be allocated ca. 250MB of memory.
+# -t specifies the number of files which can be processed simultaneously. One file is processed per thread.
+# Each thread will be allocated ca. 250MB of memory.
 
 ###########
 # COMMANDS
 ###########
-mkdir -p ../sauvagesieae/fastqc
+ipath=~/projects
 
-cd /home/sreinale/projects/rbgk/users_area/sreinales
+mkdir -p $ipath/fastqc
 
-fastqc *.fastq.gz -t 8 -o /home/sreinale/scratch/private/sauvagesieae/fastqc > /home/sreinale/scratch/private/sauvagesieae/fastqc/fastqc.outerr 2>&1
+cd $ipath
+
+fastqc *.fastq.gz -t 8 -o $ipath/fastqc > $ipath/fastqc/fastqc.outerr 2>&1

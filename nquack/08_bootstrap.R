@@ -2,9 +2,9 @@
 library(nQuack)
 
 ## Paths
-inpath <- "/home/sreinale/scratch/private/nquack/example/sauv/processed/"
-modpath <- "/home/sreinale/scratch/private/nquack/example/sauv/models/interpret/"
-outpath <- "/home/sreinale/scratch/private/nquack/example/sauv/bootstrap/"
+inpath <- "~/projects/nquack/processed/"
+modpath <- "~/projects/nquack/models/interpret/"
+outpath <- "~/projects/nquack/bootstrap/"
 
 ## Iterate files using an array job
 sample <- commandArgs(trailingOnly = T)

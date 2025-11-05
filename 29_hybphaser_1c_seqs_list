@@ -4,7 +4,7 @@
 #SBATCH --partition=short
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=250MB
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########

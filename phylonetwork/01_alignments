@@ -2,10 +2,10 @@
 
 #SBATCH --job-name=mafft
 #SBATCH --partition=short
-#SBATCH --array=0
+#SBATCH --array=0-591%10
 #SBATCH --cpus-per-task=2
-#SBATCH --mem=24G
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mem=150MB
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
@@ -14,7 +14,7 @@
 ## Align DNA sequences for each locus using the algorith E-INS-i inplemented in mafft for supercontig. This algorithm is suitable to align multiple cDNAs
 ## and multiple genomic sequences of a gene from closely related species, which has several conserved motifs embedded in long unalignable regions.
 ## As E-INS-i has the minimum assumption of the three methods, this is recommended if the nature of sequences to be aligned is not clear.
-## Most genes run well with 150MB of memory. Nevetheless, three additional runs were necessary 250MB, 500MB, 2G and 24G.
+## Most genes run well with 150MB of memory. However, three additional runs were necessary 250MB, 500MB, 2G and 24G.
 
 
 ###########
@@ -22,11 +22,13 @@
 ###########
 
 ## Define fasta file path
-fpath=~/scratch/private/phylonetworks/fastafiles
+mkdir -p ~/projects/phylonetworks
+mkdir -p ~/projects/phylonetworks/fastafiles
+fpath=~/projects/phylonetworks/fastafiles
 
 ## Output path
-mkdir -p ~/scratch/private/phylonetworks/alignments
-rpath=~/scratch/private/phylonetworks/alignments
+mkdir -p ~/projects/phylonetworks/alignments
+rpath=~/projects/phylonetworks/alignments
 
 ## Go to input-files folder
 cd $fpath

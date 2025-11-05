@@ -9,8 +9,8 @@
 library(ape)
 
 ## Define paths
-fpath <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/all_paralogs/iqtree/BScollapsed_trees/"
-rpath <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/paralogs_map/"
+fpath <- "~/projects/trees/all_paralogs/iqtree/BScollapsed_trees/"
+rpath <- "~/projects/trees/paralogs_map/"
 
 ## Tree pattern
 tpattern1 <- "BS33_trimal_"

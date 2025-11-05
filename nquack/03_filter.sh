@@ -4,7 +4,7 @@
 #SBATCH --partition=medium
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=100MB
-#SBATCH --mail-user=spreinalesl@alumni.usp.br
+#SBATCH --mail-user=xxx@alumni.usp.br
 #SBATCH --mail-type=END,FAIL
 
 ###########
@@ -21,13 +21,14 @@
 ###########
 
 ## Paths
-bampath=/home/sreinale/scratch/private/nquack/example/sauv/bamfiles
+bampath=~/projects/nquack/bamfiles
 
 # outpath
-mkdir -p /home/sreinale/scratch/private/nquack/example/sauv/filtered
-outpath=/home/sreinale/scratch/private/nquack/example/sauv/filtered
+mkdir -p ~/projects/nquack/filtered
+outpath=~/projects/nquack/filtered
 
-## Define variable to list .bam files and iterate over each element using the SLURM_ARRAY_TASK_ID variable
+## Define variable to list .bam files and iterate over each element using
+## the SLURM_ARRAY_TASK_ID variable
 #bam_list=($(ls * | grep bam$))
 #SAMP_ID=(${bam_list[$SLURM_ARRAY_TASK_ID]})
 

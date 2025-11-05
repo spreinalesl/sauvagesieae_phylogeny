@@ -2,7 +2,7 @@
 library(nQuack)
 
 ## Paths
-outpath <- "/home/sreinale/scratch/private/nquack/example/sauv/processed/"
+outpath <- "~/projects/nquack/processed/"
 
 ## Process data following the filtering approach found in nQuire:
 ## a minimum depth of 10, allele trunctation minimum of 0.15, and

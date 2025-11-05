@@ -3,8 +3,8 @@
 #SBATCH --job-name=ochn_filter_mega353
 #SBATCH --partition=short
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=1G
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mem=60MB
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
@@ -20,14 +20,14 @@
 ###########
 
 ## Activate conda environment
-source /home/sreinale/.bashrc
+source ~/.bashrc
 source activate hybpiper
 
 ## Go to the folder containing the mega353 fasta file
 cd ~/scratch/apps/conda/envs/hybpiper/NewTargets
 
 ## Path to filtered target file
-rtarget=~/scratch/private/sauvagesieae/hybpiper/new_targets
+rtarget=~/projects/hybpiper/new_targets
 
 ## run filter script
 python filter_mega353.py mega353.fasta \

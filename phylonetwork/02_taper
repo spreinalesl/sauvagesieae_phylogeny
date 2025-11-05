@@ -2,10 +2,10 @@
 
 #SBATCH --job-name=taper
 #SBATCH --partition=short
-#SBATCH --array=0
+#SBATCH --array=0-591%10
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=1200MB
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mem=250MB
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
@@ -23,7 +23,7 @@
 ###########
 
 ## Input fasta files
-fpath=~/scratch/private/phylonetworks/alignments
+fpath=~/projects/phylonetworks/alignments
 
 ## Output path
 mkdir -p $fpath/trimmed_alignm

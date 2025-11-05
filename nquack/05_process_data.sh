@@ -2,10 +2,10 @@
 
 #SBATCH --job-name=nQuack05
 #SBATCH --partition=medium
-#SBATCH --array=0-59%5
+#SBATCH --array=0-79%5
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=100MB
-#SBATCH --mail-user=spreinalesl@alumni.usp.br
+#SBATCH --mail-user=xxx@alumni.usp.br
 #SBATCH --mail-type=END,FAIL
 
 ###########
@@ -19,12 +19,13 @@
 ###########
 
 ## Paths
-inpath=/home/sreinale/scratch/private/nquack/example/sauv/processed
+inpath=~/projects/nquack/processed
 
 ## Activate conda environment
 source activate nquack
 
-## Define variable to list all files and iterate over each element using the SLURM_ARRAY_TASK_ID variable
+## Define variable to list all files and iterate over each element using
+## the SLURM_ARRAY_TASK_ID variable
 cd $inpath
 file_list=($(ls | grep txt))
 SAMP_ID=(${file_list[$SLURM_ARRAY_TASK_ID]})

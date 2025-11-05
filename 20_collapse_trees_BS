@@ -4,13 +4,13 @@
 #SBATCH --partition=medium
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=10MB
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
 # NOTES
 ###########
-## This command aims to collapse branches with BS below 10% from ML bootstraped gene trees, to improve ASTRAL accuracy.
+## This command aims to collapse branches with BS below 30% from ML bootstraped gene trees, to improve ASTRAL accuracy.
 ## These trees were estimated by RaxMl-ng using the TBE bootstrap method or iqtree nonparametric bootstrap.
 ## nw_ed iterates over the nodes in a specific order (Newick order by default), and for each node they evaluate
 ## a logical expression provided by the user. If the expression is true, they perform a user-specified action.
@@ -28,11 +28,11 @@ mtype=smp30_prlgbothgns_outliers_rm_exons
 program=iqtree
 
 ## Input trees
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$program
+fpath=~/projects/trees/$mtype/$program
 
 ## Output folder
-mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$program/BScollapsed_trees
-rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$program/BScollapsed_trees
+mkdir -p ~/projects/trees/$mtype/$program/BScollapsed_trees
+rpath=~/projects/trees/$mtype/$program/BScollapsed_trees
 
 ## Go to folder
 cd $fpath

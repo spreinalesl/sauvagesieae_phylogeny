@@ -4,15 +4,17 @@
 #SBATCH --partition=short
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=250MB
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
 # NOTES
 ###########
-## Run R script 1b_assess_dataset to generate tables and graphs to assess the dataset in regards of sequence length recovered and proportion of SNPs per sample and gene.
+## Run R script 1b_assess_dataset to generate tables and graphs to assess the dataset in regards of
+## sequence length recovered and proportion of SNPs per sample and gene.
 ## Tables and graphs are saved in a subfolder (02_assessment).
-## Before running the script it is necessary to edit the config.txt file. It is in the same directory of R script.
+## Before running the script it is necessary to edit the config.txt file.
+## It is in the same directory of R script.
 
 ###########
 # COMMANDS

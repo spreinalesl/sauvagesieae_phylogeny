@@ -4,7 +4,7 @@
 #SBATCH --partition=short
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=100MB
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
@@ -17,7 +17,7 @@
 ###########
 
 ## Create an output folder
-mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/paralogs_map
+mkdir -p ~/projects/trees/paralogs_map
 
 ## Activate conda environment
 source activate renv
@@ -26,7 +26,7 @@ source activate renv
 Rscript --vanilla multiseq_map.R
 
 ## Merge all maps in a single file
-cd ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/paralogs_map
+cd ~/projects/trees/paralogs_map
 
 cat *.map | sort | uniq > multiseqID_all.map
 

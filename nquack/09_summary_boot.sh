@@ -4,7 +4,7 @@
 #SBATCH --partition=short
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=100MB
-#SBATCH --mail-user=spreinalesl@alumni.usp.br
+#SBATCH --mail-user=xxx@alumni.usp.br
 #SBATCH --mail-type=END,FAIL
 
 ###########
@@ -15,7 +15,7 @@
 ###########
 # COMMANDS
 ###########
-cd /home/sreinale/scratch/private/nquack/example/sauv
+cd ~/projects/nquack
 
 ## Activate conda environment
 source activate nquack

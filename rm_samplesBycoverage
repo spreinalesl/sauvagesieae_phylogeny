@@ -4,13 +4,14 @@
 #SBATCH --partition=short
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=700MB
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
 # NOTES
 ###########
-## Run R script to remove outliers from fasta files
+## Run R script to remove loci with less than X% of the species sampling (outliers)
+## from fasta files
 
 ###########
 # COMMANDS
@@ -23,12 +24,13 @@ source activate renv
 probe=schn
 
 ## Paths
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/paralogs/$probe/paralogs_all
+fpath=~/projects/hybpiper/paralogs/$probe/paralogs_all
 
 # Out path
 mkdir -p $fpath/smprm
 
 ## Run r script
+#Rscript --vanilla rm_samples.R
 Rscript --vanilla rm_samples_prlgs.R
 
 echo END run!

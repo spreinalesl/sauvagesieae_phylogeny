@@ -4,7 +4,7 @@
 #SBATCH --partition=medium
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=700MB
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
@@ -18,8 +18,8 @@
 ###########
 
 ## Out path
-mkdir -p ~/scratch/private/phylonetworks/snaq
-outpath=~/scratch/private/phylonetworks/snaq
+mkdir -p ~/projects/phylonetworks/snaq
+outpath=~/projects/phylonetworks/snaq
 
 ## Run Julia script
 echo BEGIN!

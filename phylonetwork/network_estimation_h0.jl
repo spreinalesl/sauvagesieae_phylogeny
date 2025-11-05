@@ -12,13 +12,13 @@ addprocs(nruns)
 @everywhere using CSV
 @everywhere using PhyloNetworks
 
-cfs = readTableCF("/home/sreinale/scratch/private/phylonetworks/snaq/CFs_sauvagesieae.csv")
+cfs = readTableCF("CFs_sauvagesieae.csv")
 
 # read starting tree
-start_tree = readTopology("/home/sreinale/scratch/private/phylonetworks/snaq/startree/startree.tre")
+start_tree = readTopology("startree.tre")
 
 # calculate a h=0 network
-net0 = snaq!(start_tree, cfs, hmax=0, filename="/home/sreinale/scratch/private/phylonetworks/snaq/snaq_sauvagesieae_h0", seed=1234, runs = nruns)
+net0 = snaq!(start_tree, cfs, hmax=0, filename="snaq_sauvagesieae_h0", seed=1234, runs = nruns)
 
 #exit julia
 exit()

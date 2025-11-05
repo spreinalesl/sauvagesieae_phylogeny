@@ -5,8 +5,10 @@
 
 library(ape)
 
+setwd("")
+
 ## Set path
-tpath <- "~/Documents/iqtree_summ"
+tpath <- "iqtree_summ"
 pattern1 <- "sauv_"
 pattern2 <- "_gtrees.tre"
 
@@ -68,13 +70,15 @@ gtrees_summ <- do.call(rbind, gtrees_summ)
 allnames <- unique(do.call(c, allnames))
   
 ## Write tables
-write.csv(gtrees_summ, "~/Documents/iqtree_summ/gtrees_summ.csv", row.names = F)
-writeLines(allnames, "~/Documents/iqtree_summ/tipnames.csv", sep = "\n")
+write.csv(gtrees_summ, paste(tpath, "gtrees_summ.csv", sep = "/"), row.names = F)
+writeLines(allnames, paste(tpath, "tipnames.csv", sep = "/"), sep = "\n")
+
+system("cat iqtree_summ/*.csv > merge_iqtree_gtrees_sum.csv")
 
 ################################
 ## Get summary for table1
 ################################
-dat <- read.csv("~/merge_iqtree_gtrees_sum.csv")
+dat <- read.csv(paste(tpath, "merge_iqtree_gtrees_sum.csv", sep = "/"))
 
 ## Prepare data
 dat$probe[which(grepl("g[0-9]", dat$flname))] <- "schn"

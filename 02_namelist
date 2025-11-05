@@ -8,8 +8,8 @@
 ###########
 # COMMANDS
 ###########
-rawdPath=~/projects/rbgk/users_area/sreinales/sauv_sprl
-resultsPath=~/scratch/private/sauvagesieae
+rawdPath=~/projects/sauv_sprl
+resultsPath=~/projects
 
 cd $rawdPath
 ls *fastq.gz > $resultsPath/namelist_p.txt

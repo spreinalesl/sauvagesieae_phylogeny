@@ -4,20 +4,21 @@
 #SBATCH --partition=short
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=1G
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
 # NOTES
 ###########
-## This command fetches the sequences recovered for the same gene from multiple samples and generates an unaligned multi-FASTA file for each gene saved in fasta_files
+## This command fetches the sequences recovered for the same gene from multiple samples and generates
+## an unaligned multi-FASTA file for each gene saved in fasta_files
 
 ###########
 # COMMANDS
 ###########
 
 ## Activate conda environment
-source /home/sreinale/.bashrc
+source ~/.bashrc
 source activate hybpiper
 
 ## Temporary folder
@@ -25,7 +26,7 @@ cd $TMPDIR
 
 ## As all sample runs have to be in the same directory, copy runs of the same probe set in a temporary folder
 pname=schn
-dpath=~/scratch/private/sauvagesieae/hybpiper
+dpath=~/projects/hybpiper
 
 cp -r $dpath/addseqs_$pname/SRR* ./
 cp -r $dpath/sauv_sprl/$pname/SPRL* ./
@@ -43,10 +44,10 @@ mkdir -p $pname/supercontig
 rpath=./$pname
 
 ## Define namelist file
-namelist=~/scratch/private/sauvagesieae/namelist_all_schn.txt
+namelist=~/projects/namelist_all_schn.txt
 
 ## Define target file
-tfile=~/scratch/private/sauvagesieae/hybpiper/new_targets/OCHNA-input-seq_Targets_DNA_BaitKit_edit_crop.fas
+tfile=~/projects/new_targets/OCHNA-input-seq_Targets_DNA_BaitKit_edit_crop.fas
 
 ## Generate an unaligned multi-FASTA file for each gene (only exons)
 hybpiper retrieve_sequences dna -t_dna $tfile --sample_names $namelist --fasta_dir $rpath/exons
@@ -58,7 +59,7 @@ hybpiper retrieve_sequences intron -t_dna $tfile --sample_names $namelist --fast
 hybpiper retrieve_sequences supercontig -t_dna $tfile --sample_names $namelist --fasta_dir $rpath/supercontig
 
 ## Move results from temporary folder to scratch
-mkdir -p ~/scratch/private/sauvagesieae/hybpiper/fasta_files
-mv $pname ~/scratch/private/sauvagesieae/hybpiper/fasta_files
+mkdir -p ~/projects/hybpiper/fasta_files
+mv $pname ~/projects/hybpiper/fasta_files
 
-echo The End!
+echo Done!

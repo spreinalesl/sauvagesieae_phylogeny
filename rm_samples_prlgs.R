@@ -7,8 +7,8 @@
 library(ape)
 
 ## Paths
-fpath <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/paralogs/schn/paralogs_all"
-tablespath <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/name_list"
+fpath <- "~/projects/hybpiper/paralogs/schn/paralogs_all"
+tablespath <- "~/projects/name_list"
 smpTOrm <- "samplesTOremove33_all.csv"
 outfastadir <- paste(fpath, "smprm", sep = "/")
 outnm <- "rm30_smpANDgns_schnprlgs_summ.csv"

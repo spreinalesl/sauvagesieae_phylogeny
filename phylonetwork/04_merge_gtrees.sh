@@ -4,7 +4,7 @@
 #SBATCH --partition=medium
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=5MB
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
@@ -17,7 +17,7 @@
 ###########
 
 ## Input path
-cd ~/scratch/private/phylonetworks/iqtree
+cd ~/projects/phylonetworks/iqtree
 
 ## Merge all ML trees into one file
 cat *.treefile >> lesstrees_allloci.newick

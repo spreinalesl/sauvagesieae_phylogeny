@@ -2,10 +2,10 @@
 
 #SBATCH --job-name=iqtree
 #SBATCH --partition=medium
-#SBATCH --array=0-8
+#SBATCH --array=0-591%10
 #SBATCH --cpus-per-task=4
-#SBATCH --mem=400MB
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mem=50MB
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
@@ -28,19 +28,14 @@
 # COMMANDS
 ###########
 
-## Define names
-mtype=paralogs_all
-
-## Input files: alignments
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$mtype/trimmed_alignm
+## Input fasta files
+fpath=~/projects/phylonetworks/alignments/trimmed_alignm
 
 ## Output path
-mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees
-mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype
-mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/iqtree
-rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/iqtree
+mkdir -p ~/projects/phylonetworks/iqtree
+rpath=~/projects/phylonetworks/iqtree
 
-## Go to input-file folder
+## Go to the alignments folder
 cd $fpath
 
 ## Define variable to list all alignment and iterate over each element using the SLURM_ARRAY_TASK_ID variable
@@ -48,10 +43,9 @@ gene_list=($(ls * | grep fas$))
 gene=(${gene_list[$SLURM_ARRAY_TASK_ID]})
 
 ## Run IQtree
-#iqtree -s $gene -m MF -mset raxml -merit AICc -nt AUTO -ntmax ${SLURM_CPUS_PER_TASK} ## just to find the best model
-iqtree -s $gene -m MFP -merit AICc -mset raxml -b 500 -nt AUTO -ntmax ${SLURM_CPUS_PER_TASK} ## estimate best subs model and tree with BS support
+iqtree -s $gene -m MFP -merit AICc -mset raxml -B 1000 -bnni -nt AUTO -ntmax ${SLURM_CPUS_PER_TASK} ## estimate best subs model and tree with UFBS support
 
-echo Run tree and substitution model for $gene
+echo Run tree for $gene
 
 ## Move result to output folder
 mv -v $gene.iqtree $rpath ## Full result of the run, including a text version of the tree. This is the main report file

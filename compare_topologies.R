@@ -1,13 +1,13 @@
 ###########################################
 ## This script compares different topologies
-## by generate a coplot using phytools
+## with a coplot using phytools
 ###########################################
 
 ## Packages
 library(phytools)
 
 ## List of trees to compare
-tpath <- "/home/spreinalesl/Documents/plot_trees"
+tpath <- "plot_trees"
 tfiles <- list.files(pattern = "\\.tre", tpath, full.names = T)
 tpattern <- "/rooted_sauv_"
 tpattern1 <- "_BS33_sptree_annot.tre"
@@ -57,7 +57,8 @@ for(j in 1:nrow(comb)){
   ## Generate cophylo
   compt <- cophylo(alltrees[[tr1]], alltrees[[tr2]])
   
-  ## Edit node labels for both trees in the cophylo (Label edition is only needed for Astral trees which include complex annotations)
+  ## Edit node labels for both trees in the cophylo (Label edition is only
+  # needed for Astral trees which include complex annotations)
   # pp1 values are in the first position of the vector containing all node label information
   # qq1 are in the 7º position
   
@@ -78,7 +79,7 @@ for(j in 1:nrow(comb)){
   }
   
   ## Plot cophylo
-  pdf(paste("~/Documents/plot_trees/comparing_", tnames[tr1], "_", tnames[tr2], ".pdf", sep = ""), width = 15, height = 24)
+  pdf(paste("plot_trees/comparing_", tnames[tr1], "_", tnames[tr2], ".pdf", sep = ""), width = 15, height = 24)
   
   plot(compt, fsize = 0.7)
   

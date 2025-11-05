@@ -2,8 +2,8 @@
 library(nQuack)
 
 ## Paths
-inpath <- "/home/sreinale/scratch/private/nquack/example/sauv/filtered/"
-outpath <- "/home/sreinale/scratch/private/nquack/example/sauv/processed/"
+inpath <- "~/projects/nquack/filtered/"
+outpath <- "~/projects/nquack/processed/"
 
 ## Iterate files using an array job
 samp_list <- list.files(pattern = "bam", inpath)

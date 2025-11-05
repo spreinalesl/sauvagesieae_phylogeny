@@ -2,10 +2,10 @@
 
 #SBATCH --job-name=bwa
 #SBATCH --partition=medium
-#SBATCH --array=0-6
+#SBATCH --array=0-79%10
 #SBATCH --cpus-per-task=10
 #SBATCH --mem=12G
-#SBATCH --mail-user=spreinalesl@alumni.usp.br
+#SBATCH --mail-user=xxx@alumni.usp.br
 #SBATCH --mail-type=END,FAIL
 
 ###########
@@ -16,10 +16,10 @@
 ###########
 # COMMANDS
 ###########
-inpath=/home/sreinale/scratch/private/nquack/example/sauv
-targetpath=/home/sreinale/scratch/private/nquack/example/sauv/reference_seqs
-readspath=/home/sreinale/scratch/private/nquack/example/sauv/reads
-outpath=/home/sreinale/scratch/private/nquack/example/sauv/bamfiles
+inpath=~/projects/nquack
+targetpath=~/projects/nquack/reference_seqs
+readspath=~/projects/nquack/reads
+outpath=~/projects/nquack/bamfiles
 
 ## Define variable to list all samples and iterate over each element using the SLURM_ARRAY_TASK_ID variable
 sampling=($(cat $inpath/sampling.txt))

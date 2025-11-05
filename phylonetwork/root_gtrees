@@ -4,7 +4,7 @@
 #SBATCH --partition=medium
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=3MB
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
@@ -17,11 +17,11 @@
 ###########
 
 ## Input path
-cd ~/scratch/private/phylonetworks/iqtree
+cd ~/projects/phylonetworks/iqtree
 
 ## Outpath
-mkdir -p ~/scratch/private/phylonetworks/bootsnaq
-outpath=~/scratch/private/phylonetworks/bootsnaq
+mkdir -p ~/projects/phylonetworks/bootsnaq
+outpath=~/projects/phylonetworks/bootsnaq
 
 ## Untar tree files
 tar -xzvf bootrees.tar.gz

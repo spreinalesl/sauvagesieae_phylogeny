@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ## Read log files
-cd /home/spreinalesl/Documents/subsampling
+cd subsampling
 
 ## iterate fasta files
 # Replace ID for Adenarake to merge a353 and ochn data

@@ -4,13 +4,14 @@
 #SBATCH --partition=short
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=1G
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
 # NOTES
 ###########
-## This script removes low-complexity regions detected and flagged by hybpiper check_targetfile. Low-complexity reads are likely to comprise largely off-target reads.
+## This script removes low-complexity regions detected and flagged by hybpiper check_targetfile. 
+## Low-complexity reads are likely to comprise largely off-target reads.
 ## Millions of low-complexity reads can map to a low-complexity region in a target sequence.
 ## The list of low-complexity regions is in the file
 
@@ -19,11 +20,11 @@
 ###########
 
 ## Activate conda environment
-source /home/sreinale/.bashrc
+source ~/.bashrc
 source activate hybpiper
 
 ## run check script for ochnaceae custom target file
-cd ~/scratch/private/sauvagesieae/hybpiper/new_targets/
+cd ~/projects/new_targets
 
 #iter=0
 #ctl_list=($(ls *.ctl))

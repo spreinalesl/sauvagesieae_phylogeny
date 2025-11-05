@@ -1,7 +1,7 @@
 ## Paths
-inpath <- "/home/sreinale/scratch/private/nquack/example/sauv/bootstrap/"
-IDtosppnm <- "/home/sreinale/scratch/private/nquack/example/sauv/sppidTOsppname.csv"
-modfile <- "/home/sreinale/scratch/private/nquack/example/sauv/models/interpret/bestModel.csv"
+inpath <- "~/projects/nquack/bootstrap/"
+IDtosppnm <- "supplementary_tables/TableS3_hybpiper_summary.csv" ## This table contains sample IDs and species names
+modfile <- "~/projects/nquack/models/interpret/bestModel.csv"
 
 ## Read species names
 spp <- read.csv(IDtosppnm)

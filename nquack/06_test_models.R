@@ -2,8 +2,8 @@
 library(nQuack)
 
 ## Paths
-inpath <- "/home/sreinale/scratch/private/nquack/example/sauv/processed/"
-outpath <- "/home/sreinale/scratch/private/nquack/example/sauv/models/"
+inpath <- "~/projects/nquack/processed/"
+outpath <- "~/projects/nquack/models/"
 
 ## Number of cores
 ncores <- 10

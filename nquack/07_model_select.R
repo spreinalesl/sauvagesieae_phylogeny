@@ -2,8 +2,8 @@
 library(nQuack)
 
 ## Paths
-inpath <- "/home/sreinale/scratch/private/nquack/example/sauv/models/"
-outpath <- "/home/sreinale/scratch/private/nquack/example/sauv/models/interpret/"
+inpath <- "~/projects/nquack/models/"
+outpath <- "~/projects/nquack/models/interpret/"
 
 ## Iterate files
 samples <- list.files(pattern = ".csv", inpath)

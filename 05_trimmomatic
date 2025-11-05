@@ -2,10 +2,10 @@
 
 #SBATCH --job-name=trimm
 #SBATCH --partition=short
-#SBATCH --array=0-1
+#SBATCH --array=0-191%10
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=4G
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
@@ -16,7 +16,7 @@
 # LEADING:20 would delete all bases below a quality threshold of 20 or that are N, beginning at the first base and continuing until the first base that is at least a quality of 20
 # and is not N. Q20 means you will accept minimum 53 of quality score per base that corresponds to 0.01 of probability of error.
 # MINLEN:30 to trim reads shorter than 30.
-# According to google 1 node, 8 tasks or processors, 8gb for memory and 1 hour for walltime should be enough to run Trimmomatic (but haw many reads?).
+# According to google 1 node, 8 tasks or processors, 8gb for memory and 1 hour for walltime should be enough to run Trimmomatic (but how many reads?).
 # This analysis took 5h32min using 16 theads and just 2.98G to process 192 files with ca. 3M reads each.
 # BUT using an array is extremely efficient. It is not necesary to use more than 4 or 8 threads.
 # This code will perform the following:
@@ -33,22 +33,22 @@
 ## Define names, files and folders
 
 # Probes
-pname=transcripts
+pname=sauv_sprl
 
 # Rawdata
-dpath=~/projects/rbgk/users_area/sreinales/$pname
+dpath=~/projects/$pname
 
-# Results
-mkdir -p ~/scratch/private/sauvagesieae/trimmomatic
-mkdir -p ~/scratch/private/sauvagesieae/trimmomatic/$pname
+# projects
+mkdir -p ~/projects/trimmomatic
+mkdir -p ~/projects/trimmomatic/$pname
 
-rpath=~/scratch/private/sauvagesieae/trimmomatic/$pname
+rpath=~/projects/trimmomatic/$pname
 
 mkdir -p $rpath/trim_paired
 mkdir -p $rpath/unpaired
 
 # Name list
-namel=~/scratch/private/sauvagesieae/namelist_trans.txt
+namel=~/projects/namelist_sprl.txt
 
 ## Define variable to read the sample list and iterate over each element using the SLURM_ARRAY_TASK_ID variable
 sample_list=($(cat $namel))

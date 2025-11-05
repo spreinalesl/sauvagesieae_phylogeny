@@ -5,11 +5,13 @@
 
 library(ape)
 
+setwd("")
+
 ## input path
-ffpath <- "/home/spreinalesl/Documents/subsampling"
+ffpath <- "subsampling"
 
 ## List of selected taxa
-selspp <- read.csv("~/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/phylonetworks/sampling/sampling_sppnames.csv",
+selspp <- read.csv("supplementary_tables/TableS1_sampling.csv",
                    sep = ",")
 
 unique(selspp$spp_name)
@@ -51,7 +53,7 @@ cat("No samples selected for gene", warning_list1, sep = "\n")
 ########################
 ## Confirmation test
 ########################
-fflist <- list.files(pattern = "FNA", "/home/spreinalesl/Documents/subsampling/ffed", full.names = T)
+fflist <- list.files(pattern = "FNA", "subsampling/ffed", full.names = T)
 
 tipnames <- vector()
 fftable <- data.frame(gene = NA, tipnum = NA)
@@ -68,4 +70,4 @@ length(tipnames)
 
 table(sort(tipnames) == sort(unique(selspp$spp_name)))
 
-write.csv(fftable, "/home/spreinalesl/Documents/subsampling/ffed/fftable.csv", row.names = F)
+write.csv(fftable, "subsampling/ffed/fftable.csv", row.names = F)

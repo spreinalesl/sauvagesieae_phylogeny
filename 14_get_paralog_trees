@@ -4,25 +4,26 @@
 #SBATCH --partition=medium
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=6G
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
 # NOTES
 ###########
-## These commands create individual trees directly from a *.paralogs_all.fasta using mafft auto to align and FastTree to reconstruct the phylogeny.
+## These commands create individual trees directly from a *.paralogs_all.fasta using mafft auto to
+## align and FastTree to reconstruct the phylogeny.
 
 ###########
 # COMMANDS
 ###########
 
 ## Activate conda environment
-source /home/sreinale/.bashrc
+source ~/.bashrc
 source activate hybpiper
 
 ## Fasta files
 pname=schn
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/paralogs/$pname
+fpath=~/projects/hybpiper/paralogs/$pname
 
 ## Create a folder to save trees for each gen
 mkdir -p $fpath/trees
@@ -44,4 +45,4 @@ for i in `ls *.fasta`; do
  fi
 done
 
-echo The End!
+echo Done!

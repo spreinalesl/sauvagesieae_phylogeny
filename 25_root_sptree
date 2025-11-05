@@ -4,7 +4,7 @@
 #SBATCH --partition=medium
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=3MB
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
@@ -20,19 +20,19 @@
 
 ## Rooting all trees produced by wAstral and astral-pro at the same time
 ## Save folder names in as environmental variable
-#TREES=$(cat /home/sreinale/scripts/sauvagesieae_phylogeny/folder_list)
+#TREES=$(cat ~/projects/folder_list)
 
 ## Iterate folders
 #for h in $TREES; do
 
  ## Input trees
-# fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$h/*astral*
+# fpath=~/projects/trees/$h/*astral*
 
  ## Root each species tree using two outgroups (Bonn_stricta_Benko-Iseppon1726 = SRR10951426 and Hype_perforatum_OneKP132735 = ERR2040370)
  ## in case of more than one tree in the folder, iterate on it
 # cd $fpath
 # for i in *.tre; do
-#  /home/sreinale/scratch/apps/conda/bin/pxrr -t $i -g Bonn_stricta_Benko-Iseppon1726,Hype_perforatum_OneKP132735 > rooted_$i
+#  ~/scratch/apps/conda/bin/pxrr -t $i -g Bonn_stricta_Benko-Iseppon1726,Hype_perforatum_OneKP132735 > rooted_$i
 # echo Tree $i in folder $h rooted!
 # done
 #done
@@ -44,14 +44,14 @@
 mtype=smp30_prlgbothgns_outliers_rm_exons
 
 ## Input trees
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/astral-iv
+fpath=~/projects/trees/$mtype/astral-iv
 
 ## Root sp tree using two outgroups (Bonn_stricta_Benko-Iseppon1726 = SRR10951426 and Hype_perforatum_OneKP132735 = ERR2040370)
 cd $fpath
 for i in *.tre; do
   echo $i
-  /home/sreinale/scratch/apps/conda/bin/pxrr -t $i -g Bonn_stricta_Benko-Iseppon1726,Hype_perforatum_OneKP132735 > rooted_$i
-  #/home/sreinale/scratch/apps/conda/bin/pxrr -t $i -g Bonnetia_stricta,Hypericum_perforatum > rooted_$i
+  ~/scratch/apps/conda/bin/pxrr -t $i -g Bonn_stricta_Benko-Iseppon1726,Hype_perforatum_OneKP132735 > rooted_$i
+  #~/scratch/apps/conda/bin/pxrr -t $i -g Bonnetia_stricta,Hypericum_perforatum > rooted_$i
 done
 
-echo "Rooting done!"
+echo Done!

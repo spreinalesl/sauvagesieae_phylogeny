@@ -2,19 +2,21 @@
 
 #SBATCH --job-name=taper
 #SBATCH --partition=medium
-#SBATCH --array=0-592%5
+#SBATCH --array=0-607%10
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=700MB
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
 # NOTES
 ###########
-## TAPER looks for errors in small species-specific stretches of the multiple sequence alignments. This command will detect erronous sequences and will replace them with N
-## in the output, and all N characters are treated as a dash. A cutoff (make sense to > 1) to control aggressiveness of error detection. The lower the cutoff is,
-## the more aggressive the TAPER becomes. Values below 1 are allowed but discouraged. The default cutoff is -c 3. For example, if you want TAPER be more precautious,
-## you can try -c 10.
+## TAPER looks for errors in small species-specific stretches of the multiple sequence alignments.
+## This command will detect erronous sequences and will replace them with N
+## in the output, and all N characters are treated as a dash. A cutoff (make sense to > 1) to control
+## aggressiveness of error detection. The lower the cutoff is, the more aggressive the TAPER becomes.
+## Values below 1 are allowed but discouraged. The default cutoff is -c 3. For example, if you want TAPER
+## be more precautious, you can try -c 10.
 ## Most samples run with 250MB, just 4 (4527, g2009517, g2011628, g2026803) need 1G
 ## For supercontig 1G was required
 
@@ -26,16 +28,12 @@
 source activate julia
 
 ## Define names
-#mtype=rmout_infprlgs
+mtype=rmout_infprlgs
 
 ## Input fasta files
-#fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$mtype
-fpath=~/scratch/private/phylonetworks/alignments
+fpath=~/projects/alignments/$mtype
 
 ## Output path
-#mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$mtype/trimmed_alignm
-#rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$mtype/trimmed_alignm
-
 mkdir -p $fpath/trimmed_alignm
 rpath=$fpath/trimmed_alignm
 

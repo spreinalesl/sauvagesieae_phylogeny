@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ## Read log files
-cd /home/spreinalesl/Documents/iqtree_summ
+cd ~/projects/iqtree_summ
 
 ## tar files (one per dataset)
 tarfiles=$(ls | grep tar)

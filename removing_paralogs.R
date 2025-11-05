@@ -1,9 +1,9 @@
 ###########################################
-## This script check gene trees for genes
-## containing paralogous sequences as tagged
+## This script checks gene trees for genes
+## containing paralogous sequences tagged
 ## by Hybpiper, in case that paralogs are
 ## in different clades, they are removed from
-## the original fasta matrix
+## the original fasta file
 ###########################################
 
 ## Packages
@@ -11,8 +11,8 @@ library(ape)
 
 ## Input paths
 probe <- "schn"
-ppath <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/paralogs/"
-fpath <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/fasta_files/"
+ppath <- "~/projects/hybpiper/paralogs/"
+fpath <- "~/projects/hybpiper/fasta_files/"
 aptpth <- paste(ppath, probe, "/trees/", sep = "")
 aptl <- paste(ppath, probe, "/paralogs_above_threshold_report.txt", sep = "")
 apff <- paste(fpath, probe, "/exons/rmout_infprlgs/edfast/", sep = "")

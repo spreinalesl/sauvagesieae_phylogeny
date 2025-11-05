@@ -2,10 +2,10 @@
 
 #SBATCH --job-name=iqtree
 #SBATCH --partition=long
-#SBATCH --array=0-2
+#SBATCH --array=0-607%10
 #SBATCH --cpus-per-task=4
 #SBATCH --mem=500MB
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
@@ -32,13 +32,13 @@
 mtype=rmout_infprlgs
 
 ## Input files: alignments
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/alignments/$mtype/trimmed_alignm
+fpath=~/projects/alignments/$mtype/trimmed_alignm
 
 ## Output path
-mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees
-mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype
-mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/iqtree
-rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/iqtree
+mkdir -p ~/projects/trees
+mkdir -p ~/projects/trees/$mtype
+mkdir -p ~/projects/trees/$mtype/iqtree
+rpath=~/projects/trees/$mtype/iqtree
 
 ## Go to input-file folder
 cd $fpath

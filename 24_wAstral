@@ -4,7 +4,7 @@
 #SBATCH --partition=short
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=100MB
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
@@ -24,15 +24,15 @@ mtype=smp30_prlgbothgns_outliers_rm_exons
 program=iqtree
 
 ## Input trees
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$program
+fpath=~/projects/trees/$mtype/$program
 
 ## Output path
 output=wastral
-mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$output
-rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$output
+mkdir -p ~/projects/trees/$mtype/$output
+rpath=~/projects/trees/$mtype/$output
 
 ## Path to multi-sequence IDs map
-#msID_map=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/paralogs_map/multiseqID.map
+#msID_map=~/projects/trees/paralogs_map/multiseqID.map
 
 ## Define max and min support values
 maxv=100

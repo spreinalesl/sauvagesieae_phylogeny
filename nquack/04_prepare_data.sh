@@ -4,7 +4,7 @@
 #SBATCH --partition=medium
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=250MB
-#SBATCH --mail-user=spreinalesl@alumni.usp.br
+#SBATCH --mail-user=xxx@alumni.usp.br
 #SBATCH --mail-type=END,FAIL
 
 ###########
@@ -20,10 +20,10 @@
 ###########
 
 ## Paths
-cd /home/sreinale/scratch/private/nquack/example/sauv
+cd ~/projects/nquack
 
 ## Create a directory for the output
-mkdir -p /home/sreinale/scratch/private/nquack/example/sauv/processed
+mkdir -p ~/projects/nquack/processed
 
 ## Activate conda environment
 source activate nquack

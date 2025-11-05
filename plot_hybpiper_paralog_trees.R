@@ -1,9 +1,8 @@
 #####################################################################################################################
-#### Scripts to plot the phylogenetic trees of the paralog loci retrieved from HybPiper 2.0 
-#### The script will plot the trees for ALL loci (not only paralog loci) and assemble them in a single multipages 
-#### .pdf file called paralog_trees.pdf
-#### The samples with nos suspicion of paralogy are plotted normally
-#### The samples with suspicion of paralogy are flagged as follow:
+#### Script to plot phylogenetic trees with all paralogous sequences retrieved from HybPiper 2.0 
+#### The script will plot the trees for ALL loci (not only loci with paralogs) in a single PDF called paralog_trees.pdf
+#### samples with no paralog warning are plotted normally
+#### samples with paralog warnings are flagged as follow:
 #### The "main" sequence is flagged in orange and the other alternative sequences (.0, .1, .2, etc.) in blue
 #### This script assumes that:
 ######### - the trees files are in the Newick format and have a "paralogs.tre" suffix
@@ -19,9 +18,11 @@ library(ggplot2)
 library(ggtree)
 library(gridExtra)
 
+setwd("")
+
 ##  Paths and names
 probe <- "a353"
-fpath <- paste("/home/sreinale/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/paralogs/", probe, "/trees", sep = "")
+fpath <- paste("~/projects/hybpiper/paralogs/", probe, "/trees", sep = "")
 
 ## Read all tree files
 files <- list.files(path = fpath, pattern = "\\.tre$", full.names = T, recursive=FALSE)
@@ -97,5 +98,3 @@ dev.off()
 close(pb)
 cat("Less than 3 paralogous sequences were found in the following trees (just complete trees were plotted):" , warning_list1,
     "There are no paralogous sequences in the following trees:", warning_list2, sep = "\n")
-
-### end of script ###

@@ -2,10 +2,10 @@
 
 #SBATCH --job-name=nQuack08
 #SBATCH --partition=long
-#SBATCH --array=0-59%10
+#SBATCH --array=0-79%10
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=750MB
-#SBATCH --mail-user=spreinalesl@alumni.usp.br
+#SBATCH --mail-user=xxx@alumni.usp.br
 #SBATCH --mail-type=END,FAIL
 
 ###########
@@ -19,13 +19,13 @@
 ###########
 
 ## Create out directory
-mkdir -p /home/sreinale/scratch/private/nquack/example/sauv/bootstrap
+mkdir -p ~/projects/nquack/bootstrap
 
 ## Activate conda environment
 source activate nquack
 
 ## Create task ID
-cd /home/sreinale/scratch/private/nquack/example/sauv/processed
+cd ~/projects/nquack/processed
 file_list=($(ls * | grep -e '_dd.csv'))
 SAMP_ID=(${file_list[$SLURM_ARRAY_TASK_ID]})
 

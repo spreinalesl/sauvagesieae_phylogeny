@@ -4,7 +4,7 @@
 #SBATCH --partition=medium
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=2G
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
@@ -18,7 +18,7 @@
 ###########
 
 ## Activate conda environment
-source /home/sreinale/.bashrc
+source ~/.bashrc
 source activate hybpiper
 
 ## Temporary folder
@@ -26,7 +26,7 @@ cd $TMPDIR
 
 ## As all sample runs have to be in the same directory, copy runs of the same probe set in a temporary folder
 pname=schn
-dpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper
+dpath=~/projects/hybpiper
 
 cp -r $dpath/addseqs_$pname/SRR* ./
 cp -r $dpath/sauv_sprl/$pname/SPRL* ./
@@ -35,10 +35,10 @@ cp -r $dpath/transcripts/$pname/ERR* ./
 echo Copy Done!
 
 ## Define namelist file
-namelist=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/namelist_all_$pname.txt
+namelist=~/projects/namelist_all_$pname.txt
 
 ## Define target file
-tfile=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/new_targets/OCHNA-input-seq_Targets_DNA_BaitKit_edit_crop.fas
+tfile=~/projects/new_targets/OCHNA-input-seq_Targets_DNA_BaitKit_edit_crop.fas
 
 ## Recover coding sequences from alternative long paralogs
 hybpiper paralog_retriever $namelist -t_dna $tfile
@@ -51,4 +51,4 @@ mkdir -p $dpath/paralogs/$pname
 
 ## Move results from temporary folder to scratch
 mv -v paralog* $dpath/paralogs/$pname
-echo The End!
+echo Done!

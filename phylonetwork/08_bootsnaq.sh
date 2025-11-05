@@ -5,7 +5,7 @@
 #SBATCH --array=1-100%5
 #SBATCH --cpus-per-task=6
 #SBATCH --mem=20G
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
@@ -20,7 +20,7 @@
 ###########
 
 ## Out path
-outpath=~/scratch/private/phylonetworks/bootsnaq
+outpath=~/projects/phylonetworks/bootsnaq
 
 ## Define variables
 NRUNS=5

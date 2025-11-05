@@ -7,8 +7,8 @@
 library(ape)
 
 ## Paths
-fpath <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/fasta_files/schn/exons"
-tablespath <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/name_list"
+fpath <- "~/projects/hybpiper/fasta_files/schn/exons"
+tablespath <- "~/projects/name_list"
 smpTOrm <- "samplesTOremove33_all.csv"
 outfastadir <- paste(fpath, "smprm", sep = "/")
 outnm <- "rm30_smpANDgns_schn_summ.csv"
@@ -62,7 +62,8 @@ for(i in 1:length(fastafl)){
   ## Samples to remove
   fsumm$smprm[i] <- length(rmpst)
   
-  ## If there is no sequences to remove write original fasta file and jump to next iteration
+  ## If there is no sequences to remove write original 
+  ## fasta file and jump to next iteration
   if(length(rmpst) == 0) {
     fsumm$nsample_ed[i] <- length(fastaf)
     write.FASTA(fastaf, file = paste(outfastadir, "/", gnm, ".FNA", sep = ""))

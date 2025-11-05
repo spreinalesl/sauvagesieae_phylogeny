@@ -4,7 +4,7 @@
 #SBATCH --partition=long
 #SBATCH --cpus-per-task=21
 #SBATCH --mem=57G
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
@@ -23,7 +23,7 @@
 ###########
 
 ## Out path
-outpath=~/scratch/private/phylonetworks/snaq
+outpath=~/projects/phylonetworks/snaq
 
 ## Set script and file names
 outh=h5

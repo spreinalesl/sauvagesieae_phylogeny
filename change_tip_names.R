@@ -1,5 +1,5 @@
 ###########################################
-## This script read trees and change 
+## This script reads trees and changes 
 ## sample names for species names
 ###########################################
 
@@ -12,11 +12,11 @@ program <- "iqtree"
 fpath <- "./"
 
 # ID to species names table
-fnamespath <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/name_list/sppidTOsppname.csv"
+fnamespath <- "TableS3_hybpiper_summary.csv" ## This table contains sample IDs and species names
 
 ## Output path
 ofolder <- "names_ed"
-opath <- paste("~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees", mtype, program, ofolder, sep = "/")
+opath <- paste("~/projects/trees", mtype, program, ofolder, sep = "/")
 
 ## Read data and iterate files
 fpattern <- "gtrees.tre$"

@@ -4,7 +4,7 @@
 #SBATCH --partition=short
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=20G
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
@@ -18,17 +18,20 @@
 ###########
 
 ## Activate conda environment
-source /home/sreinale/.bashrc
+source ~/.bashrc
 source activate hybpiper
 
+# Name of probe set
+pname=schn
+
 ## Define paths
-rpath=~/scratch/private/sauvagesieae/hybpiper/transcripts/schn
+rpath=~/projects/hybpiper/sauv_sprl/$pname
 
 # namelist
-npath=~/scratch/private/sauvagesieae/namelist_trans.txt
+npath=~/projects/namelist_sprl.txt
 
 ## Define target file
-tfile=~/scratch/private/sauvagesieae/hybpiper/new_targets/OCHNA-input-seq_Targets_DNA_BaitKit_edit_crop.fas
+tfile=~/projects/new_targets/OCHNA-input-seq_Targets_DNA_BaitKit_edit_crop.fas
 
 ## Summarize target enrichment and gene recovery efficiency for all samples (All DNA sequences)
 cd $rpath

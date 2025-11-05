@@ -1,23 +1,22 @@
 #################################################
-## This script detects and removes extreme 
-## outliers from the alignments, i.e. extremely
+## This script detects and removes extremely
 ## short sequences and sequences with high amount
-## of unknown positions 'N'
+## of unknown positions 'N' from each fasta file
 ##################################################
 
 ## Packages
 library(ape)
 
 ## Input paths
-namesfile <- "sppidTOsppname.csv"
+namesfile <- "supplementary_tables/TableS3_hybpiper_summary.csv" ## This table contains sample IDs and species names
 probename <- "schn"
 type <- "exons"
-namespath <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/name_list/"
-fpath <- paste0("~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/fasta_files",
+namespath <- "~/projects/name_list/"
+fpath <- paste0("~/projects/hybpiper/fasta_files",
                 "/", probename, "/", type, "/", collapse = "")
 
 # output files
-outpath1 <- "~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybpiper/get_seqs_summ/"
+outpath1 <- "~/projects/hybpiper/get_seqs_summ/"
 outpath2 <- paste(fpath, "rmout_infprlgs/", sep = "")
 out1 <- paste0("lociNOseqs_", probename, ".txt", collapse = "")
 out2 <- paste0("samplesTOremove_", probename, ".csv", collapse = "")
@@ -54,7 +53,8 @@ for(i in ffiles){
   ## Extract number of samples included in the fasta file
   smp_num_org <- length(fasta)
   
-  ## Skip the current iteration because the fasta file is empty (i.e. no sequences were retriueved for this locus)
+  ## Skip the current iteration because the fasta file
+  ## is empty (i.e. no sequences were retrieved for this locus)
   if(length(fasta) == 0){
     write(locus_name, file = paste0(outpath1, out1, collapse = ""), sep = "\n", append = T)
     next

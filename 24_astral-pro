@@ -4,7 +4,7 @@
 #SBATCH --partition=medium
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=100MB
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
@@ -25,15 +25,15 @@ program=iqtree
 addf=
 
 ## Input trees
-fpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$program/$addf
+fpath=~/projects/trees/$mtype/$program/$addf
 
 ## Output path
 output=astral-pro3
-mkdir -p ~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$output
-rpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/$mtype/$output
+mkdir -p ~/projects/trees/$mtype/$output
+rpath=~/projects/trees/$mtype/$output
 
 ## Path to multi-sequence IDs map
-msID_map=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/trees/paralogs_map/multiseqID.map
+msID_map=~/projects/trees/paralogs_map/multiseqID.map
 
 ## Collapsing threshold
 BS=BS33

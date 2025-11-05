@@ -10,8 +10,10 @@ library(TreeDist) # to generalized Robinson–Foulds distances
 library(reshape2) # to plot matrix
 library(ggplot2) # to plot matrix
 
+setwd("")
+
 ## List of trees to compare
-tpath <- "/home/spreinalesl/Documents/plot_trees"
+tpath <- "plot_trees"
 tfiles <- list.files(pattern = "\\.tre", tpath, full.names = T)
 tpattern <- "/sauv_"
 tpattern1 <- "_BS33_sptree_annot.tre"
@@ -31,7 +33,8 @@ for(i in 1:length(tfiles)){
   ## Read tree
   ttree <- read.tree(tfiles[i])
   
-  ## Unrooting tree (Astral produces species trees rooted in the first sample present in the gene trees)
+  ## Unrooting tree (Astral produces species trees rooted
+  ## in the first sample present in the gene trees)
   ttree <- unroot(ttree)
   
   ## Save tree in a list

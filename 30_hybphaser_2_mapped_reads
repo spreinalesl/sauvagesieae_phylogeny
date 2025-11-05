@@ -4,7 +4,7 @@
 #SBATCH --partition=short
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=250MB
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
@@ -29,8 +29,8 @@ probe=a353
 mtype=all_$probe
 
 ## Paths
-dpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybphaser/$mtype/01_data
-outpath=~/projects/rbgk/users_area/sreinales/results/sauvagesieae/hybphaser/$mtype
+dpath=~/projects/hybphaser/$mtype/01_data
+outpath=~/projects/hybphaser/$mtype
 
 ## Run bash script
 cd $outpath

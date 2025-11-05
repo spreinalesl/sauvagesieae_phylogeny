@@ -4,7 +4,7 @@
 #SBATCH --partition=short
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=2G
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
@@ -12,11 +12,13 @@
 ###########
 # The environment that we are working inside includes a version of the Firefox web browser. We can open a particular HTML file with firefox using the command:
 # firefox results/SRR1552444_fastqc.html
-# The analysis took 1.43min in a single core using 0.42G memmory for 192 reports
+# This analysis took 1.43min in a single core using 0.42G memmory for 192 reports
 
 ###########
 # COMMANDS
 ###########
-mkdir -p ../sauvagesieae/multiqc
+ipath=~/projects
 
-multiqc ../sauvagesieae/fastqc/*fastqc.zip -o ../sauvagesieae/multiqc > ../sauvagesieae/multiqc/multiqc.outerr 2>&1
+mkdir -p $ipath/multiqc
+
+multiqc $ipath/fastqc/*fastqc.zip -o $ipath/multiqc > $ipath/multiqc/multiqc.outerr 2>&1

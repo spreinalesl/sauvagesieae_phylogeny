@@ -5,7 +5,8 @@ using CSV
 using PhyloNetworks
 
 ## fetch the quartets without the assumption that there are the same terminales in each tree
-trees = readlines("/home/sreinale/scratch/private/phylonetworks/iqtree/lesstrees_allloci.newick")
+## use the absolute path
+trees = readlines("lesstrees_allloci.newick")
 
 ## convert from String newick to HybridNetwork with Functors.fmap
 trees = Functors.fmap(readTopology, trees)
@@ -14,7 +15,7 @@ trees = Functors.fmap(readTopology, trees)
 q,t = countquartetsintrees(trees)
 df = writeTableCF(q,t)
 
-CSV.write("/home/sreinale/scratch/private/phylonetworks/snaq/CFs_sauvagesieae.csv", df)
+CSV.write("CFs_sauvagesieae.csv", df)
 
 ## exit julia
 exit()

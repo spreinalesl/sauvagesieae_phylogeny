@@ -4,7 +4,7 @@
 #SBATCH --partition=short
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=4G
-#SBATCH --mail-user=s.reinales@kew.org
+#SBATCH --mail-user=xxx@kew.org
 #SBATCH --mail-type=END,FAIL
 
 ###########
@@ -17,16 +17,16 @@
 ###########
 
 ## Create folders
-#pname=addseqs_schnkit
-pname=addseqs_schnkit
+#pname=sauv_sprl
+pname=sauv_sprl
 
-mkdir -p ~/scratch/private/sauvagesieae/quality-post-trim/
-mkdir -p ~/scratch/private/sauvagesieae/quality-post-trim/$pname
-mkdir -p ~/scratch/private/sauvagesieae/quality-post-trim/$pname/fastqc_$pname
+mkdir -p ~/projects/quality-post-trim/
+mkdir -p ~/projects/quality-post-trim/$pname
+mkdir -p ~/projects/quality-post-trim/$pname/fastqc_$pname
 
 ## Define paths
-dpath=~/scratch/private/sauvagesieae/trimmomatic/$pname/trim_paired
-rpath=~/scratch/private/sauvagesieae/quality-post-trim/$pname/fastqc_$pname
+dpath=~/projects/trimmomatic/$pname/trim_paired
+rpath=~/projects/quality-post-trim/$pname/fastqc_$pname
 
 ## Run fastqc
 

@@ -12,26 +12,29 @@ library(viridis) ## heatmap colors
 library(ggpubr) ## for multiple plots aligned
 library(gtable) ## for complex layout
 library(grid) ## for complex layout
+library(conover.test) ## For a post-hoc Conover-Iman test
+
+## Set working directory
+setwd("")
 
 ## Set path
-outpath <- "~/Documents/plot_trees"
+outpath <- "plot_trees"
 
 ## Read gtrees summary table
-data <- read.table("~/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/trees/plots/iqtree_summ/merge_iqtree_gtrees_sum.csv",
+data <- read.table(paste(outpath, "merge_iqtree_gtrees_sum.csv", sep = "/"),
                    header = T, sep = ",")
 data <- subset(data, subset = (!(data$dataset == "0rmout_infprlgs_rmlociGTE")))
 
 ## Read q1 scores from astral by clades
-cladesumm <- read.csv("~/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/trees/plots/clades_sum.csv",
+cladesumm <- read.csv(paste(outpath, "clades_sum.csv", sep = "/"),
                       sep = ",")
 
-## Read gCF scores
-gCFs <- read.csv("~/Dropbox/Sandra/Manuscritos/NGS_phyloOchn/analyses/results/trees/concordance_factors/summary/summ_CFs_datasets.csv")
+## Concordance factors
+cfs <- read.csv(paste(outpath, "summ_CFs_datasets.csv", sep = "/"))
 
 ######################
 ## Plot iqtree summ
 ######################
-
 bntips <- ggplot(data, aes(x = dataset, y = ntips, fill = dataset, alpha = 1.7)) + 
            geom_boxplot(width = 0.3, outlier.size = 1) +
            theme_bw() +
@@ -97,7 +100,7 @@ bootsupport <- ggplot(data, aes(x = dataset, y = btsupp, fill = dataset, alpha =
                       legend.position = "none")
 
 ## Export boxplots
-pdf(paste(outpath, "/", "gtrees_sum_boxplots.pdf", sep = ""), width = 9, height = 7)
+pdf(paste(outpath, "gtrees_sum_boxplots.pdf", sep = "/"), width = 9, height = 7)
 ggarrange(bntips, bnsites, prsminf, totbrl_median, totbrl_var, bootsupport,
           ncol = 3, nrow = 2, align = "hv", common.legend = T, legend = "bottom")
 dev.off()
@@ -112,7 +115,9 @@ ntips <- ggplot(data, aes(x = dataset, y = gene, fill = ntips)) +
                 axis.text.x = element_text(size = 6),
                 legend.key.size = unit(0.4, 'cm'),
                 legend.text = element_text(size = 4), legend.title = element_text(size = 6)) +
-           scale_x_discrete(labels = c("rmout\ninfprlgs", "all_exons", "rm_out", "str\nmssdata", "str_mssdata\nprlgs", "putative\northlgs", "inform\nprlgs", "all_paralogs")) +
+           scale_x_discrete(labels = c("rmout\ninfprlgs", "all_exons", "rm_out", "str\nmssdata",
+                                       "str_mssdata\nprlgs", "putative\northlgs", "inform\nprlgs",
+                                       "all_paralogs")) +
            scale_fill_viridis(direction = -1, option = "A", alpha = 0.9, name = "nsamples")
 
 nsites <- ggplot(data, aes(x = dataset, y = gene, fill = nsites)) +
@@ -122,13 +127,54 @@ nsites <- ggplot(data, aes(x = dataset, y = gene, fill = nsites)) +
                  axis.text.x = element_text(size = 6),
                  legend.key.size = unit(0.4, 'cm'),
                  legend.text = element_text(size = 4), legend.title = element_text(size = 6)) +
-           scale_x_discrete(labels = c("rmout\ninfprlgs", "all_exons", "rm_out", "str\nmssdata", "str_mssdata\nprlgs", "putative\northlgs", "inform\nprlgs", "all_paralogs")) +
+           scale_x_discrete(labels = c("rmout\ninfprlgs", "all_exons", "rm_out", "str\nmssdata",
+                                       "str_mssdata\nprlgs", "putative\northlgs", "inform\nprlgs",
+                                       "all_paralogs")) +
            scale_fill_viridis(direction = -1, option = "A", alpha = 0.9, transform = "log", name = "log(nsites)")
 
 ## Export occupancy
-pdf(paste(outpath, "/", "dataset_occupancy_heatmaps.pdf", sep = ""), width = 9)
+pdf(paste(outpath, "dataset_occupancy_heatmap.pdf", sep = "/"), width = 9)
 ggarrange(ntips, nsites, ncol = 2, nrow = 1, align = "hv")
 dev.off()
+
+##########################
+## Conover test gene trees
+##########################
+## Iterate variables
+data <- data[,c("dataset", "nsites", "tbrachn_median", "btsupp")]
+
+for(i in colnames(data)[-1]){
+  
+  ## Remove outliers before, because they affect KW test
+  # use boxplot output which detects outliers using quantiles (Q1-1.5*IQR) 
+  datasub <- data.frame()
+  for(j in unique(data$dataset)){
+    bxpl <- boxplot(data[which(data$dataset == j), c(i)], plot = F)
+    datasub <- rbind(datasub,
+                     subset(data[which(data$dataset == j), c("dataset", i)],
+                            subset = !(data[which(data$dataset == j), c(i)] %in% bxpl$out)))
+  }
+  
+  ## Plot test
+  #boxplot(datasub[,c(i)] ~ datasub$dataset, main = i)
+  
+  ## Kuskal Wallis test
+  kw <- kruskal.test(datasub[,c(i)] ~ datasub$dataset)
+  cat("Kw for", i, kw$p.value, "\n")
+  
+  ## Export results
+  capture.output(file = paste(outpath, "conoverTest.txt", sep = "/"), append = T,
+                 cat("\n", "\n", "#################### ", i, " ####################", "\n", "\n"),
+                 paste0("n=", length(datasub[,c(i)])), kw)
+  
+  ## Post-hoc Conover-Iman test for significant different variables
+  if(kw$p.value < 0.05){
+    capture.output(file = paste(outpath, "conoverTest.txt", sep = "/"), append = T,
+                   cat("\n", "\n"),
+                   conover.test(datasub[,c(i)], datasub$dataset, method = "bonferroni"),
+                   cat("\n", "\n"))
+  }
+}
 
 ######################
 ## Export gtrees figure
@@ -141,7 +187,7 @@ g <- rbind(g1, g2, g3, size = "first")
 g$widths <- unit.pmax(g1$widths, g2$widths, g3$widths)
 
 ## Complex layout
-pdf(paste(outpath, "/", "gtrees_summ_stats.pdf", sep = ""), width = 9, height = 7)
+pdf(paste(outpath, "gtrees_summ_stats.pdf", sep = "/"), width = 9, height = 7)
 ggarrange(ntips, g, ncol = 2, widths = c(1.2, 0.8))
 dev.off()
 
@@ -169,15 +215,6 @@ lpp1 <- ggplot(cladesumm, aes(x = tree, y = pp1, fill = tree, alpha = 1.7)) +
 
 ## prop q2/q3 
 cladesumm$prop_q2_q3 <- cladesumm$q2/cladesumm$q3
-
-# Remove extreme value for each dataset
-cladesumm$prop_q2_q3[which(cladesumm$prop_q2_q3 == max(cladesumm$prop_q2_q3[which(cladesumm$tree == "1all_exons")], na.rm = T))] <- NA
-cladesumm$prop_q2_q3[which(cladesumm$prop_q2_q3 == max(cladesumm$prop_q2_q3[which(cladesumm$tree =="7all_paralogs")], na.rm = T))] <- NA
-cladesumm$prop_q2_q3[which(cladesumm$prop_q2_q3 == max(cladesumm$prop_q2_q3[which(cladesumm$tree == "6inform_prlgs")], na.rm = T))] <- NA
-cladesumm$prop_q2_q3[which(cladesumm$prop_q2_q3 == max(cladesumm$prop_q2_q3[which(cladesumm$tree == "5putative_orthlgs")], na.rm = T))] <- NA
-cladesumm$prop_q2_q3[which(cladesumm$prop_q2_q3 == max(cladesumm$prop_q2_q3[which(cladesumm$tree == "2rm_out")], na.rm = T))] <- NA
-cladesumm$prop_q2_q3[which(cladesumm$prop_q2_q3 == max(cladesumm$prop_q2_q3[which(cladesumm$tree == "3str_mssdata")], na.rm = T))] <- NA
-cladesumm$prop_q2_q3[which(cladesumm$prop_q2_q3 == max(cladesumm$prop_q2_q3[which(cladesumm$tree == "4str_mssdata_prlgs")], na.rm = T))] <- NA
 
 # plot
 qprp <- ggplot(cladesumm, aes(x = tree, y = prop_q2_q3, fill = tree, alpha = 1.7)) + 
@@ -216,7 +253,7 @@ qprp_clade <- ggplot(cladesumm, aes(x = clade, y = prop_q2_q3, fill = tree, alph
 ######################
 ## Plot astral gCF values
 ######################
-gCF <- ggplot(gCFs, aes(x = dataset, y = gCF, fill = dataset, alpha = 1.7)) + 
+gCF <- ggplot(cfs, aes(x = tree, y = gCF, fill = tree, alpha = 1.7)) + 
         geom_boxplot(width = 0.3, outlier.size = 0.3) +
         theme_bw() +
         labs(x = "", y = "gCF") +
@@ -226,8 +263,8 @@ gCF <- ggplot(gCFs, aes(x = dataset, y = gCF, fill = dataset, alpha = 1.7)) +
               legend.position = "none")
 
 # by clades
-gCFs <- subset(gCFs, subset = !(is.na(gCFs$clade)))
-gCF_clade <- ggplot(gCFs, aes(x = clade, y = gCF, fill = dataset, alpha = 1.7)) + 
+gCFs <- subset(cfs, subset = !(is.na(cfs$clade)))
+gCF_clade <- ggplot(gCFs, aes(x = clade, y = gCF, fill = tree, alpha = 1.7)) + 
               geom_boxplot(outlier.size = 0.3) +
               theme_bw() +
               labs(x = "", y = "") +
@@ -237,7 +274,7 @@ gCF_clade <- ggplot(gCFs, aes(x = clade, y = gCF, fill = dataset, alpha = 1.7)) 
 #######################
 ## Export plot
 #######################
-pdf(paste(outpath, "/", "astraltrees_q1_lpp_gCF_summ.pdf", sep = ""), height = 10, width = 12)
+pdf(paste(outpath, "astraltrees_q1_lpp_gCF_summ.pdf", sep = "/"), height = 10, width = 12)
 ggarrange(q1, q1_clade, lpp1, lpp1_clade, gCF, gCF_clade, widths = c(0.8, 1.5),
           ncol = 2, nrow = 3, align = "hv", common.legend = T, legend = "bottom")
 dev.off()
@@ -248,3 +285,119 @@ dev.off()
 ngenes <- tapply(data$gene, as.factor(data$dataset), FUN = length)
 
 write.table(ngenes, paste(outpath, "ngenesPERdataset.txt", sep = "/"))
+
+##########################
+## Conover test for 
+## species trees
+##########################
+## Iterate variables
+#cladesumm <- cfs
+colnames(cladesumm)[9] <- "dataset"
+variables <- c("q1","pp1")#,"gCF")
+data <- cladesumm
+
+for(i in variables){
+ 
+  ## Remove outliers before, because they affect KW test
+  # use boxplot output which detects outliers using quantiles (Q1-1.5*IQR) 
+  datasub <- data.frame()
+  for(j in unique(data$dataset)){
+    bxpl <- boxplot(data[which(data$dataset == j), c(i)], plot = F)
+    datasub <- rbind(datasub,
+                     subset(data[which(data$dataset == j), c("dataset", i)],
+                            subset = !(data[which(data$dataset == j), c(i)] %in% bxpl$out)))
+  }
+  
+  ## Plot test
+  #boxplot(datasub[,c(i)] ~ datasub$dataset, main = i)
+  
+  ## Kuskal Wallis test between datasets
+  kw <- kruskal.test(datasub[,c(i)] ~ datasub$dataset)
+  cat("Kw for", i, kw$p.value, "\n")
+  
+  ## Export results
+  capture.output(file = paste(outpath, "conoverTest_sptrees.txt", sep = "/"), append = T,
+                 cat("\n", "\n", "#################### ", i, " ####################", "\n", "\n"),
+                 paste0("n=", length(datasub[,c(i)])), kw)
+  
+  ## Post-hoc Conover-Iman test for significant different variables
+  if(kw$p.value < 0.05){
+    capture.output(file = paste(outpath, "conoverTest_sptrees.txt", sep = "/"), append = T,
+                   cat("\n", "\n"),
+                   conover.test(datasub[,c(i)], datasub$dataset, method = "bonferroni"),
+                   cat("\n", "\n"))
+  }
+  
+  ###########################
+  ## Kruskal Wallis by clade
+  ## and dataset
+  ###########################
+  for(k in unique(data$clade)){
+    datasub2 <- subset(data, subset = data$clade == k)
+    
+    ## rm outliers
+    datasub3 <- data.frame()
+    for(j in unique(datasub2$dataset)){
+      bxpl <- boxplot(datasub2[which(datasub2$dataset == j), c(i)], plot = F)
+      datasub3 <- rbind(datasub3,
+                       subset(datasub2[which(datasub2$dataset == j), c("dataset", i)],
+                              subset = !(datasub2[which(datasub2$dataset == j), c(i)] %in% bxpl$out)))
+    }
+    
+    ## Kruskal Wallis within each clade
+    kw <- kruskal.test(datasub3[,c(i)] ~ datasub3$dataset)
+    cat("Kw for", i, "in clade", k, kw$p.value, "\n")
+    
+    ## Plot test
+    #boxplot(datasub2[,c(i)] ~ datasub2$dataset, main = i)
+    
+    ## Export results
+    capture.output(file = paste(outpath, "conoverTest_sptreesByClade.txt", sep = "/"), append = T,
+                   cat("\n", "\n", "#################### ", i, "clade", k, " ####################", "\n", "\n"),
+                   paste0("n=", length(datasub3[,c(i)])), kw)
+    
+    ## Post-hoc Conover-Iman test for significant different variables
+    if(kw$p.value < 0.05){
+      capture.output(file = paste(outpath, "conoverTest_sptreesByClade.txt", sep = "/"), append = T,
+                     cat("\n", "\n"),
+                     conover.test(datasub3[,c(i)], datasub3$dataset, method = "bonferroni"),
+                     cat("\n", "\n"))
+    }
+  }
+}
+
+#####################################
+## Kuskal Wallis test between clades
+#####################################
+for(i in variables){
+  for(j in unique(data$dataset)){
+    ## Kruskal Wallis between clades
+    datasub3 <- subset(data, subset = data$dataset == j)
+    
+    datasub <- data.frame()
+    for(k in unique(datasub3$clade)){
+      bxpl <- boxplot(datasub3[which(datasub3$clade == k), c(i)], plot = F)
+      datasub <- rbind(datasub,
+                       subset(datasub3[which(datasub3$clade == k), c("clade", i)],
+                              subset = !(datasub3[which(datasub3$clade == k), c(i)] %in% bxpl$out)))
+    }
+    
+    ## Kruskal Wallis
+    kw_btw <- kruskal.test(datasub[,c(i)] ~ datasub$clade)
+    boxplot(datasub[,c(i)] ~ datasub$clade, main = paste(i,j, sep = " - "))
+    cat("Kw for", i, j, kw_btw$p.value, "\n")
+    
+    ## Export results
+    capture.output(file = paste(outpath, "conoverTest_sptrees_betweenClades.txt", sep = "/"), append = T,
+                   cat("\n", "\n", "#################### ", i, j, " ####################", "\n", "\n"),
+                   paste0("n=", length(datasub[,c(i)])), kw_btw)
+    
+    ## Post-hoc Conover-Iman test for significant different variables
+    if(kw_btw$p.value < 0.05){
+      capture.output(file = paste(outpath, "conoverTest_sptrees_betweenClades.txt", sep = "/"), append = T,
+                     cat("\n", "\n"),
+                     conover.test(datasub[,c(i)], datasub$clade, method = "bonferroni"),
+                     cat("\n", "\n"))
+    }
+  }
+}
