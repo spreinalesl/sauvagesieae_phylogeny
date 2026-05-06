@@ -14,4 +14,4 @@ Additional analyses to test reticulated evolution using SNaQ and recent polyploi
 
 This repository is open and can be used for academic and research proposes as long as the corresponding paper is properly cited:
 
-Reinales S, Forest F, Cardoso D, Zuntini AR, Ballen GA, Cárdenas D, Pirani JR. 2025. Integrating Lineage-specific and Universal Genomic Probes Illuminates Phylogenetic Relationships and Complex Evolutionary Processes within Ochnaceae. Submitted.
+Reinales, S., Forest, F., Zuntini, A.R., Cardoso, D., Ballen, G.A., Cárdenas, D. & Pirani, J.R. 2026. Integrating lineage-specific and universal genomic probes illuminates phylogenetic relationships and molecular evolution in Sauvagesieae (Ochnaceae). bioRxiv. doi:10.64898/2026.04.29.721621.
