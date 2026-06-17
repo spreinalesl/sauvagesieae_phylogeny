@@ -12,6 +12,16 @@ Phylogenetic inference was carried out using a species tree approach with Weight
 
 Additional analyses to test reticulated evolution using SNaQ and recent polyploidisation using nQuack were also performed and the corresponding scripts are available. Scripts to produce summary tables and figures included in the paper are also provided.
 
-This repository is open and can be used for academic and research proposes as long as the corresponding paper is properly cited:
+This repository can be used for academic and research proposes as long as the corresponding paper is properly cited:
 
 Reinales, S., Forest, F., Zuntini, A.R., Cardoso, D., Ballen, G.A., Cárdenas, D. & Pirani, J.R. 2026. Integrating lineage-specific and universal genomic probes illuminates phylogenetic relationships and molecular evolution in Sauvagesieae (Ochnaceae). bioRxiv. doi:10.64898/2026.04.29.721621.
+
+@article{Reinales2026,
+  title={{Integrating lineage-specific and universal genomic probes illuminates phylogenetic relationships and molecular evolution in Sauvagesieae (Ochnaceae)}},
+  author={Reinales, Sandra and Forest, F{\'e}lix and Zuntini, Alexandre and Cardoso, Domingos and Ballen, Gustavo A and C{\'a}rdenas, Dairon and Pirani, Jos{\'e} R},
+  doi={10.64898/2026.04.29.721621},
+  journal={bioRxiv},
+  pages={2026--04},
+  year={2026},
+  publisher={Cold Spring Harbor Laboratory}
+}
