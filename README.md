@@ -16,12 +16,16 @@ This repository can be used for academic and research proposes as long as the co
 
 Reinales, S., Forest, F., Zuntini, A.R., Cardoso, D., Ballen, G.A., Cárdenas, D. & Pirani, J.R. 2026. Integrating lineage-specific and universal genomic probes illuminates phylogenetic relationships and molecular evolution in Sauvagesieae (Ochnaceae). bioRxiv. doi:10.64898/2026.04.29.721621.
 
-@article{Reinales2026,
-  title={{Integrating lineage-specific and universal genomic probes illuminates phylogenetic relationships and molecular evolution in Sauvagesieae (Ochnaceae)}},
-  author={Reinales, Sandra and Forest, F{\'e}lix and Zuntini, Alexandre and Cardoso, Domingos and Ballen, Gustavo A and C{\'a}rdenas, Dairon and Pirani, Jos{\'e} R},
-  doi={10.64898/2026.04.29.721621},
-  journal={bioRxiv},
-  pages={2026--04},
-  year={2026},
-  publisher={Cold Spring Harbor Laboratory}
+If you use bibtex, use the following entry in your .bib file:
+
+```
+  @article{Reinales2026,
+    title={{Integrating lineage-specific and universal genomic probes illuminates phylogenetic relationships and molecular evolution in Sauvagesieae (Ochnaceae)}},
+    author={Reinales, Sandra and Forest, F{\'e}lix and Zuntini, Alexandre and Cardoso, Domingos and Ballen, Gustavo A and C{\'a}rdenas, Dairon and Pirani, Jos{\'e} R},
+    doi={10.64898/2026.04.29.721621},
+    journal={bioRxiv},
+    pages={2026--04},
+    year={2026},
+    publisher={Cold Spring Harbor Laboratory}
 }
+```
