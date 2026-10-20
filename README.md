@@ -14,18 +14,20 @@ Additional analyses to test reticulated evolution using SNaQ and recent polyploi
 
 This repository can be used for academic and research proposes as long as the corresponding paper is properly cited:
 
-Reinales, S., Forest, F., Zuntini, A.R., Cardoso, D., Ballen, G.A., Cárdenas, D. & Pirani, J.R. 2026. Integrating lineage-specific and universal genomic probes illuminates phylogenetic relationships and molecular evolution in Sauvagesieae (Ochnaceae). bioRxiv. doi:10.64898/2026.04.29.721621.
+Reinales S, Forest F, Zuntini AR, Cardoso D, Ballen GA, Cárdenas D, Pirani JR. Integrating lineage-specific and universal genomic probes illuminates phylogenetic relationships and molecular evolution in Sauvagesieae (Ochnaceae). Molecular Phylogenetics and Evolution. 2026 Jul 14:108687.
 
 If you use bibtex, use the following entry in your .bib file:
 
 ```
-  @article{Reinales2026,
-    title={{Integrating lineage-specific and universal genomic probes illuminates phylogenetic relationships and molecular evolution in Sauvagesieae (Ochnaceae)}},
-    author={Reinales, Sandra and Forest, F{\'e}lix and Zuntini, Alexandre and Cardoso, Domingos and Ballen, Gustavo A and C{\'a}rdenas, Dairon and Pirani, Jos{\'e} R},
-    doi={10.64898/2026.04.29.721621},
-    journal={bioRxiv},
-    pages={2026--04},
-    year={2026},
-    publisher={Cold Spring Harbor Laboratory}
+@article{Reinales2026sauv,
+  title={{Integrating lineage-specific and universal genomic probes illuminates phylogenetic relationships and molecular evolution in Sauvagesieae (Ochnaceae)}},
+  author={Sandra Reinales and Félix Forest and Alexandre R. Zuntini and Domingos Cardoso and Gustavo A. Ballen and Dairon Cárdenas and José R. Pirani},
+  journal={Molecular Phylogenetics and Evolution},
+  volume={224},
+  pages={108687},
+  year={2026},
+  doi={10.1016/j.ympev.2026.108687},
+  issn={1055-7903},
+  url={https://www.sciencedirect.com/science/article/pii/S1055790326001570}
 }
 ```
